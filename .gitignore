@@ -1,0 +1,10 @@
+# Test result
+.nyc/
+coverage/
+
+# Modules
+node_modules/
+
+# Compile output
+lib/
+types/

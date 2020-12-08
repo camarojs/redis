@@ -1,0 +1,17 @@
+{
+    "extension": [
+        ".ts"
+    ],
+    "check-coverage": true,
+    "include": [
+        "src/**"
+    ],
+    "reporter": [
+        "text-summary"
+    ],
+    "statements": 90,
+    "branches": 90,
+    "functions": 95,
+    "lines": 90,
+    "temp-dir": "./.nyc"
+}

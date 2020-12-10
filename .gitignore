@@ -7,4 +7,5 @@ node_modules/
 
 # Compile output
 lib/
-types/
+types/*.ts
+!types/internal/commands.d.ts

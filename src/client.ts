@@ -1,4 +1,5 @@
 import { Socket } from 'net';
+import { ClientCommand } from './clientCommand';
 
 export interface IClientOptions {
     host?: string;
@@ -6,11 +7,11 @@ export interface IClientOptions {
     auth?: string;
 }
 
-interface IClient {
+export interface Client extends ClientCommand {
     connect(): void;
 }
 
-export class Client implements IClient {
+export class Client implements Client {
     private socket = new Socket();
     constructor(
         private readonly options: IClientOptions = {}

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { parse, Node } from 'node-html-parser';
+import fs from 'fs';
 
-interface Commands {
+interface Command {
     command: string;
     args: string | null;
     summary: string;
@@ -15,7 +16,8 @@ async function dodo() {
         .map(e => e.childNodes.filter(cn => cn.nodeType === 1))
         .map(e => handleHTMLElement(e));
 
-    convertCommandsToTypeScript(commands);
+    fs.writeFileSync('./src/commands.json', JSON.stringify(commands));
+    generateTypescriptInterface(commands);
 }
 
 function handleHTMLElement(datas: Node[]) {
@@ -26,11 +28,48 @@ function handleHTMLElement(datas: Node[]) {
         command,
         args,
         summary
-    } as Commands;
+    } as Command;
 }
 
-function convertCommandsToTypeScript(commands: Commands[]) {
-    console.log(commands);
+const result = new Array<string>();
+const tab = '\u0020\u0020\u0020\u0020';
+
+function generateTypescriptInterface(commands: Command[]) {
+    appendHeader();
+    result.push('export interface ClientCommand {\n');
+    for (let i = 0; i < commands.length; i++) {
+        const command = commands[i] as Command;
+        appendComment(command);
+        appendMethod(command);
+    }
+    result.push('}');
+    fs.writeFileSync('./src/clientCommand.ts', result.join(''));
+}
+
+function appendHeader() {
+    result.push('/**\n');
+    result.push(`\u0020*\u0020Automatically generated on ${new Date()}\n`);
+    result.push('\u0020*/\n');
+    result.push('\n');
+
+    result.push('/* eslint-disable @typescript-eslint/no-explicit-any */\n');
+}
+
+function appendComment(command: Command) {
+    result.push(`${tab}/**\n`);
+    result.push(`${tab}\u0020*\u0020${command.summary}\n`);
+    if (command.args !== null) {
+        result.push(`${tab}\u0020*\u0020@param\u0020args\u0020${command.args}\n`);
+    }
+    result.push(`${tab}\u0020*/\n`);
+}
+
+function appendMethod(command: Command) {
+    result.push(`${tab}${command.command.replace(/( |-)/g, '')}<T>(`);
+    if (command.args !== null) {
+        result.push('...args: any');
+    }
+    result.push('): Promise<T>;\n');
 }
 
 dodo();

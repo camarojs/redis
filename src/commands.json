@@ -1,1 +1,1031 @@
-[{"command":"ACL LOAD","args":null,"summary":"Reload the ACLs from the configured ACL file"},{"command":"ACL SAVE","args":null,"summary":"Save the current ACL rules in the configured ACL file"},{"command":"ACL LIST","args":null,"summary":"List the current ACL rules in ACL config file format"},{"command":"ACL USERS","args":null,"summary":"List the username of all the configured ACL rules"},{"command":"ACL GETUSER","args":"username","summary":"Get the rules for a specific ACL user"},{"command":"ACL SETUSER","args":"username [rule [rule ...]]","summary":"Modify or create the rules for a specific ACL user"},{"command":"ACL DELUSER","args":"username [username ...]","summary":"Remove the specified ACL users and the associated rules"},{"command":"ACL CAT","args":"[categoryname]","summary":"List the ACL categories or the commands inside a category"},{"command":"ACL GENPASS","args":"[bits]","summary":"Generate a pseudorandom secure password to use for ACL users"},{"command":"ACL WHOAMI","args":null,"summary":"Return the name of the user associated to the current connection"},{"command":"ACL LOG","args":"[count or RESET]","summary":"List latest events denied because of ACLs in place"},{"command":"ACL HELP","args":null,"summary":"Show helpful text about the different subcommands"},{"command":"APPEND","args":"key value","summary":"Append a value to a key"},{"command":"AUTH","args":"[username] password","summary":"Authenticate to the server"},{"command":"BGREWRITEAOF","args":null,"summary":"Asynchronously rewrite the append-only file"},{"command":"BGSAVE","args":"[SCHEDULE]","summary":"Asynchronously save the dataset to disk"},{"command":"BITCOUNT","args":"key [start end]","summary":"Count set bits in a string"},{"command":"BITFIELD","args":"key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]","summary":"Perform arbitrary bitfield integer operations on strings"},{"command":"BITOP","args":"operation destkey key [key ...]","summary":"Perform bitwise operations between strings"},{"command":"BITPOS","args":"key bit [start] [end]","summary":"Find first bit set or clear in a string"},{"command":"BLPOP","args":"key [key ...] timeout","summary":"Remove and get the first element in a list, or block until one is available"},{"command":"BRPOP","args":"key [key ...] timeout","summary":"Remove and get the last element in a list, or block until one is available"},{"command":"BRPOPLPUSH","args":"source destination timeout","summary":"Pop an element from a list, push it to another list and return it; or block until one is available"},{"command":"BLMOVE","args":"source destination LEFT|RIGHT LEFT|RIGHT timeout","summary":"Pop an element from a list, push it to another list and return it; or block until one is available"},{"command":"BZPOPMIN","args":"key [key ...] timeout","summary":"Remove and return the member with the lowest score from one or more sorted sets, or block until one is available"},{"command":"BZPOPMAX","args":"key [key ...] timeout","summary":"Remove and return the member with the highest score from one or more sorted sets, or block until one is available"},{"command":"CLIENT CACHING","args":"YES|NO","summary":"Instruct the server about tracking or not keys in the next request"},{"command":"CLIENT ID","args":null,"summary":"Returns the client ID for the current connection"},{"command":"CLIENT INFO","args":null,"summary":"Returns information about the current client connection."},{"command":"CLIENT KILL","args":"[ip:port] [ID client-id] [TYPE normal|master|slave|pubsub] [USER username] [ADDR ip:port] [SKIPME yes/no]","summary":"Kill the connection of a client"},{"command":"CLIENT LIST","args":"[TYPE normal|master|replica|pubsub] [ID client-id [client-id ...]]","summary":"Get the list of client connections"},{"command":"CLIENT GETNAME","args":null,"summary":"Get the current connection name"},{"command":"CLIENT GETREDIR","args":null,"summary":"Get tracking notifications redirection client ID if any"},{"command":"CLIENT PAUSE","args":"timeout","summary":"Stop processing commands from clients for some time"},{"command":"CLIENT REPLY","args":"ON|OFF|SKIP","summary":"Instruct the server whether to reply to commands"},{"command":"CLIENT SETNAME","args":"connection-name","summary":"Set the current connection name"},{"command":"CLIENT TRACKING","args":"ON|OFF [REDIRECT client-id] [PREFIX prefix [PREFIX prefix ...]] [BCAST] [OPTIN] [OPTOUT] [NOLOOP]","summary":"Enable or disable server assisted client side caching support"},{"command":"CLIENT UNBLOCK","args":"client-id [TIMEOUT|ERROR]","summary":"Unblock a client blocked in a blocking command from a different connection"},{"command":"CLUSTER ADDSLOTS","args":"slot [slot ...]","summary":"Assign new hash slots to receiving node"},{"command":"CLUSTER BUMPEPOCH","args":null,"summary":"Advance the cluster config epoch"},{"command":"CLUSTER COUNT-FAILURE-REPORTS","args":"node-id","summary":"Return the number of failure reports active for a given node"},{"command":"CLUSTER COUNTKEYSINSLOT","args":"slot","summary":"Return the number of local keys in the specified hash slot"},{"command":"CLUSTER DELSLOTS","args":"slot [slot ...]","summary":"Set hash slots as unbound in receiving node"},{"command":"CLUSTER FAILOVER","args":"[FORCE|TAKEOVER]","summary":"Forces a replica to perform a manual failover of its master."},{"command":"CLUSTER FLUSHSLOTS","args":null,"summary":"Delete a node's own slots information"},{"command":"CLUSTER FORGET","args":"node-id","summary":"Remove a node from the nodes table"},{"command":"CLUSTER GETKEYSINSLOT","args":"slot count","summary":"Return local key names in the specified hash slot"},{"command":"CLUSTER INFO","args":null,"summary":"Provides info about Redis Cluster node state"},{"command":"CLUSTER KEYSLOT","args":"key","summary":"Returns the hash slot of the specified key"},{"command":"CLUSTER MEET","args":"ip port","summary":"Force a node cluster to handshake with another node"},{"command":"CLUSTER MYID","args":null,"summary":"Return the node id"},{"command":"CLUSTER NODES","args":null,"summary":"Get Cluster config for the node"},{"command":"CLUSTER REPLICATE","args":"node-id","summary":"Reconfigure a node as a replica of the specified master node"},{"command":"CLUSTER RESET","args":"[HARD|SOFT]","summary":"Reset a Redis Cluster node"},{"command":"CLUSTER SAVECONFIG","args":null,"summary":"Forces the node to save cluster state on disk"},{"command":"CLUSTER SET-CONFIG-EPOCH","args":"config-epoch","summary":"Set the configuration epoch in a new node"},{"command":"CLUSTER SETSLOT","args":"slot IMPORTING|MIGRATING|STABLE|NODE [node-id]","summary":"Bind a hash slot to a specific node"},{"command":"CLUSTER SLAVES","args":"node-id","summary":"List replica nodes of the specified master node"},{"command":"CLUSTER REPLICAS","args":"node-id","summary":"List replica nodes of the specified master node"},{"command":"CLUSTER SLOTS","args":null,"summary":"Get array of Cluster slot to node mappings"},{"command":"COMMAND","args":null,"summary":"Get array of Redis command details"},{"command":"COMMAND COUNT","args":null,"summary":"Get total number of Redis commands"},{"command":"COMMAND GETKEYS","args":null,"summary":"Extract keys given a full Redis command"},{"command":"COMMAND INFO","args":"command-name [command-name ...]","summary":"Get array of specific Redis command details"},{"command":"CONFIG GET","args":"parameter","summary":"Get the value of a configuration parameter"},{"command":"CONFIG REWRITE","args":null,"summary":"Rewrite the configuration file with the in memory configuration"},{"command":"CONFIG SET","args":"parameter value","summary":"Set a configuration parameter to the given value"},{"command":"CONFIG RESETSTAT","args":null,"summary":"Reset the stats returned by INFO"},{"command":"COPY","args":"source destination [DB destination-db] [REPLACE]","summary":"Copy a key"},{"command":"DBSIZE","args":null,"summary":"Return the number of keys in the selected database"},{"command":"DEBUG OBJECT","args":"key","summary":"Get debugging information about a key"},{"command":"DEBUG SEGFAULT","args":null,"summary":"Make the server crash"},{"command":"DECR","args":"key","summary":"Decrement the integer value of a key by one"},{"command":"DECRBY","args":"key decrement","summary":"Decrement the integer value of a key by the given number"},{"command":"DEL","args":"key [key ...]","summary":"Delete a key"},{"command":"DISCARD","args":null,"summary":"Discard all commands issued after MULTI"},{"command":"DUMP","args":"key","summary":"Return a serialized version of the value stored at the specified key."},{"command":"ECHO","args":"message","summary":"Echo the given string"},{"command":"EVAL","args":"script numkeys key [key ...] arg [arg ...]","summary":"Execute a Lua script server side"},{"command":"EVALSHA","args":"sha1 numkeys key [key ...] arg [arg ...]","summary":"Execute a Lua script server side"},{"command":"EXEC","args":null,"summary":"Execute all commands issued after MULTI"},{"command":"EXISTS","args":"key [key ...]","summary":"Determine if a key exists"},{"command":"EXPIRE","args":"key seconds","summary":"Set a key's time to live in seconds"},{"command":"EXPIREAT","args":"key timestamp","summary":"Set the expiration for a key as a UNIX timestamp"},{"command":"FLUSHALL","args":"[ASYNC]","summary":"Remove all keys from all databases"},{"command":"FLUSHDB","args":"[ASYNC]","summary":"Remove all keys from the current database"},{"command":"GEOADD","args":"key longitude latitude member [longitude latitude member ...]","summary":"Add one or more geospatial items in the geospatial index represented using a sorted set"},{"command":"GEOHASH","args":"key member [member ...]","summary":"Returns members of a geospatial index as standard geohash strings"},{"command":"GEOPOS","args":"key member [member ...]","summary":"Returns longitude and latitude of members of a geospatial index"},{"command":"GEODIST","args":"key member1 member2 [m|km|ft|mi]","summary":"Returns the distance between two members of a geospatial index"},{"command":"GEORADIUS","args":"key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]","summary":"Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point"},{"command":"GEORADIUSBYMEMBER","args":"key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]","summary":"Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member"},{"command":"GET","args":"key","summary":"Get the value of a key"},{"command":"GETBIT","args":"key offset","summary":"Returns the bit value at offset in the string value stored at key"},{"command":"GETRANGE","args":"key start end","summary":"Get a substring of the string stored at a key"},{"command":"GETSET","args":"key value","summary":"Set the string value of a key and return its old value"},{"command":"HDEL","args":"key field [field ...]","summary":"Delete one or more hash fields"},{"command":"HELLO","args":"protover [AUTH username password] [SETNAME clientname]","summary":"switch Redis protocol"},{"command":"HEXISTS","args":"key field","summary":"Determine if a hash field exists"},{"command":"HGET","args":"key field","summary":"Get the value of a hash field"},{"command":"HGETALL","args":"key","summary":"Get all the fields and values in a hash"},{"command":"HINCRBY","args":"key field increment","summary":"Increment the integer value of a hash field by the given number"},{"command":"HINCRBYFLOAT","args":"key field increment","summary":"Increment the float value of a hash field by the given amount"},{"command":"HKEYS","args":"key","summary":"Get all the fields in a hash"},{"command":"HLEN","args":"key","summary":"Get the number of fields in a hash"},{"command":"HMGET","args":"key field [field ...]","summary":"Get the values of all the given hash fields"},{"command":"HMSET","args":"key field value [field value ...]","summary":"Set multiple hash fields to multiple values"},{"command":"HSET","args":"key field value [field value ...]","summary":"Set the string value of a hash field"},{"command":"HSETNX","args":"key field value","summary":"Set the value of a hash field, only if the field does not exist"},{"command":"HSTRLEN","args":"key field","summary":"Get the length of the value of a hash field"},{"command":"HVALS","args":"key","summary":"Get all the values in a hash"},{"command":"INCR","args":"key","summary":"Increment the integer value of a key by one"},{"command":"INCRBY","args":"key increment","summary":"Increment the integer value of a key by the given amount"},{"command":"INCRBYFLOAT","args":"key increment","summary":"Increment the float value of a key by the given amount"},{"command":"INFO","args":"[section]","summary":"Get information and statistics about the server"},{"command":"LOLWUT","args":"[VERSION version]","summary":"Display some computer art and the Redis version"},{"command":"KEYS","args":"pattern","summary":"Find all keys matching the given pattern"},{"command":"LASTSAVE","args":null,"summary":"Get the UNIX time stamp of the last successful save to disk"},{"command":"LINDEX","args":"key index","summary":"Get an element from a list by its index"},{"command":"LINSERT","args":"key BEFORE|AFTER pivot element","summary":"Insert an element before or after another element in a list"},{"command":"LLEN","args":"key","summary":"Get the length of a list"},{"command":"LPOP","args":"key","summary":"Remove and get the first element in a list"},{"command":"LPOS","args":"key element [RANK rank] [COUNT num-matches] [MAXLEN len]","summary":"Return the index of matching elements on a list"},{"command":"LPUSH","args":"key element [element ...]","summary":"Prepend one or multiple elements to a list"},{"command":"LPUSHX","args":"key element [element ...]","summary":"Prepend an element to a list, only if the list exists"},{"command":"LRANGE","args":"key start stop","summary":"Get a range of elements from a list"},{"command":"LREM","args":"key count element","summary":"Remove elements from a list"},{"command":"LSET","args":"key index element","summary":"Set the value of an element in a list by its index"},{"command":"LTRIM","args":"key start stop","summary":"Trim a list to the specified range"},{"command":"MEMORY DOCTOR","args":null,"summary":"Outputs memory problems report"},{"command":"MEMORY HELP","args":null,"summary":"Show helpful text about the different subcommands"},{"command":"MEMORY MALLOC-STATS","args":null,"summary":"Show allocator internal stats"},{"command":"MEMORY PURGE","args":null,"summary":"Ask the allocator to release memory"},{"command":"MEMORY STATS","args":null,"summary":"Show memory usage details"},{"command":"MEMORY USAGE","args":"key [SAMPLES count]","summary":"Estimate the memory usage of a key"},{"command":"MGET","args":"key [key ...]","summary":"Get the values of all the given keys"},{"command":"MIGRATE","args":"host port key|\"\" destination-db timeout [COPY] [REPLACE] [AUTH password] [AUTH2 username password] [KEYS key [key ...]]","summary":"Atomically transfer a key from a Redis instance to another one."},{"command":"MODULE LIST","args":null,"summary":"List all modules loaded by the server"},{"command":"MODULE LOAD","args":"path [ arg [arg ...]]","summary":"Load a module"},{"command":"MODULE UNLOAD","args":"name","summary":"Unload a module"},{"command":"MONITOR","args":null,"summary":"Listen for all requests received by the server in real time"},{"command":"MOVE","args":"key db","summary":"Move a key to another database"},{"command":"MSET","args":"key value [key value ...]","summary":"Set multiple keys to multiple values"},{"command":"MSETNX","args":"key value [key value ...]","summary":"Set multiple keys to multiple values, only if none of the keys exist"},{"command":"MULTI","args":null,"summary":"Mark the start of a transaction block"},{"command":"OBJECT","args":"subcommand [arguments [arguments ...]]","summary":"Inspect the internals of Redis objects"},{"command":"PERSIST","args":"key","summary":"Remove the expiration from a key"},{"command":"PEXPIRE","args":"key milliseconds","summary":"Set a key's time to live in milliseconds"},{"command":"PEXPIREAT","args":"key milliseconds-timestamp","summary":"Set the expiration for a key as a UNIX timestamp specified in milliseconds"},{"command":"PFADD","args":"key element [element ...]","summary":"Adds the specified elements to the specified HyperLogLog."},{"command":"PFCOUNT","args":"key [key ...]","summary":"Return the approximated cardinality of the set(s) observed by the HyperLogLog at key(s)."},{"command":"PFMERGE","args":"destkey sourcekey [sourcekey ...]","summary":"Merge N different HyperLogLogs into a single one."},{"command":"PING","args":"[message]","summary":"Ping the server"},{"command":"PSETEX","args":"key milliseconds value","summary":"Set the value and expiration in milliseconds of a key"},{"command":"PSUBSCRIBE","args":"pattern [pattern ...]","summary":"Listen for messages published to channels matching the given patterns"},{"command":"PUBSUB","args":"subcommand [argument [argument ...]]","summary":"Inspect the state of the Pub/Sub subsystem"},{"command":"PTTL","args":"key","summary":"Get the time to live for a key in milliseconds"},{"command":"PUBLISH","args":"channel message","summary":"Post a message to a channel"},{"command":"PUNSUBSCRIBE","args":"[pattern [pattern ...]]","summary":"Stop listening for messages posted to channels matching the given patterns"},{"command":"QUIT","args":null,"summary":"Close the connection"},{"command":"RANDOMKEY","args":null,"summary":"Return a random key from the keyspace"},{"command":"READONLY","args":null,"summary":"Enables read queries for a connection to a cluster replica node"},{"command":"READWRITE","args":null,"summary":"Disables read queries for a connection to a cluster replica node"},{"command":"RENAME","args":"key newkey","summary":"Rename a key"},{"command":"RENAMENX","args":"key newkey","summary":"Rename a key, only if the new key does not exist"},{"command":"RESET","args":null,"summary":"Reset the connection"},{"command":"RESTORE","args":"key ttl serialized-value [REPLACE] [ABSTTL] [IDLETIME seconds] [FREQ frequency]","summary":"Create a key using the provided serialized value, previously obtained using DUMP."},{"command":"ROLE","args":null,"summary":"Return the role of the instance in the context of replication"},{"command":"RPOP","args":"key","summary":"Remove and get the last element in a list"},{"command":"RPOPLPUSH","args":"source destination","summary":"Remove the last element in a list, prepend it to another list and return it"},{"command":"LMOVE","args":"source destination LEFT|RIGHT LEFT|RIGHT","summary":"Pop an element from a list, push it to another list and return it"},{"command":"RPUSH","args":"key element [element ...]","summary":"Append one or multiple elements to a list"},{"command":"RPUSHX","args":"key element [element ...]","summary":"Append an element to a list, only if the list exists"},{"command":"SADD","args":"key member [member ...]","summary":"Add one or more members to a set"},{"command":"SAVE","args":null,"summary":"Synchronously save the dataset to disk"},{"command":"SCARD","args":"key","summary":"Get the number of members in a set"},{"command":"SCRIPT DEBUG","args":"YES|SYNC|NO","summary":"Set the debug mode for executed scripts."},{"command":"SCRIPT EXISTS","args":"sha1 [sha1 ...]","summary":"Check existence of scripts in the script cache."},{"command":"SCRIPT FLUSH","args":null,"summary":"Remove all the scripts from the script cache."},{"command":"SCRIPT KILL","args":null,"summary":"Kill the script currently in execution."},{"command":"SCRIPT LOAD","args":"script","summary":"Load the specified Lua script into the script cache."},{"command":"SDIFF","args":"key [key ...]","summary":"Subtract multiple sets"},{"command":"SDIFFSTORE","args":"destination key [key ...]","summary":"Subtract multiple sets and store the resulting set in a key"},{"command":"SELECT","args":"index","summary":"Change the selected database for the current connection"},{"command":"SET","args":"key value [EX seconds|PX milliseconds|KEEPTTL] [NX|XX] [GET]","summary":"Set the string value of a key"},{"command":"SETBIT","args":"key offset value","summary":"Sets or clears the bit at offset in the string value stored at key"},{"command":"SETEX","args":"key seconds value","summary":"Set the value and expiration of a key"},{"command":"SETNX","args":"key value","summary":"Set the value of a key, only if the key does not exist"},{"command":"SETRANGE","args":"key offset value","summary":"Overwrite part of a string at key starting at the specified offset"},{"command":"SHUTDOWN","args":"[NOSAVE|SAVE]","summary":"Synchronously save the dataset to disk and then shut down the server"},{"command":"SINTER","args":"key [key ...]","summary":"Intersect multiple sets"},{"command":"SINTERSTORE","args":"destination key [key ...]","summary":"Intersect multiple sets and store the resulting set in a key"},{"command":"SISMEMBER","args":"key member","summary":"Determine if a given value is a member of a set"},{"command":"SMISMEMBER","args":"key member [member ...]","summary":"Returns the membership associated with the given elements for a set"},{"command":"SLAVEOF","args":"host port","summary":"Make the server a replica of another instance, or promote it as master. Deprecated starting with Redis 5. Use REPLICAOF instead."},{"command":"REPLICAOF","args":"host port","summary":"Make the server a replica of another instance, or promote it as master."},{"command":"SLOWLOG","args":"subcommand [argument]","summary":"Manages the Redis slow queries log"},{"command":"SMEMBERS","args":"key","summary":"Get all the members in a set"},{"command":"SMOVE","args":"source destination member","summary":"Move a member from one set to another"},{"command":"SORT","args":"key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA] [STORE destination]","summary":"Sort the elements in a list, set or sorted set"},{"command":"SPOP","args":"key [count]","summary":"Remove and return one or multiple random members from a set"},{"command":"SRANDMEMBER","args":"key [count]","summary":"Get one or multiple random members from a set"},{"command":"SREM","args":"key member [member ...]","summary":"Remove one or more members from a set"},{"command":"STRALGO","args":"LCS algo-specific-argument [algo-specific-argument ...]","summary":"Run algorithms (currently LCS) against strings"},{"command":"STRLEN","args":"key","summary":"Get the length of the value stored in a key"},{"command":"SUBSCRIBE","args":"channel [channel ...]","summary":"Listen for messages published to the given channels"},{"command":"SUNION","args":"key [key ...]","summary":"Add multiple sets"},{"command":"SUNIONSTORE","args":"destination key [key ...]","summary":"Add multiple sets and store the resulting set in a key"},{"command":"SWAPDB","args":"index1 index2","summary":"Swaps two Redis databases"},{"command":"SYNC","args":null,"summary":"Internal command used for replication"},{"command":"PSYNC","args":"replicationid offset","summary":"Internal command used for replication"},{"command":"TIME","args":null,"summary":"Return the current server time"},{"command":"TOUCH","args":"key [key ...]","summary":"Alters the last access time of a key(s). Returns the number of existing keys specified."},{"command":"TTL","args":"key","summary":"Get the time to live for a key"},{"command":"TYPE","args":"key","summary":"Determine the type stored at key"},{"command":"UNSUBSCRIBE","args":"[channel [channel ...]]","summary":"Stop listening for messages posted to the given channels"},{"command":"UNLINK","args":"key [key ...]","summary":"Delete a key asynchronously in another thread. Otherwise it is just as DEL, but non blocking."},{"command":"UNWATCH","args":null,"summary":"Forget about all watched keys"},{"command":"WAIT","args":"numreplicas timeout","summary":"Wait for the synchronous replication of all the write commands sent in the context of the current connection"},{"command":"WATCH","args":"key [key ...]","summary":"Watch the given keys to determine execution of the MULTI/EXEC block"},{"command":"ZADD","args":"key [NX|XX] [GT|LT] [CH] [INCR] score member [score member ...]","summary":"Add one or more members to a sorted set, or update its score if it already exists"},{"command":"ZCARD","args":"key","summary":"Get the number of members in a sorted set"},{"command":"ZCOUNT","args":"key min max","summary":"Count the members in a sorted set with scores within the given values"},{"command":"ZDIFF","args":"numkeys key [key ...] [WITHSCORES]","summary":"Subtract multiple sorted sets"},{"command":"ZDIFFSTORE","args":"destination numkeys key [key ...]","summary":"Subtract multiple sorted sets and store the resulting sorted set in a new key"},{"command":"ZINCRBY","args":"key increment member","summary":"Increment the score of a member in a sorted set"},{"command":"ZINTER","args":"numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] [WITHSCORES]","summary":"Intersect multiple sorted sets"},{"command":"ZINTERSTORE","args":"destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]","summary":"Intersect multiple sorted sets and store the resulting sorted set in a new key"},{"command":"ZLEXCOUNT","args":"key min max","summary":"Count the number of members in a sorted set between a given lexicographical range"},{"command":"ZPOPMAX","args":"key [count]","summary":"Remove and return members with the highest scores in a sorted set"},{"command":"ZPOPMIN","args":"key [count]","summary":"Remove and return members with the lowest scores in a sorted set"},{"command":"ZRANGE","args":"key start stop [WITHSCORES]","summary":"Return a range of members in a sorted set, by index"},{"command":"ZRANGEBYLEX","args":"key min max [LIMIT offset count]","summary":"Return a range of members in a sorted set, by lexicographical range"},{"command":"ZREVRANGEBYLEX","args":"key max min [LIMIT offset count]","summary":"Return a range of members in a sorted set, by lexicographical range, ordered from higher to lower strings."},{"command":"ZRANGEBYSCORE","args":"key min max [WITHSCORES] [LIMIT offset count]","summary":"Return a range of members in a sorted set, by score"},{"command":"ZRANK","args":"key member","summary":"Determine the index of a member in a sorted set"},{"command":"ZREM","args":"key member [member ...]","summary":"Remove one or more members from a sorted set"},{"command":"ZREMRANGEBYLEX","args":"key min max","summary":"Remove all members in a sorted set between the given lexicographical range"},{"command":"ZREMRANGEBYRANK","args":"key start stop","summary":"Remove all members in a sorted set within the given indexes"},{"command":"ZREMRANGEBYSCORE","args":"key min max","summary":"Remove all members in a sorted set within the given scores"},{"command":"ZREVRANGE","args":"key start stop [WITHSCORES]","summary":"Return a range of members in a sorted set, by index, with scores ordered from high to low"},{"command":"ZREVRANGEBYSCORE","args":"key max min [WITHSCORES] [LIMIT offset count]","summary":"Return a range of members in a sorted set, by score, with scores ordered from high to low"},{"command":"ZREVRANK","args":"key member","summary":"Determine the index of a member in a sorted set, with scores ordered from high to low"},{"command":"ZSCORE","args":"key member","summary":"Get the score associated with the given member in a sorted set"},{"command":"ZUNION","args":"numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] [WITHSCORES]","summary":"Add multiple sorted sets"},{"command":"ZMSCORE","args":"key member [member ...]","summary":"Get the score associated with the given members in a sorted set"},{"command":"ZUNIONSTORE","args":"destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]","summary":"Add multiple sorted sets and store the resulting sorted set in a new key"},{"command":"SCAN","args":"cursor [MATCH pattern] [COUNT count] [TYPE type]","summary":"Incrementally iterate the keys space"},{"command":"SSCAN","args":"key cursor [MATCH pattern] [COUNT count]","summary":"Incrementally iterate Set elements"},{"command":"HSCAN","args":"key cursor [MATCH pattern] [COUNT count]","summary":"Incrementally iterate hash fields and associated values"},{"command":"ZSCAN","args":"key cursor [MATCH pattern] [COUNT count]","summary":"Incrementally iterate sorted sets elements and associated scores"},{"command":"XINFO","args":"[CONSUMERS key groupname] [GROUPS key] [STREAM key] [HELP]","summary":"Get information on streams and consumer groups"},{"command":"XADD","args":"key [MAXLEN [=|~] length] [NOMKSTREAM] *|ID field value [field value ...]","summary":"Appends a new entry to a stream"},{"command":"XTRIM","args":"key MAXLEN [=|~] length","summary":"Trims the stream to (approximately if '~' is passed) a certain size"},{"command":"XDEL","args":"key ID [ID ...]","summary":"Removes the specified entries from the stream. Returns the number of items actually deleted, that may be different from the number of IDs passed in case certain IDs do not exist."},{"command":"XRANGE","args":"key start end [COUNT count]","summary":"Return a range of elements in a stream, with IDs matching the specified IDs interval"},{"command":"XREVRANGE","args":"key end start [COUNT count]","summary":"Return a range of elements in a stream, with IDs matching the specified IDs interval, in reverse order (from greater to smaller IDs) compared to XRANGE"},{"command":"XLEN","args":"key","summary":"Return the number of entries in a stream"},{"command":"XREAD","args":"[COUNT count] [BLOCK milliseconds] STREAMS key [key ...] ID [ID ...]","summary":"Return never seen elements in multiple streams, with IDs greater than the ones reported by the caller for each stream. Can block."},{"command":"XGROUP","args":"[CREATE key groupname ID|$ [MKSTREAM]] [SETID key groupname ID|$] [DESTROY key groupname] [CREATECONSUMER key groupname consumername] [DELCONSUMER key groupname consumername]","summary":"Create, destroy, and manage consumer groups."},{"command":"XREADGROUP","args":"GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]","summary":"Return new entries from a stream using a consumer group, or access the history of the pending entries for a given consumer. Can block."},{"command":"XACK","args":"key group ID [ID ...]","summary":"Marks a pending message as correctly processed, effectively removing it from the pending entries list of the consumer group. Return value of the command is the number of messages successfully acknowledged, that is, the IDs we were actually able to resolve in the PEL."},{"command":"XCLAIM","args":"key group consumer min-idle-time ID [ID ...] [IDLE ms] [TIME ms-unix-time] [RETRYCOUNT count] [FORCE] [JUSTID]","summary":"Changes (or acquires) ownership of a message in a consumer group, as if the message was delivered to the specified consumer."},{"command":"XPENDING","args":"key group [[IDLE min-idle-time] start end count [consumer]]","summary":"Return information and entries from a stream consumer group pending entries list, that are messages fetched but never acknowledged."},{"command":"LATENCY DOCTOR","args":null,"summary":"Return a human readable latency analysis report."},{"command":"LATENCY GRAPH","args":"event","summary":"Return a latency graph for the event."},{"command":"LATENCY HISTORY","args":"event","summary":"Return timestamp-latency samples for the event."},{"command":"LATENCY LATEST","args":null,"summary":"Return the latest latency samples for all events."},{"command":"LATENCY RESET","args":"[event [event ...]]","summary":"Reset latency data for one or more events."},{"command":"LATENCY HELP","args":null,"summary":"Show helpful text about the different subcommands."}]
+{
+    "ACL LOAD": {
+        "summary": "Reload the ACLs from the configured ACL file"
+    },
+    "ACL SAVE": {
+        "summary": "Save the current ACL rules in the configured ACL file"
+    },
+    "ACL LIST": {
+        "summary": "List the current ACL rules in ACL config file format"
+    },
+    "ACL USERS": {
+        "summary": "List the username of all the configured ACL rules"
+    },
+    "ACL GETUSER": {
+        "args": "username",
+        "summary": "Get the rules for a specific ACL user"
+    },
+    "ACL SETUSER": {
+        "args": "username [rule [rule ...]]",
+        "summary": "Modify or create the rules for a specific ACL user"
+    },
+    "ACL DELUSER": {
+        "args": "username [username ...]",
+        "summary": "Remove the specified ACL users and the associated rules"
+    },
+    "ACL CAT": {
+        "args": "[categoryname]",
+        "summary": "List the ACL categories or the commands inside a category"
+    },
+    "ACL GENPASS": {
+        "args": "[bits]",
+        "summary": "Generate a pseudorandom secure password to use for ACL users"
+    },
+    "ACL WHOAMI": {
+        "summary": "Return the name of the user associated to the current connection"
+    },
+    "ACL LOG": {
+        "args": "[count or RESET]",
+        "summary": "List latest events denied because of ACLs in place"
+    },
+    "ACL HELP": {
+        "summary": "Show helpful text about the different subcommands"
+    },
+    "APPEND": {
+        "args": "key value",
+        "summary": "Append a value to a key"
+    },
+    "AUTH": {
+        "args": "[username] password",
+        "summary": "Authenticate to the server"
+    },
+    "BGREWRITEAOF": {
+        "summary": "Asynchronously rewrite the append-only file"
+    },
+    "BGSAVE": {
+        "args": "[SCHEDULE]",
+        "summary": "Asynchronously save the dataset to disk"
+    },
+    "BITCOUNT": {
+        "args": "key [start end]",
+        "summary": "Count set bits in a string"
+    },
+    "BITFIELD": {
+        "args": "key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]",
+        "summary": "Perform arbitrary bitfield integer operations on strings"
+    },
+    "BITOP": {
+        "args": "operation destkey key [key ...]",
+        "summary": "Perform bitwise operations between strings"
+    },
+    "BITPOS": {
+        "args": "key bit [start] [end]",
+        "summary": "Find first bit set or clear in a string"
+    },
+    "BLPOP": {
+        "args": "key [key ...] timeout",
+        "summary": "Remove and get the first element in a list, or block until one is available"
+    },
+    "BRPOP": {
+        "args": "key [key ...] timeout",
+        "summary": "Remove and get the last element in a list, or block until one is available"
+    },
+    "BRPOPLPUSH": {
+        "args": "source destination timeout",
+        "summary": "Pop an element from a list, push it to another list and return it; or block until one is available"
+    },
+    "BLMOVE": {
+        "args": "source destination LEFT|RIGHT LEFT|RIGHT timeout",
+        "summary": "Pop an element from a list, push it to another list and return it; or block until one is available"
+    },
+    "BZPOPMIN": {
+        "args": "key [key ...] timeout",
+        "summary": "Remove and return the member with the lowest score from one or more sorted sets, or block until one is available"
+    },
+    "BZPOPMAX": {
+        "args": "key [key ...] timeout",
+        "summary": "Remove and return the member with the highest score from one or more sorted sets, or block until one is available"
+    },
+    "CLIENT CACHING": {
+        "args": "YES|NO",
+        "summary": "Instruct the server about tracking or not keys in the next request"
+    },
+    "CLIENT ID": {
+        "summary": "Returns the client ID for the current connection"
+    },
+    "CLIENT INFO": {
+        "summary": "Returns information about the current client connection."
+    },
+    "CLIENT KILL": {
+        "args": "[ip:port] [ID client-id] [TYPE normal|master|slave|pubsub] [USER username] [ADDR ip:port] [SKIPME yes/no]",
+        "summary": "Kill the connection of a client"
+    },
+    "CLIENT LIST": {
+        "args": "[TYPE normal|master|replica|pubsub] [ID client-id [client-id ...]]",
+        "summary": "Get the list of client connections"
+    },
+    "CLIENT GETNAME": {
+        "summary": "Get the current connection name"
+    },
+    "CLIENT GETREDIR": {
+        "summary": "Get tracking notifications redirection client ID if any"
+    },
+    "CLIENT PAUSE": {
+        "args": "timeout",
+        "summary": "Stop processing commands from clients for some time"
+    },
+    "CLIENT REPLY": {
+        "args": "ON|OFF|SKIP",
+        "summary": "Instruct the server whether to reply to commands"
+    },
+    "CLIENT SETNAME": {
+        "args": "connection-name",
+        "summary": "Set the current connection name"
+    },
+    "CLIENT TRACKING": {
+        "args": "ON|OFF [REDIRECT client-id] [PREFIX prefix [PREFIX prefix ...]] [BCAST] [OPTIN] [OPTOUT] [NOLOOP]",
+        "summary": "Enable or disable server assisted client side caching support"
+    },
+    "CLIENT UNBLOCK": {
+        "args": "client-id [TIMEOUT|ERROR]",
+        "summary": "Unblock a client blocked in a blocking command from a different connection"
+    },
+    "CLUSTER ADDSLOTS": {
+        "args": "slot [slot ...]",
+        "summary": "Assign new hash slots to receiving node"
+    },
+    "CLUSTER BUMPEPOCH": {
+        "summary": "Advance the cluster config epoch"
+    },
+    "CLUSTER COUNT-FAILURE-REPORTS": {
+        "args": "node-id",
+        "summary": "Return the number of failure reports active for a given node"
+    },
+    "CLUSTER COUNTKEYSINSLOT": {
+        "args": "slot",
+        "summary": "Return the number of local keys in the specified hash slot"
+    },
+    "CLUSTER DELSLOTS": {
+        "args": "slot [slot ...]",
+        "summary": "Set hash slots as unbound in receiving node"
+    },
+    "CLUSTER FAILOVER": {
+        "args": "[FORCE|TAKEOVER]",
+        "summary": "Forces a replica to perform a manual failover of its master."
+    },
+    "CLUSTER FLUSHSLOTS": {
+        "summary": "Delete a node's own slots information"
+    },
+    "CLUSTER FORGET": {
+        "args": "node-id",
+        "summary": "Remove a node from the nodes table"
+    },
+    "CLUSTER GETKEYSINSLOT": {
+        "args": "slot count",
+        "summary": "Return local key names in the specified hash slot"
+    },
+    "CLUSTER INFO": {
+        "summary": "Provides info about Redis Cluster node state"
+    },
+    "CLUSTER KEYSLOT": {
+        "args": "key",
+        "summary": "Returns the hash slot of the specified key"
+    },
+    "CLUSTER MEET": {
+        "args": "ip port",
+        "summary": "Force a node cluster to handshake with another node"
+    },
+    "CLUSTER MYID": {
+        "summary": "Return the node id"
+    },
+    "CLUSTER NODES": {
+        "summary": "Get Cluster config for the node"
+    },
+    "CLUSTER REPLICATE": {
+        "args": "node-id",
+        "summary": "Reconfigure a node as a replica of the specified master node"
+    },
+    "CLUSTER RESET": {
+        "args": "[HARD|SOFT]",
+        "summary": "Reset a Redis Cluster node"
+    },
+    "CLUSTER SAVECONFIG": {
+        "summary": "Forces the node to save cluster state on disk"
+    },
+    "CLUSTER SET-CONFIG-EPOCH": {
+        "args": "config-epoch",
+        "summary": "Set the configuration epoch in a new node"
+    },
+    "CLUSTER SETSLOT": {
+        "args": "slot IMPORTING|MIGRATING|STABLE|NODE [node-id]",
+        "summary": "Bind a hash slot to a specific node"
+    },
+    "CLUSTER SLAVES": {
+        "args": "node-id",
+        "summary": "List replica nodes of the specified master node"
+    },
+    "CLUSTER REPLICAS": {
+        "args": "node-id",
+        "summary": "List replica nodes of the specified master node"
+    },
+    "CLUSTER SLOTS": {
+        "summary": "Get array of Cluster slot to node mappings"
+    },
+    "COMMAND": {
+        "summary": "Get array of Redis command details"
+    },
+    "COMMAND COUNT": {
+        "summary": "Get total number of Redis commands"
+    },
+    "COMMAND GETKEYS": {
+        "summary": "Extract keys given a full Redis command"
+    },
+    "COMMAND INFO": {
+        "args": "command-name [command-name ...]",
+        "summary": "Get array of specific Redis command details"
+    },
+    "CONFIG GET": {
+        "args": "parameter",
+        "summary": "Get the value of a configuration parameter"
+    },
+    "CONFIG REWRITE": {
+        "summary": "Rewrite the configuration file with the in memory configuration"
+    },
+    "CONFIG SET": {
+        "args": "parameter value",
+        "summary": "Set a configuration parameter to the given value"
+    },
+    "CONFIG RESETSTAT": {
+        "summary": "Reset the stats returned by INFO"
+    },
+    "COPY": {
+        "args": "source destination [DB destination-db] [REPLACE]",
+        "summary": "Copy a key"
+    },
+    "DBSIZE": {
+        "summary": "Return the number of keys in the selected database"
+    },
+    "DEBUG OBJECT": {
+        "args": "key",
+        "summary": "Get debugging information about a key"
+    },
+    "DEBUG SEGFAULT": {
+        "summary": "Make the server crash"
+    },
+    "DECR": {
+        "args": "key",
+        "summary": "Decrement the integer value of a key by one"
+    },
+    "DECRBY": {
+        "args": "key decrement",
+        "summary": "Decrement the integer value of a key by the given number"
+    },
+    "DEL": {
+        "args": "key [key ...]",
+        "summary": "Delete a key"
+    },
+    "DISCARD": {
+        "summary": "Discard all commands issued after MULTI"
+    },
+    "DUMP": {
+        "args": "key",
+        "summary": "Return a serialized version of the value stored at the specified key."
+    },
+    "ECHO": {
+        "args": "message",
+        "summary": "Echo the given string"
+    },
+    "EVAL": {
+        "args": "script numkeys key [key ...] arg [arg ...]",
+        "summary": "Execute a Lua script server side"
+    },
+    "EVALSHA": {
+        "args": "sha1 numkeys key [key ...] arg [arg ...]",
+        "summary": "Execute a Lua script server side"
+    },
+    "EXEC": {
+        "summary": "Execute all commands issued after MULTI"
+    },
+    "EXISTS": {
+        "args": "key [key ...]",
+        "summary": "Determine if a key exists"
+    },
+    "EXPIRE": {
+        "args": "key seconds",
+        "summary": "Set a key's time to live in seconds"
+    },
+    "EXPIREAT": {
+        "args": "key timestamp",
+        "summary": "Set the expiration for a key as a UNIX timestamp"
+    },
+    "FLUSHALL": {
+        "args": "[ASYNC]",
+        "summary": "Remove all keys from all databases"
+    },
+    "FLUSHDB": {
+        "args": "[ASYNC]",
+        "summary": "Remove all keys from the current database"
+    },
+    "GEOADD": {
+        "args": "key longitude latitude member [longitude latitude member ...]",
+        "summary": "Add one or more geospatial items in the geospatial index represented using a sorted set"
+    },
+    "GEOHASH": {
+        "args": "key member [member ...]",
+        "summary": "Returns members of a geospatial index as standard geohash strings"
+    },
+    "GEOPOS": {
+        "args": "key member [member ...]",
+        "summary": "Returns longitude and latitude of members of a geospatial index"
+    },
+    "GEODIST": {
+        "args": "key member1 member2 [m|km|ft|mi]",
+        "summary": "Returns the distance between two members of a geospatial index"
+    },
+    "GEORADIUS": {
+        "args": "key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]",
+        "summary": "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point"
+    },
+    "GEORADIUSBYMEMBER": {
+        "args": "key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]",
+        "summary": "Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member"
+    },
+    "GET": {
+        "args": "key",
+        "summary": "Get the value of a key"
+    },
+    "GETBIT": {
+        "args": "key offset",
+        "summary": "Returns the bit value at offset in the string value stored at key"
+    },
+    "GETRANGE": {
+        "args": "key start end",
+        "summary": "Get a substring of the string stored at a key"
+    },
+    "GETSET": {
+        "args": "key value",
+        "summary": "Set the string value of a key and return its old value"
+    },
+    "HDEL": {
+        "args": "key field [field ...]",
+        "summary": "Delete one or more hash fields"
+    },
+    "HELLO": {
+        "args": "protover [AUTH username password] [SETNAME clientname]",
+        "summary": "switch Redis protocol"
+    },
+    "HEXISTS": {
+        "args": "key field",
+        "summary": "Determine if a hash field exists"
+    },
+    "HGET": {
+        "args": "key field",
+        "summary": "Get the value of a hash field"
+    },
+    "HGETALL": {
+        "args": "key",
+        "summary": "Get all the fields and values in a hash"
+    },
+    "HINCRBY": {
+        "args": "key field increment",
+        "summary": "Increment the integer value of a hash field by the given number"
+    },
+    "HINCRBYFLOAT": {
+        "args": "key field increment",
+        "summary": "Increment the float value of a hash field by the given amount"
+    },
+    "HKEYS": {
+        "args": "key",
+        "summary": "Get all the fields in a hash"
+    },
+    "HLEN": {
+        "args": "key",
+        "summary": "Get the number of fields in a hash"
+    },
+    "HMGET": {
+        "args": "key field [field ...]",
+        "summary": "Get the values of all the given hash fields"
+    },
+    "HMSET": {
+        "args": "key field value [field value ...]",
+        "summary": "Set multiple hash fields to multiple values"
+    },
+    "HSET": {
+        "args": "key field value [field value ...]",
+        "summary": "Set the string value of a hash field"
+    },
+    "HSETNX": {
+        "args": "key field value",
+        "summary": "Set the value of a hash field, only if the field does not exist"
+    },
+    "HSTRLEN": {
+        "args": "key field",
+        "summary": "Get the length of the value of a hash field"
+    },
+    "HVALS": {
+        "args": "key",
+        "summary": "Get all the values in a hash"
+    },
+    "INCR": {
+        "args": "key",
+        "summary": "Increment the integer value of a key by one"
+    },
+    "INCRBY": {
+        "args": "key increment",
+        "summary": "Increment the integer value of a key by the given amount"
+    },
+    "INCRBYFLOAT": {
+        "args": "key increment",
+        "summary": "Increment the float value of a key by the given amount"
+    },
+    "INFO": {
+        "args": "[section]",
+        "summary": "Get information and statistics about the server"
+    },
+    "LOLWUT": {
+        "args": "[VERSION version]",
+        "summary": "Display some computer art and the Redis version"
+    },
+    "KEYS": {
+        "args": "pattern",
+        "summary": "Find all keys matching the given pattern"
+    },
+    "LASTSAVE": {
+        "summary": "Get the UNIX time stamp of the last successful save to disk"
+    },
+    "LINDEX": {
+        "args": "key index",
+        "summary": "Get an element from a list by its index"
+    },
+    "LINSERT": {
+        "args": "key BEFORE|AFTER pivot element",
+        "summary": "Insert an element before or after another element in a list"
+    },
+    "LLEN": {
+        "args": "key",
+        "summary": "Get the length of a list"
+    },
+    "LPOP": {
+        "args": "key",
+        "summary": "Remove and get the first element in a list"
+    },
+    "LPOS": {
+        "args": "key element [RANK rank] [COUNT num-matches] [MAXLEN len]",
+        "summary": "Return the index of matching elements on a list"
+    },
+    "LPUSH": {
+        "args": "key element [element ...]",
+        "summary": "Prepend one or multiple elements to a list"
+    },
+    "LPUSHX": {
+        "args": "key element [element ...]",
+        "summary": "Prepend an element to a list, only if the list exists"
+    },
+    "LRANGE": {
+        "args": "key start stop",
+        "summary": "Get a range of elements from a list"
+    },
+    "LREM": {
+        "args": "key count element",
+        "summary": "Remove elements from a list"
+    },
+    "LSET": {
+        "args": "key index element",
+        "summary": "Set the value of an element in a list by its index"
+    },
+    "LTRIM": {
+        "args": "key start stop",
+        "summary": "Trim a list to the specified range"
+    },
+    "MEMORY DOCTOR": {
+        "summary": "Outputs memory problems report"
+    },
+    "MEMORY HELP": {
+        "summary": "Show helpful text about the different subcommands"
+    },
+    "MEMORY MALLOC-STATS": {
+        "summary": "Show allocator internal stats"
+    },
+    "MEMORY PURGE": {
+        "summary": "Ask the allocator to release memory"
+    },
+    "MEMORY STATS": {
+        "summary": "Show memory usage details"
+    },
+    "MEMORY USAGE": {
+        "args": "key [SAMPLES count]",
+        "summary": "Estimate the memory usage of a key"
+    },
+    "MGET": {
+        "args": "key [key ...]",
+        "summary": "Get the values of all the given keys"
+    },
+    "MIGRATE": {
+        "args": "host port key|\"\" destination-db timeout [COPY] [REPLACE] [AUTH password] [AUTH2 username password] [KEYS key [key ...]]",
+        "summary": "Atomically transfer a key from a Redis instance to another one."
+    },
+    "MODULE LIST": {
+        "summary": "List all modules loaded by the server"
+    },
+    "MODULE LOAD": {
+        "args": "path [ arg [arg ...]]",
+        "summary": "Load a module"
+    },
+    "MODULE UNLOAD": {
+        "args": "name",
+        "summary": "Unload a module"
+    },
+    "MONITOR": {
+        "summary": "Listen for all requests received by the server in real time"
+    },
+    "MOVE": {
+        "args": "key db",
+        "summary": "Move a key to another database"
+    },
+    "MSET": {
+        "args": "key value [key value ...]",
+        "summary": "Set multiple keys to multiple values"
+    },
+    "MSETNX": {
+        "args": "key value [key value ...]",
+        "summary": "Set multiple keys to multiple values, only if none of the keys exist"
+    },
+    "MULTI": {
+        "summary": "Mark the start of a transaction block"
+    },
+    "OBJECT": {
+        "args": "subcommand [arguments [arguments ...]]",
+        "summary": "Inspect the internals of Redis objects"
+    },
+    "PERSIST": {
+        "args": "key",
+        "summary": "Remove the expiration from a key"
+    },
+    "PEXPIRE": {
+        "args": "key milliseconds",
+        "summary": "Set a key's time to live in milliseconds"
+    },
+    "PEXPIREAT": {
+        "args": "key milliseconds-timestamp",
+        "summary": "Set the expiration for a key as a UNIX timestamp specified in milliseconds"
+    },
+    "PFADD": {
+        "args": "key element [element ...]",
+        "summary": "Adds the specified elements to the specified HyperLogLog."
+    },
+    "PFCOUNT": {
+        "args": "key [key ...]",
+        "summary": "Return the approximated cardinality of the set(s) observed by the HyperLogLog at key(s)."
+    },
+    "PFMERGE": {
+        "args": "destkey sourcekey [sourcekey ...]",
+        "summary": "Merge N different HyperLogLogs into a single one."
+    },
+    "PING": {
+        "args": "[message]",
+        "summary": "Ping the server"
+    },
+    "PSETEX": {
+        "args": "key milliseconds value",
+        "summary": "Set the value and expiration in milliseconds of a key"
+    },
+    "PSUBSCRIBE": {
+        "args": "pattern [pattern ...]",
+        "summary": "Listen for messages published to channels matching the given patterns"
+    },
+    "PUBSUB": {
+        "args": "subcommand [argument [argument ...]]",
+        "summary": "Inspect the state of the Pub/Sub subsystem"
+    },
+    "PTTL": {
+        "args": "key",
+        "summary": "Get the time to live for a key in milliseconds"
+    },
+    "PUBLISH": {
+        "args": "channel message",
+        "summary": "Post a message to a channel"
+    },
+    "PUNSUBSCRIBE": {
+        "args": "[pattern [pattern ...]]",
+        "summary": "Stop listening for messages posted to channels matching the given patterns"
+    },
+    "QUIT": {
+        "summary": "Close the connection"
+    },
+    "RANDOMKEY": {
+        "summary": "Return a random key from the keyspace"
+    },
+    "READONLY": {
+        "summary": "Enables read queries for a connection to a cluster replica node"
+    },
+    "READWRITE": {
+        "summary": "Disables read queries for a connection to a cluster replica node"
+    },
+    "RENAME": {
+        "args": "key newkey",
+        "summary": "Rename a key"
+    },
+    "RENAMENX": {
+        "args": "key newkey",
+        "summary": "Rename a key, only if the new key does not exist"
+    },
+    "RESET": {
+        "summary": "Reset the connection"
+    },
+    "RESTORE": {
+        "args": "key ttl serialized-value [REPLACE] [ABSTTL] [IDLETIME seconds] [FREQ frequency]",
+        "summary": "Create a key using the provided serialized value, previously obtained using DUMP."
+    },
+    "ROLE": {
+        "summary": "Return the role of the instance in the context of replication"
+    },
+    "RPOP": {
+        "args": "key",
+        "summary": "Remove and get the last element in a list"
+    },
+    "RPOPLPUSH": {
+        "args": "source destination",
+        "summary": "Remove the last element in a list, prepend it to another list and return it"
+    },
+    "LMOVE": {
+        "args": "source destination LEFT|RIGHT LEFT|RIGHT",
+        "summary": "Pop an element from a list, push it to another list and return it"
+    },
+    "RPUSH": {
+        "args": "key element [element ...]",
+        "summary": "Append one or multiple elements to a list"
+    },
+    "RPUSHX": {
+        "args": "key element [element ...]",
+        "summary": "Append an element to a list, only if the list exists"
+    },
+    "SADD": {
+        "args": "key member [member ...]",
+        "summary": "Add one or more members to a set"
+    },
+    "SAVE": {
+        "summary": "Synchronously save the dataset to disk"
+    },
+    "SCARD": {
+        "args": "key",
+        "summary": "Get the number of members in a set"
+    },
+    "SCRIPT DEBUG": {
+        "args": "YES|SYNC|NO",
+        "summary": "Set the debug mode for executed scripts."
+    },
+    "SCRIPT EXISTS": {
+        "args": "sha1 [sha1 ...]",
+        "summary": "Check existence of scripts in the script cache."
+    },
+    "SCRIPT FLUSH": {
+        "summary": "Remove all the scripts from the script cache."
+    },
+    "SCRIPT KILL": {
+        "summary": "Kill the script currently in execution."
+    },
+    "SCRIPT LOAD": {
+        "args": "script",
+        "summary": "Load the specified Lua script into the script cache."
+    },
+    "SDIFF": {
+        "args": "key [key ...]",
+        "summary": "Subtract multiple sets"
+    },
+    "SDIFFSTORE": {
+        "args": "destination key [key ...]",
+        "summary": "Subtract multiple sets and store the resulting set in a key"
+    },
+    "SELECT": {
+        "args": "index",
+        "summary": "Change the selected database for the current connection"
+    },
+    "SET": {
+        "args": "key value [EX seconds|PX milliseconds|KEEPTTL] [NX|XX] [GET]",
+        "summary": "Set the string value of a key"
+    },
+    "SETBIT": {
+        "args": "key offset value",
+        "summary": "Sets or clears the bit at offset in the string value stored at key"
+    },
+    "SETEX": {
+        "args": "key seconds value",
+        "summary": "Set the value and expiration of a key"
+    },
+    "SETNX": {
+        "args": "key value",
+        "summary": "Set the value of a key, only if the key does not exist"
+    },
+    "SETRANGE": {
+        "args": "key offset value",
+        "summary": "Overwrite part of a string at key starting at the specified offset"
+    },
+    "SHUTDOWN": {
+        "args": "[NOSAVE|SAVE]",
+        "summary": "Synchronously save the dataset to disk and then shut down the server"
+    },
+    "SINTER": {
+        "args": "key [key ...]",
+        "summary": "Intersect multiple sets"
+    },
+    "SINTERSTORE": {
+        "args": "destination key [key ...]",
+        "summary": "Intersect multiple sets and store the resulting set in a key"
+    },
+    "SISMEMBER": {
+        "args": "key member",
+        "summary": "Determine if a given value is a member of a set"
+    },
+    "SMISMEMBER": {
+        "args": "key member [member ...]",
+        "summary": "Returns the membership associated with the given elements for a set"
+    },
+    "SLAVEOF": {
+        "args": "host port",
+        "summary": "Make the server a replica of another instance, or promote it as master. Deprecated starting with Redis 5. Use REPLICAOF instead."
+    },
+    "REPLICAOF": {
+        "args": "host port",
+        "summary": "Make the server a replica of another instance, or promote it as master."
+    },
+    "SLOWLOG": {
+        "args": "subcommand [argument]",
+        "summary": "Manages the Redis slow queries log"
+    },
+    "SMEMBERS": {
+        "args": "key",
+        "summary": "Get all the members in a set"
+    },
+    "SMOVE": {
+        "args": "source destination member",
+        "summary": "Move a member from one set to another"
+    },
+    "SORT": {
+        "args": "key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA] [STORE destination]",
+        "summary": "Sort the elements in a list, set or sorted set"
+    },
+    "SPOP": {
+        "args": "key [count]",
+        "summary": "Remove and return one or multiple random members from a set"
+    },
+    "SRANDMEMBER": {
+        "args": "key [count]",
+        "summary": "Get one or multiple random members from a set"
+    },
+    "SREM": {
+        "args": "key member [member ...]",
+        "summary": "Remove one or more members from a set"
+    },
+    "STRALGO": {
+        "args": "LCS algo-specific-argument [algo-specific-argument ...]",
+        "summary": "Run algorithms (currently LCS) against strings"
+    },
+    "STRLEN": {
+        "args": "key",
+        "summary": "Get the length of the value stored in a key"
+    },
+    "SUBSCRIBE": {
+        "args": "channel [channel ...]",
+        "summary": "Listen for messages published to the given channels"
+    },
+    "SUNION": {
+        "args": "key [key ...]",
+        "summary": "Add multiple sets"
+    },
+    "SUNIONSTORE": {
+        "args": "destination key [key ...]",
+        "summary": "Add multiple sets and store the resulting set in a key"
+    },
+    "SWAPDB": {
+        "args": "index1 index2",
+        "summary": "Swaps two Redis databases"
+    },
+    "SYNC": {
+        "summary": "Internal command used for replication"
+    },
+    "PSYNC": {
+        "args": "replicationid offset",
+        "summary": "Internal command used for replication"
+    },
+    "TIME": {
+        "summary": "Return the current server time"
+    },
+    "TOUCH": {
+        "args": "key [key ...]",
+        "summary": "Alters the last access time of a key(s). Returns the number of existing keys specified."
+    },
+    "TTL": {
+        "args": "key",
+        "summary": "Get the time to live for a key"
+    },
+    "TYPE": {
+        "args": "key",
+        "summary": "Determine the type stored at key"
+    },
+    "UNSUBSCRIBE": {
+        "args": "[channel [channel ...]]",
+        "summary": "Stop listening for messages posted to the given channels"
+    },
+    "UNLINK": {
+        "args": "key [key ...]",
+        "summary": "Delete a key asynchronously in another thread. Otherwise it is just as DEL, but non blocking."
+    },
+    "UNWATCH": {
+        "summary": "Forget about all watched keys"
+    },
+    "WAIT": {
+        "args": "numreplicas timeout",
+        "summary": "Wait for the synchronous replication of all the write commands sent in the context of the current connection"
+    },
+    "WATCH": {
+        "args": "key [key ...]",
+        "summary": "Watch the given keys to determine execution of the MULTI/EXEC block"
+    },
+    "ZADD": {
+        "args": "key [NX|XX] [GT|LT] [CH] [INCR] score member [score member ...]",
+        "summary": "Add one or more members to a sorted set, or update its score if it already exists"
+    },
+    "ZCARD": {
+        "args": "key",
+        "summary": "Get the number of members in a sorted set"
+    },
+    "ZCOUNT": {
+        "args": "key min max",
+        "summary": "Count the members in a sorted set with scores within the given values"
+    },
+    "ZDIFF": {
+        "args": "numkeys key [key ...] [WITHSCORES]",
+        "summary": "Subtract multiple sorted sets"
+    },
+    "ZDIFFSTORE": {
+        "args": "destination numkeys key [key ...]",
+        "summary": "Subtract multiple sorted sets and store the resulting sorted set in a new key"
+    },
+    "ZINCRBY": {
+        "args": "key increment member",
+        "summary": "Increment the score of a member in a sorted set"
+    },
+    "ZINTER": {
+        "args": "numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] [WITHSCORES]",
+        "summary": "Intersect multiple sorted sets"
+    },
+    "ZINTERSTORE": {
+        "args": "destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]",
+        "summary": "Intersect multiple sorted sets and store the resulting sorted set in a new key"
+    },
+    "ZLEXCOUNT": {
+        "args": "key min max",
+        "summary": "Count the number of members in a sorted set between a given lexicographical range"
+    },
+    "ZPOPMAX": {
+        "args": "key [count]",
+        "summary": "Remove and return members with the highest scores in a sorted set"
+    },
+    "ZPOPMIN": {
+        "args": "key [count]",
+        "summary": "Remove and return members with the lowest scores in a sorted set"
+    },
+    "ZRANGE": {
+        "args": "key start stop [WITHSCORES]",
+        "summary": "Return a range of members in a sorted set, by index"
+    },
+    "ZRANGEBYLEX": {
+        "args": "key min max [LIMIT offset count]",
+        "summary": "Return a range of members in a sorted set, by lexicographical range"
+    },
+    "ZREVRANGEBYLEX": {
+        "args": "key max min [LIMIT offset count]",
+        "summary": "Return a range of members in a sorted set, by lexicographical range, ordered from higher to lower strings."
+    },
+    "ZRANGEBYSCORE": {
+        "args": "key min max [WITHSCORES] [LIMIT offset count]",
+        "summary": "Return a range of members in a sorted set, by score"
+    },
+    "ZRANK": {
+        "args": "key member",
+        "summary": "Determine the index of a member in a sorted set"
+    },
+    "ZREM": {
+        "args": "key member [member ...]",
+        "summary": "Remove one or more members from a sorted set"
+    },
+    "ZREMRANGEBYLEX": {
+        "args": "key min max",
+        "summary": "Remove all members in a sorted set between the given lexicographical range"
+    },
+    "ZREMRANGEBYRANK": {
+        "args": "key start stop",
+        "summary": "Remove all members in a sorted set within the given indexes"
+    },
+    "ZREMRANGEBYSCORE": {
+        "args": "key min max",
+        "summary": "Remove all members in a sorted set within the given scores"
+    },
+    "ZREVRANGE": {
+        "args": "key start stop [WITHSCORES]",
+        "summary": "Return a range of members in a sorted set, by index, with scores ordered from high to low"
+    },
+    "ZREVRANGEBYSCORE": {
+        "args": "key max min [WITHSCORES] [LIMIT offset count]",
+        "summary": "Return a range of members in a sorted set, by score, with scores ordered from high to low"
+    },
+    "ZREVRANK": {
+        "args": "key member",
+        "summary": "Determine the index of a member in a sorted set, with scores ordered from high to low"
+    },
+    "ZSCORE": {
+        "args": "key member",
+        "summary": "Get the score associated with the given member in a sorted set"
+    },
+    "ZUNION": {
+        "args": "numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] [WITHSCORES]",
+        "summary": "Add multiple sorted sets"
+    },
+    "ZMSCORE": {
+        "args": "key member [member ...]",
+        "summary": "Get the score associated with the given members in a sorted set"
+    },
+    "ZUNIONSTORE": {
+        "args": "destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]",
+        "summary": "Add multiple sorted sets and store the resulting sorted set in a new key"
+    },
+    "SCAN": {
+        "args": "cursor [MATCH pattern] [COUNT count] [TYPE type]",
+        "summary": "Incrementally iterate the keys space"
+    },
+    "SSCAN": {
+        "args": "key cursor [MATCH pattern] [COUNT count]",
+        "summary": "Incrementally iterate Set elements"
+    },
+    "HSCAN": {
+        "args": "key cursor [MATCH pattern] [COUNT count]",
+        "summary": "Incrementally iterate hash fields and associated values"
+    },
+    "ZSCAN": {
+        "args": "key cursor [MATCH pattern] [COUNT count]",
+        "summary": "Incrementally iterate sorted sets elements and associated scores"
+    },
+    "XINFO": {
+        "args": "[CONSUMERS key groupname] [GROUPS key] [STREAM key] [HELP]",
+        "summary": "Get information on streams and consumer groups"
+    },
+    "XADD": {
+        "args": "key [MAXLEN [=|~] length] [NOMKSTREAM] *|ID field value [field value ...]",
+        "summary": "Appends a new entry to a stream"
+    },
+    "XTRIM": {
+        "args": "key MAXLEN [=|~] length",
+        "summary": "Trims the stream to (approximately if '~' is passed) a certain size"
+    },
+    "XDEL": {
+        "args": "key ID [ID ...]",
+        "summary": "Removes the specified entries from the stream. Returns the number of items actually deleted, that may be different from the number of IDs passed in case certain IDs do not exist."
+    },
+    "XRANGE": {
+        "args": "key start end [COUNT count]",
+        "summary": "Return a range of elements in a stream, with IDs matching the specified IDs interval"
+    },
+    "XREVRANGE": {
+        "args": "key end start [COUNT count]",
+        "summary": "Return a range of elements in a stream, with IDs matching the specified IDs interval, in reverse order (from greater to smaller IDs) compared to XRANGE"
+    },
+    "XLEN": {
+        "args": "key",
+        "summary": "Return the number of entries in a stream"
+    },
+    "XREAD": {
+        "args": "[COUNT count] [BLOCK milliseconds] STREAMS key [key ...] ID [ID ...]",
+        "summary": "Return never seen elements in multiple streams, with IDs greater than the ones reported by the caller for each stream. Can block."
+    },
+    "XGROUP": {
+        "args": "[CREATE key groupname ID|$ [MKSTREAM]] [SETID key groupname ID|$] [DESTROY key groupname] [CREATECONSUMER key groupname consumername] [DELCONSUMER key groupname consumername]",
+        "summary": "Create, destroy, and manage consumer groups."
+    },
+    "XREADGROUP": {
+        "args": "GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]",
+        "summary": "Return new entries from a stream using a consumer group, or access the history of the pending entries for a given consumer. Can block."
+    },
+    "XACK": {
+        "args": "key group ID [ID ...]",
+        "summary": "Marks a pending message as correctly processed, effectively removing it from the pending entries list of the consumer group. Return value of the command is the number of messages successfully acknowledged, that is, the IDs we were actually able to resolve in the PEL."
+    },
+    "XCLAIM": {
+        "args": "key group consumer min-idle-time ID [ID ...] [IDLE ms] [TIME ms-unix-time] [RETRYCOUNT count] [FORCE] [JUSTID]",
+        "summary": "Changes (or acquires) ownership of a message in a consumer group, as if the message was delivered to the specified consumer."
+    },
+    "XPENDING": {
+        "args": "key group [[IDLE min-idle-time] start end count [consumer]]",
+        "summary": "Return information and entries from a stream consumer group pending entries list, that are messages fetched but never acknowledged."
+    },
+    "LATENCY DOCTOR": {
+        "summary": "Return a human readable latency analysis report."
+    },
+    "LATENCY GRAPH": {
+        "args": "event",
+        "summary": "Return a latency graph for the event."
+    },
+    "LATENCY HISTORY": {
+        "args": "event",
+        "summary": "Return timestamp-latency samples for the event."
+    },
+    "LATENCY LATEST": {
+        "summary": "Return the latest latency samples for all events."
+    },
+    "LATENCY RESET": {
+        "args": "[event [event ...]]",
+        "summary": "Reset latency data for one or more events."
+    },
+    "LATENCY HELP": {
+        "summary": "Show helpful text about the different subcommands."
+    }
+}

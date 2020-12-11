@@ -1,47 +1,54 @@
 import axios from 'axios';
-import { parse, Node } from 'node-html-parser';
+import { parse } from 'node-html-parser';
 import fs from 'fs';
 
-interface Command {
-    command: string;
-    args: string | null;
-    summary: string;
+interface Commands {
+    [x: string]: {
+        args?: string;
+        summary: string;
+        returnType?: string;
+    }
 }
 
 async function dodo() {
     const res = await axios.get('https://redis.io/commands');
     const html = await res.data;
     const root = parse(html);
-    const commands = root.querySelectorAll('#commands li a')
+    const commands = {} as Commands;
+    root.querySelectorAll('#commands li a')
         .map(e => e.childNodes.filter(cn => cn.nodeType === 1))
-        .map(e => handleHTMLElement(e));
+        .forEach(node => {
+            const command = node[0]?.childNodes[0]?.rawText.trim() as string;
+            const args = node[0]?.childNodes[1]?.childNodes[0]?.rawText.trim().split(/(\n| )+/).join('') || undefined;
+            const summary = node[1]?.childNodes[0]?.rawText.trim() as string;
+            commands[command] = { args, summary };
+        });
 
-    fs.writeFileSync('./src/commands.json', JSON.stringify(commands));
-    generateTypescriptInterface(commands);
-}
-
-function handleHTMLElement(datas: Node[]) {
-    const command = datas[0]?.childNodes[0]?.rawText.trim();
-    const args = datas[0]?.childNodes[1]?.childNodes[0]?.rawText.trim().split(/(\n| )+/).join('') || null;
-    const summary = datas[1]?.childNodes[0]?.rawText.trim();
-    return {
-        command,
-        args,
-        summary
-    } as Command;
+    generateCommandJson(commands);
+    generateTypescriptInterface();
 }
 
 const result = new Array<string>();
 const tab = '\u0020\u0020\u0020\u0020';
+const jsonPath = './src/commands.json';
 
-function generateTypescriptInterface(commands: Command[]) {
+function generateCommandJson(commands: Commands) {
+    const rawData = JSON.parse(fs.readFileSync(jsonPath).toString()) as Commands;
+    Object.entries(commands).forEach(([command, attr]) => {
+        rawData[command] = Object.assign({}, rawData[command], attr);
+    });
+    fs.writeFileSync(jsonPath, JSON.stringify(rawData, undefined, tab));
+}
+
+function generateTypescriptInterface() {
+    const rawData = JSON.parse(fs.readFileSync(jsonPath).toString()) as Commands;
     appendHeader();
     result.push('export interface ClientCommand {\n');
-    for (let i = 0; i < commands.length; i++) {
-        const command = commands[i] as Command;
-        appendComment(command);
-        appendMethod(command);
-    }
+    Object.entries(rawData).forEach(([command, attr]) => {
+        appendComment(attr);
+        appendMethod(command, attr);
+    });
+
     result.push('}');
     fs.writeFileSync('./src/clientCommand.ts', result.join(''));
 }
@@ -55,21 +62,22 @@ function appendHeader() {
     result.push('/* eslint-disable @typescript-eslint/no-explicit-any */\n');
 }
 
-function appendComment(command: Command) {
+function appendComment(attr: Commands[keyof Commands]) {
     result.push(`${tab}/**\n`);
-    result.push(`${tab}\u0020*\u0020${command.summary}\n`);
-    if (command.args !== null) {
-        result.push(`${tab}\u0020*\u0020@param\u0020args\u0020${command.args}\n`);
+    result.push(`${tab}\u0020*\u0020${attr.summary}\n`);
+    if (attr.args) {
+        result.push(`${tab}\u0020*\u0020@param\u0020args\u0020${attr.args}\n`);
     }
     result.push(`${tab}\u0020*/\n`);
 }
 
-function appendMethod(command: Command) {
-    result.push(`${tab}${command.command.replace(/( |-)/g, '')}<T>(`);
-    if (command.args !== null) {
+function appendMethod(command: string, attr: Commands[keyof Commands]) {
+    result.push(`${tab}${command.replace(/( |-)/g, '')}(`);
+    if (attr.args) {
         result.push('...args: any');
     }
-    result.push('): Promise<T>;\n');
+    const type = attr.returnType ?? 'void';
+    result.push(`): Promise<${type}>;\n`);
 }
 
 dodo();

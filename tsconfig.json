@@ -17,7 +17,8 @@
         "skipLibCheck": true, /* Skip type checking of declaration files. */
         "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
         "declaration": true, /* Generate .d.ts files for every TypeScript or JavaScript file inside your project. */
-        "declarationDir": "./types" /* Offers a way to configure the root directory for where declaration files are emitted. */
+        "declarationDir": "./types", /* Offers a way to configure the root directory for where declaration files are emitted. */
+        "resolveJsonModule": true /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
     },
     "include": [
         "src/**/*"

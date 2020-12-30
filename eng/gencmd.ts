@@ -1,20 +1,13 @@
 import axios from 'axios';
 import { parse } from 'node-html-parser';
 import fs from 'fs';
-
-interface Commands {
-    [x: string]: {
-        args?: string;
-        summary: string;
-        returnType?: string;
-    }
-}
+import { JsonCommand } from './../src/client';
 
 async function dodo() {
     const res = await axios.get('https://redis.io/commands');
     const html = await res.data;
     const root = parse(html);
-    const commands = {} as Commands;
+    const commands = {} as JsonCommand;
     root.querySelectorAll('#commands li a')
         .map(e => e.childNodes.filter(cn => cn.nodeType === 1))
         .forEach(node => {
@@ -32,8 +25,8 @@ const result = new Array<string>();
 const tab = '\u0020\u0020\u0020\u0020';
 const jsonPath = './src/commands.json';
 
-function generateCommandJson(commands: Commands) {
-    const rawData = JSON.parse(fs.readFileSync(jsonPath).toString()) as Commands;
+function generateCommandJson(commands: JsonCommand) {
+    const rawData = JSON.parse(fs.readFileSync(jsonPath).toString()) as JsonCommand;
     Object.entries(commands).forEach(([command, attr]) => {
         rawData[command] = Object.assign({}, rawData[command], attr);
     });
@@ -41,9 +34,9 @@ function generateCommandJson(commands: Commands) {
 }
 
 function generateTypescriptInterface() {
-    const rawData = JSON.parse(fs.readFileSync(jsonPath).toString()) as Commands;
+    const rawData = JSON.parse(fs.readFileSync(jsonPath).toString()) as JsonCommand;
     appendHeader();
-    result.push('export interface ClientCommand {\n');
+    result.push('export interface IClientCommand {\n');
     Object.entries(rawData).forEach(([command, attr]) => {
         appendComment(attr);
         appendMethod(command, attr);
@@ -62,7 +55,7 @@ function appendHeader() {
     result.push('/* eslint-disable @typescript-eslint/no-explicit-any */\n');
 }
 
-function appendComment(attr: Commands[keyof Commands]) {
+function appendComment(attr: JsonCommand[keyof JsonCommand]) {
     result.push(`${tab}/**\n`);
     result.push(`${tab}\u0020*\u0020${attr.summary}\n`);
     if (attr.args) {
@@ -71,13 +64,13 @@ function appendComment(attr: Commands[keyof Commands]) {
     result.push(`${tab}\u0020*/\n`);
 }
 
-function appendMethod(command: string, attr: Commands[keyof Commands]) {
+function appendMethod(command: string, attr: JsonCommand[keyof JsonCommand]) {
     result.push(`${tab}${command.replace(/( |-)/g, '')}(`);
     if (attr.args) {
-        result.push('...args: any');
+        result.push('...args: string[]');
     }
     const type = attr.returnType ?? 'void';
-    result.push(`): Promise<${type}>;\n`);
+    result.push(`)${type === 'T' ? '<T>' : ''}: Promise<${type}>;\n`);
 }
 
 dodo();

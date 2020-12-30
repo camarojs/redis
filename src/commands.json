@@ -342,7 +342,8 @@
     },
     "GET": {
         "args": "key",
-        "summary": "Get the value of a key"
+        "summary": "Get the value of a key",
+        "returnType": "string"
     },
     "GETBIT": {
         "args": "key offset",
@@ -1027,5 +1028,13 @@
     },
     "LATENCY HELP": {
         "summary": "Show helpful text about the different subcommands."
+    },
+    "GEOSEARCH": {
+        "args": "key [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH]",
+        "summary": "Query a sorted set representing a geospatial index to fetch members inside an area of a box or a circle."
+    },
+    "GEOSEARCHSTORE": {
+        "args": "destination source [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH] [STOREDIST]",
+        "summary": "Query a sorted set representing a geospatial index to fetch members inside an area of a box or a circle, and store the result in another key."
     }
 }

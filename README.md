@@ -1,15 +1,37 @@
-# Template
+# Camaro Redis
 
-A template that integrate `mocha`, `nyc`, `eslint` and `typescript`.
+Redis client for node, support resp3 and all commands of redis.
 
-## Scripts
+## Features
 
-+ npm run test
+The first redis client to support [resp3](https://github.com/antirez/RESP3/blob/master/spec.md) .
 
-+ npm run coverage
++ All commands of redis support.
++ All command results return promise.
++ Support for ES6 types, such as Map and Set.
 
-+ npm run lint
+## Quick Start
 
-+ npm run lint:fix
+### Install
 
-+ npm run compile
+```bash
+npm install @camaro/redis
+```
+
+### Usage
+
+```js
+const { Client } = require('redis')
+const client = new Client();
+
+client.SET('foo', 'foo').then(() => {
+    return client.GET('foo')
+}).then(reply => {
+    console.log(reply) // 'foo'
+})
+
+// if you want to use async/await
+await client.SET('bar', 'bar')
+const reply = await client.GET('bar')
+console.log(reply) // 'bar'
+```

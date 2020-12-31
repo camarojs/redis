@@ -11,7 +11,7 @@ export interface IClientOptions {
 }
 
 export interface Client extends IClientCommand {
-    connect(): void;
+    new(options: IClientOptions): void
 }
 
 export interface JsonCommand {
@@ -23,7 +23,7 @@ export interface JsonCommand {
 }
 
 export class Client implements Client {
-    private socket = new Socket({ readable: true });
+    private socket = new Socket();
     constructor(
         private readonly options: IClientOptions = {}
     ) {
@@ -31,10 +31,10 @@ export class Client implements Client {
             this.addCommand(command, attr);
         });
         this.initOptions(options);
-        this.socket.read();
+        this.connect();
     }
 
-    public connect(): void {
+    private connect(): void {
         this.socket.connect(
             this.options.port as number,
             this.options.host as string

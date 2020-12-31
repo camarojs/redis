@@ -10,7 +10,8 @@
     "scripts": {
         "test": "ts-node test/index.ts",
         "coverage": "nyc --nycrc-path=./eng/.nycrc.json npm test",
-        "format": "ts-node ./eng/lint.ts",
+        "lint": "eslint '**/*.ts'",
+        "format": "ts-node ./eng/format.ts",
         "watch": "tsc --build ./eng/tsconfig.dev.json --watch",
         "compile": "tsc --build ./eng/tsconfig.prod.json",
         "gencmd": "ts-node ./eng/gencmd.ts"

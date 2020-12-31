@@ -47,12 +47,11 @@ class Parser extends EventEmitter {
     }
 
     private async parseReply() {
-        const tmp = this.nextChar();
         let char: string;
-        if (typeof (tmp as Promise<string>).then === 'function') {
-            char = await tmp;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
         } else {
-            char = tmp as string;
+            char = await this.nextCharAsync();
         }
 
         switch (char) {
@@ -64,24 +63,34 @@ class Parser extends EventEmitter {
                 return this.parseNumber();
             case '*':
                 return this.parseArray();
+            case '+':
+                return this.parseSimpleString();
             default:
                 console.log(char);
                 return null;
         }
     }
 
-    private nextChar(): string | Promise<string> {
-        if (this.offset < this.buffer.length) {
-            return this.buffer[this.offset++] as string;
-        } else {
-            this.buffer = '';
-            this.offset = 0;
-            return new Promise((resolve) => {
-                this.once('newData', () => {
-                    resolve(this.buffer[this.offset++] as string);
-                });
+    /**
+     * Get the next character synchronously,
+     * should judge whether the offset is less than the length of the buffer.
+     */
+    private nextChar(): string {
+        return this.buffer[this.offset++] as string;
+    }
+
+    /**
+     * Get the next character asynchronously,
+     * should judge whether the offset is large equal than the length of the buffer.
+     */
+    private nextCharAsync(): Promise<string> {
+        this.buffer = '';
+        this.offset = 0;
+        return new Promise((resolve) => {
+            this.once('newData', () => {
+                resolve(this.buffer[this.offset++] as string);
             });
-        }
+        });
     }
 
     private async parseMap() {
@@ -99,13 +108,13 @@ class Parser extends EventEmitter {
         const length = await this.parseNumber();
         let result = '';
         for (let i = 0; i < length; i++) {
-            const tmp = this.nextChar();
             let char: string;
-            if (typeof (tmp as Promise<string>).then === 'function') {
-                char = await tmp;
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
             } else {
-                char = tmp as string;
+                char = await this.nextCharAsync();
             }
+            // TODO: handle special characters like: 
             result += char;
         }
         // skip '\r\n'
@@ -115,21 +124,19 @@ class Parser extends EventEmitter {
 
     private async parseNumber() {
         let result = 0;
-        let tmp = this.nextChar();
         let char: string;
-        if (typeof (tmp as Promise<string>).then === 'function') {
-            char = await tmp;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
         } else {
-            char = tmp as string;
+            char = await this.nextCharAsync();
         }
 
         while (char !== '\r') {
             result = result * 10 + ((char as unknown as number) - ('0' as unknown as number));
-            tmp = this.nextChar();
-            if (typeof (tmp as Promise<string>).then === 'function') {
-                char = await tmp;
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
             } else {
-                char = tmp as string;
+                char = await this.nextCharAsync();
             }
         }
         // skip '\r\n'
@@ -145,6 +152,28 @@ class Parser extends EventEmitter {
             array.push(elem);
         }
         return array;
+    }
+
+    private async parseSimpleString() {
+        let result = '';
+        let char: string;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
+        } else {
+            char = await this.nextCharAsync();
+        }
+
+        while (char !== '\r') {
+            result += char;
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
+            } else {
+                char = await this.nextCharAsync();
+            }
+        }
+        // skip '\r\n'
+        this.offset++;
+        return result;
     }
 }
 

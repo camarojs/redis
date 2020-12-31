@@ -22,7 +22,7 @@ class Parser extends EventEmitter {
 
     async decodeReply(data: Buffer) {
         this.buffer += data.toString();
-        this.emit('newDate');
+        this.emit('newData');
         if (this.parsing) {
             return;
         }
@@ -33,8 +33,14 @@ class Parser extends EventEmitter {
             if (cb) {
                 cb(undefined, reply);
             }
+
+            if (this.callbacks.length === 0) {
+                break;
+            }
+
             reply = await this.parseReply();
         }
+
         this.reset();
     }
 
@@ -44,9 +50,11 @@ class Parser extends EventEmitter {
     private reset() {
         this.buffer = '';
         this.offset = 0;
+        this.parsing = false;
     }
 
     private async parseReply() {
+        this.parsing = true;
         let char: string;
         if (this.offset < this.buffer.length) {
             char = this.nextChar();

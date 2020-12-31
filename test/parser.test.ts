@@ -34,13 +34,13 @@ describe('Parser.decodeReply', () => {
         }, 0);
         setTimeout(() => {
             parser.decodeReply(buffer2);
-        }, 100);
+        }, 10);
         setTimeout(() => {
             parser.decodeReply(buffer1);
-        }, 200);
+        }, 20);
         setTimeout(() => {
             parser.decodeReply(buffer2);
-        }, 300);
+        }, 30);
 
         const result1 = await p1;
         const result2 = await p2;

@@ -11,7 +11,7 @@ export interface IClientOptions {
 }
 
 export interface Client extends IClientCommand {
-    new(options: IClientOptions): void
+    options: IClientOptions
 }
 
 export interface JsonCommand {
@@ -25,7 +25,7 @@ export interface JsonCommand {
 export class Client implements Client {
     private socket = new Socket();
     constructor(
-        private readonly options: IClientOptions = {}
+        public options: IClientOptions = {}
     ) {
         Object.entries(commands as JsonCommand).forEach(([command, attr]) => {
             this.addCommand(command, attr);

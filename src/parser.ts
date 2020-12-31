@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 
 class Parser extends EventEmitter {
-    callbacks = new Array<(error: Error | undefined, reply: unknown) => void>();
+    callbacks = new Array<(error: string | undefined, reply: unknown | undefined) => void>();
     private buffer = '';
     private offset = 0;
     private parsing = false;
@@ -30,8 +30,13 @@ class Parser extends EventEmitter {
         let reply = await this.parseReply();
         while (reply) {
             const cb = this.callbacks.shift();
+            
             if (cb) {
-                cb(undefined, reply);
+                if (typeof reply === 'string' && reply.startsWith('ERR ')) {
+                    cb(reply.replace('ERR ', ''), undefined);
+                } else {
+                    cb(undefined, reply);
+                }
             }
 
             if (this.callbacks.length === 0) {
@@ -73,6 +78,8 @@ class Parser extends EventEmitter {
                 return this.parseArray();
             case '+':
                 return this.parseSimpleString();
+            case '-':
+                return this.parseSimpleError();
             default:
                 console.log(char);
                 return null;
@@ -182,6 +189,26 @@ class Parser extends EventEmitter {
         // skip '\r\n'
         this.offset++;
         return result;
+    }
+
+    private async parseSimpleError() {
+        let msg = '';
+        let char: string;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
+        } else {
+            char = await this.nextCharAsync();
+        }
+
+        while (char !== '\r') {
+            msg += char;
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
+            } else {
+                char = await this.nextCharAsync();
+            }
+        }
+        return msg;
     }
 }
 

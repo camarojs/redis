@@ -1,5 +1,5 @@
 {
-    "name": "@camarojs/redis",
+    "name": "@camaro/redis",
     "version": "0.0.1",
     "main": "lib/index.js",
     "repository": {

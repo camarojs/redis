@@ -1,5 +1,6 @@
-./nyc
+.nyc/
 .vscode/
+coverage/
 eng/
 src/
 test/

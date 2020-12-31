@@ -8,7 +8,8 @@
     ],
     "reporter": [
         "text",
-        "text-summary"
+        "text-summary",
+        "cobertura"
     ],
     "statements": 30,
     "branches": 30,

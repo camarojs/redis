@@ -62,3 +62,17 @@ describe('Parser.parseSimpleError', () => {
         strictEqual(result, 'wrong number of arguments for \'get\' command');
     });
 });
+
+describe('Parser.parseBlobString', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('$11\r\nhello world\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = await p;
+        strictEqual(result, 'hello world');
+    });
+});

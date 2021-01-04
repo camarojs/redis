@@ -82,7 +82,6 @@ class Parser extends EventEmitter {
             case '-':
                 return this.parseSimpleError();
             default:
-                console.log(char);
                 return null;
         }
     }

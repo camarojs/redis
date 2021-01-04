@@ -28,7 +28,7 @@ class Parser extends EventEmitter {
         }
 
         let reply = await this.parseReply();
-        while (reply) {
+        while (reply !== null) {
             const cb = this.callbacks.shift();
 
             if (cb) {

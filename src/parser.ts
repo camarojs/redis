@@ -1,7 +1,8 @@
 import { EventEmitter } from 'events';
+import { RedisError, VerbatimString } from './types';
 
 class Parser extends EventEmitter {
-    callbacks = new Array<(error: string | undefined, reply: unknown | undefined) => void>();
+    callbacks = new Array<(error: RedisError | undefined, reply: unknown | undefined) => void>();
     private buffer = '';
     private offset = 0;
     private parsing = false;
@@ -28,13 +29,12 @@ class Parser extends EventEmitter {
         }
 
         let reply = await this.parseReply();
-        while (reply !== null) {
+        while (reply !== undefined) {
             const cb = this.callbacks.shift();
 
             if (cb) {
-                const preStr = 'ERR ';
-                if (typeof reply === 'string' && reply.startsWith(preStr)) {
-                    cb(reply.replace(preStr, ''), undefined);
+                if (reply instanceof RedisError) {
+                    cb(reply, undefined);
                 } else {
                     cb(undefined, reply);
                 }
@@ -81,8 +81,23 @@ class Parser extends EventEmitter {
                 return this.parseSimpleString();
             case '-':
                 return this.parseSimpleError();
-            default:
+            case ',':
+                return this.parseDouble();
+            case '#':
+                return this.parseBoolean();
+            case '!':
+                return this.parseBlobError();
+            case '=':
+                return this.parseVerbatimString();
+            case '(':
+                return this.parseBigNumber();
+            case '~':
+                return this.parseSet();
+            case '_':
+                this.offset += 2;
                 return null;
+            default:
+                return undefined;
         }
     }
 
@@ -129,11 +144,10 @@ class Parser extends EventEmitter {
             } else {
                 char = await this.nextCharAsync();
             }
-            // TODO: handle special characters like: 
             result += char;
         }
         // skip '\r\n'
-        this.offset = this.offset + 2;
+        this.offset += 2;
         return result;
     }
 
@@ -194,6 +208,8 @@ class Parser extends EventEmitter {
     private async parseSimpleError() {
         let msg = '';
         let char: string;
+        // skip 'ERR '
+        this.offset += 4;
         if (this.offset < this.buffer.length) {
             char = this.nextChar();
         } else {
@@ -208,7 +224,115 @@ class Parser extends EventEmitter {
                 char = await this.nextCharAsync();
             }
         }
-        return msg;
+        return new RedisError(msg);
+    }
+
+    private async parseDouble() {
+        let result = '';
+        let char: string;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
+        } else {
+            char = await this.nextCharAsync();
+        }
+
+        while (char !== '\r') {
+            result += char;
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
+            } else {
+                char = await this.nextCharAsync();
+            }
+        }
+
+        this.offset++;
+        return parseFloat(result);
+    }
+
+    private async parseBoolean() {
+        let char: string;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
+        } else {
+            char = await this.nextCharAsync();
+        }
+
+        this.offset += 2;
+        return char === 't';
+    }
+
+    private async parseBlobError() {
+        // TODO
+        const code = await this.parseNumber();
+        let msg = '';
+        let char: string;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
+        } else {
+            char = await this.nextCharAsync();
+        }
+        while (char !== '\r') {
+            msg += char;
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
+            } else {
+                char = await this.nextCharAsync();
+            }
+        }
+
+        return new RedisError(msg, code);
+    }
+
+    private async parseVerbatimString() {
+        const length = await this.parseNumber();
+        let result = '';
+        let format = '';
+        let char: string;
+        for (let i = 0; i < length; i++) {
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
+            } else {
+                char = await this.nextCharAsync();
+            }
+
+            // the fourth byte is always ':'
+            if (i < 3) {
+                format += char;
+            } else if (i > 3) {
+                result += char;
+            }
+        }
+        return new VerbatimString(format, result);
+    }
+
+    private async parseBigNumber() {
+        let result = '';
+        let char: string;
+        if (this.offset < this.buffer.length) {
+            char = this.nextChar();
+        } else {
+            char = await this.nextCharAsync();
+        }
+        while (char !== '\r') {
+            result += char;
+            if (this.offset < this.buffer.length) {
+                char = this.nextChar();
+            } else {
+                char = await this.nextCharAsync();
+            }
+        }
+        this.offset++;
+        return BigInt(result);
+    }
+
+    private async parseSet() {
+        const length = await this.parseNumber();
+        const result = new Set();
+        for (let i = 0; i < length; i++) {
+            const elem = await this.parseReply();
+            result.add(elem);
+        }
+        return result;
     }
 }
 

@@ -1,5 +1,6 @@
 import { strictEqual } from 'assert';
 import { describe, it } from 'mocha';
+import { RedisError, VerbatimString } from '../src/types';
 import parser from '../src/parser';
 
 
@@ -51,15 +52,15 @@ describe('Parser.decodeReply', () => {
 
 describe('Parser.parseSimpleError', () => {
     it('should be strict equal', async () => {
-        const buffer = Buffer.from('-ERR wrong number of arguments for \'get\' command\r\n');
+        const buffer = Buffer.from('-ERR this is the error description\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err) => {
                 resolve(_err);
             });
         });
         parser.decodeReply(buffer);
-        const result = await p;
-        strictEqual(result, 'wrong number of arguments for \'get\' command');
+        const result = (await p) as RedisError;
+        strictEqual(result.message, 'this is the error description');
     });
 });
 
@@ -116,5 +117,92 @@ describe('Parser.parseArray', () => {
         strictEqual(result[0], 1);
         strictEqual(result[1], 2);
         strictEqual(result[2], 3);
+    });
+});
+
+describe('Parser.parseDouble', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from(',1.23\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = await p;
+        strictEqual(result, 1.23);
+    });
+});
+
+describe('Parser.parseBoolean', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('#t\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = await p;
+        strictEqual(result, true);
+    });
+});
+
+describe('Parser.parseBlobError', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('!21\r\nSYNTAX invalid syntax\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err) => {
+                resolve(_err);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as RedisError;
+        strictEqual(result.message, 'SYNTAX invalid syntax');
+        strictEqual(result.code, 21);
+    });
+});
+
+describe('Parser.parseVerbatimString', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('=15\r\ntxt:Some string\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as VerbatimString;
+        strictEqual(result.format, 'txt');
+        strictEqual(result.toString(), 'Some string');
+    });
+});
+
+describe('Parser.parseBigNumber', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('(3492890328409238509324850943850943825024385\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as BigInt;
+        strictEqual(result, BigInt('3492890328409238509324850943850943825024385'));
+    });
+});
+
+describe('Parser.parseSet', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('~5\r\n=+orange\r\n+apple\r\n#t\r\n:100\r\n:999\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as Set<unknown>;
+        strictEqual(result.has('apple'), true);
+        strictEqual(result.has(100), true);
     });
 });

@@ -67,7 +67,7 @@ export class Client implements Client {
             };
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (Client as any).prototype[name] = fn;
+        (Client as any).prototype[name] = (Client as any).prototype[name.toLowerCase()] = fn; 
     }
 
     private runCommand(command: string, args?: string[]) {

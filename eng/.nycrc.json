@@ -11,9 +11,9 @@
         "text-summary",
         "cobertura"
     ],
-    "statements": 60,
-    "branches": 60,
-    "functions": 65,
-    "lines": 60,
+    "statements": 70,
+    "branches": 70,
+    "functions": 75,
+    "lines": 70,
     "temp-dir": "./.nyc"
 }

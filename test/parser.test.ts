@@ -76,3 +76,18 @@ describe('Parser.parseBlobString', () => {
         strictEqual(result, 'hello world');
     });
 });
+
+describe('Parser.parseMap', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('%2\r\n+first\r\n:1\r\n+second\r\n:2\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as Map<string, number>;
+        strictEqual(result.get('first'), 1);
+        strictEqual(result.get('second'), 2);
+    });
+});

@@ -7,6 +7,10 @@ class Parser extends EventEmitter {
     private offset = 0;
     private parsing = false;
 
+    get inBounds() {
+        return this.offset < this.buffer.length;
+    }
+
     encodeCommand(command: string, args?: string[]): string {
         const result = [];
         result.push('*', args ? args.length + 1 : 1, '\r\n');
@@ -62,7 +66,7 @@ class Parser extends EventEmitter {
     private async parseReply() {
         this.parsing = true;
         let char: string;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
@@ -139,7 +143,7 @@ class Parser extends EventEmitter {
         let result = '';
         for (let i = 0; i < length; i++) {
             let char: string;
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();
@@ -154,7 +158,7 @@ class Parser extends EventEmitter {
     private async parseNumber() {
         let result = 0;
         let char: string;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
@@ -162,7 +166,7 @@ class Parser extends EventEmitter {
 
         while (char !== '\r') {
             result = result * 10 + ((char as unknown as number) - ('0' as unknown as number));
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();
@@ -186,7 +190,7 @@ class Parser extends EventEmitter {
     private async parseSimpleString() {
         let result = '';
         let char: string;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
@@ -194,7 +198,7 @@ class Parser extends EventEmitter {
 
         while (char !== '\r') {
             result += char;
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();
@@ -210,7 +214,7 @@ class Parser extends EventEmitter {
         let char: string;
         // skip 'ERR '
         this.offset += 4;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
@@ -218,7 +222,7 @@ class Parser extends EventEmitter {
 
         while (char !== '\r') {
             msg += char;
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();
@@ -230,7 +234,7 @@ class Parser extends EventEmitter {
     private async parseDouble() {
         let result = '';
         let char: string;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
@@ -238,7 +242,7 @@ class Parser extends EventEmitter {
 
         while (char !== '\r') {
             result += char;
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();
@@ -251,7 +255,7 @@ class Parser extends EventEmitter {
 
     private async parseBoolean() {
         let char: string;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
@@ -262,18 +266,17 @@ class Parser extends EventEmitter {
     }
 
     private async parseBlobError() {
-        // TODO
         const code = await this.parseNumber();
         let msg = '';
         let char: string;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
         }
         while (char !== '\r') {
             msg += char;
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();
@@ -289,7 +292,7 @@ class Parser extends EventEmitter {
         let format = '';
         let char: string;
         for (let i = 0; i < length; i++) {
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();
@@ -308,14 +311,14 @@ class Parser extends EventEmitter {
     private async parseBigNumber() {
         let result = '';
         let char: string;
-        if (this.offset < this.buffer.length) {
+        if (this.inBounds) {
             char = this.nextChar();
         } else {
             char = await this.nextCharAsync();
         }
         while (char !== '\r') {
             result += char;
-            if (this.offset < this.buffer.length) {
+            if (this.inBounds) {
                 char = this.nextChar();
             } else {
                 char = await this.nextCharAsync();

@@ -48,3 +48,17 @@ describe('Parser.decodeReply', () => {
         strictEqual(result2, 'hello world');
     });
 });
+
+describe('Parser.parseSimpleError', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('-ERR wrong number of arguments for \'get\' command\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err) => {
+                resolve(_err);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = await p;
+        strictEqual(result, 'wrong number of arguments for \'get\' command');
+    });
+});

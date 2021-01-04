@@ -30,10 +30,11 @@ class Parser extends EventEmitter {
         let reply = await this.parseReply();
         while (reply) {
             const cb = this.callbacks.shift();
-            
+
             if (cb) {
-                if (typeof reply === 'string' && reply.startsWith('ERR ')) {
-                    cb(reply.replace('ERR ', ''), undefined);
+                const preStr = 'ERR ';
+                if (typeof reply === 'string' && reply.startsWith(preStr)) {
+                    cb(reply.replace(preStr, ''), undefined);
                 } else {
                     cb(undefined, reply);
                 }

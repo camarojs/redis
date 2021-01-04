@@ -75,6 +75,17 @@ describe('Parser.parseBlobString', () => {
         const result = await p;
         strictEqual(result, 'hello world');
     });
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('$0\r\n\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = await p;
+        strictEqual(result, '');
+    });
 });
 
 describe('Parser.parseMap', () => {

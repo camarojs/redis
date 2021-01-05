@@ -206,3 +206,18 @@ describe('Parser.parseSet', () => {
         strictEqual(result.has(100), true);
     });
 });
+
+describe('Parser.parseAttribute', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('|1\r\n+key-popularity\r\n%2\r\n$1\r\na\r\n,0.1923\r\n$1\r\nb\r\n,0.0012\r\n*2\r\n:2039123\r\n:9543892\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as Array<number>;
+        strictEqual(result[0], 2039123);
+        strictEqual(result[1], 9543892);
+    });
+});

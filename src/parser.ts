@@ -63,7 +63,7 @@ class Parser extends EventEmitter {
         this.parsing = false;
     }
 
-    private async parseReply() {
+    private async parseReply(): Promise<unknown> {
         this.parsing = true;
         let char: string;
         if (this.inBounds) {
@@ -97,6 +97,8 @@ class Parser extends EventEmitter {
                 return this.parseBigNumber();
             case '~':
                 return this.parseSet();
+            case '|':
+                return this.parseAttribute();
             case '_':
                 this.offset += 2;
                 return null;
@@ -336,6 +338,17 @@ class Parser extends EventEmitter {
             result.add(elem);
         }
         return result;
+    }
+
+    private async parseAttribute() {
+        /**
+         * Attribute type, just discard it.
+         * 
+         * Is there a real need for the attribute type? 
+         * https://github.com/antirez/RESP3/issues/20#issuecomment-583073317
+         */
+        await this.parseMap();
+        return this.parseReply();
     }
 }
 

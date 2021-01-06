@@ -81,6 +81,7 @@ export class Client implements Client {
             }
         });
 
+        // TODO: MONITOR commands
         return new Promise((resolve, reject) => {
             parser.callbacks.push((err, reply) => {
                 err ? reject(err) : resolve(reply);
@@ -88,5 +89,9 @@ export class Client implements Client {
             const buffer = parser.encodeCommand(command, args);
             this.socket.write(buffer);
         });
+    }
+
+    public on(event: string, listener: (data: unknown) => void): void {
+        parser.on(event, listener);
     }
 }

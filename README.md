@@ -52,3 +52,34 @@ console.log(reply) // 'bar'
 | port | 6379 | Port of the redis server. |
 | username | default | Username of redis client. |
 | password | null | Password of redis client. |
+
+## API Reference
+
+### Client.Constructor
+
+The `Client` class has a constructor that can pass `Options`.
+
+### Commands
+
+All redis command can be used like this:
+
+```js
+const client = new Client();
+client.SET(...args);
+client.GET(...args);
+// ... other commands
+```
+
+See the complete command list: [https://redis.io/commands](https://redis.io/commands) .
+
+### Pub/Sub
+
+You can receive `pub/sub` message by `message` event and handle it in the callback function.
+
+```js
+const client = new Client();
+client.on('message', (data)=>{
+    // data: ['pubsub','message','somechannel','this is the message']
+    console.log(data);    
+})
+```

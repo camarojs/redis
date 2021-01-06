@@ -43,8 +43,11 @@ class Parser extends EventEmitter {
                     cb(undefined, reply);
                 }
             }
-
-            if (this.callbacks.length === 0) {
+            /**
+             * When the array is emptied but there is unprocessed data in the buffer,
+             * there may be pubsub data.
+             */
+            if (this.callbacks.length === 0 && (!this.inBounds)) {
                 break;
             }
 
@@ -99,6 +102,8 @@ class Parser extends EventEmitter {
                 return this.parseSet();
             case '|':
                 return this.parseAttribute();
+            case '>':
+                return this.parsePubSub();
             case '_':
                 this.offset += 2;
                 return null;
@@ -347,6 +352,16 @@ class Parser extends EventEmitter {
          */
         await this.parseMap();
         return this.parseReply();
+    }
+
+    private async parsePubSub() {
+        const length = await this.parseNumber();
+        const message = [];
+        for (let i = 0; i < length; i++) {
+            const tmp = await this.parseReply();
+            message.push(tmp);
+        }
+        this.emit('message', message);
     }
 }
 

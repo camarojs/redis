@@ -221,3 +221,17 @@ describe('Parser.parseAttribute', () => {
         strictEqual(result[1], 9543892);
     });
 });
+
+describe('Parser.parsePubSub', () => {
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('$9\r\nGet-Reply\r\n>4\r\n+pubsub\r\n+message\r\n+somechannel\r\n+this is the message\r\n');
+        const p = new Promise((resolve) => {
+            parser.on('message', (data) => {
+                resolve(data);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as Array<number>;
+        strictEqual(result[0], 'pubsub');
+    });
+});

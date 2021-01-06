@@ -7,8 +7,8 @@
 
 Redis client for node, support resp3 and all commands of redis.
 
-**Note**:
-> Currently only resp3 is supported.
+**NOTE**:
+> Camaro Redis only support redis 6.0 or later, and protocol version 3.
 
 ## Features
 
@@ -43,3 +43,12 @@ await client.SET('bar', 'bar')
 const reply = await client.GET('bar')
 console.log(reply) // 'bar'
 ```
+
+### Client Options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| host | 127.0.0.1 | IP address of the redis server. |
+| port | 6379 | Port of the redis server. |
+| username | default | Username of redis client. |
+| password | null | Password of redis client. |

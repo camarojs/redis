@@ -6,8 +6,8 @@ import parser from './parser';
 export interface IClientOptions {
     host?: string;
     port?: number;
-    auth?: string;
-    protover?: '2' | '3';
+    username?: string;
+    password?: string;
 }
 
 export interface Client extends IClientCommand {
@@ -40,18 +40,22 @@ export class Client implements Client {
             this.options.host as string
         );
         this.socket.setKeepAlive(true);
-        this.socket.bytesRead;
         this.socket.on('data', (data) => {
             parser.decodeReply(data);
         });
 
-        this.HELLO(this.options.protover as string);
+        const args: string[] = [];
+        args.push('3');
+        if (this.options.password) {
+            args.push('AUTH', this.options.username as string, this.options.password as string);
+        }
+        this.HELLO(...args);
     }
 
     private initOptions(options: IClientOptions): void {
         options.host = options.host || '127.0.0.1';
         options.port = options.port || 6379;
-        options.protover = options.protover || '3';
+        options.username = options.username || 'default';
     }
 
     private addCommand(command: string, attr: JsonCommand[keyof JsonCommand]): void {
@@ -67,7 +71,7 @@ export class Client implements Client {
             };
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (Client as any).prototype[name] = (Client as any).prototype[name.toLowerCase()] = fn; 
+        (Client as any).prototype[name] = (Client as any).prototype[name.toLowerCase()] = fn;
     }
 
     private runCommand(command: string, args?: string[]) {

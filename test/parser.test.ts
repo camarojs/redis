@@ -60,7 +60,7 @@ describe('Parser.parseSimpleError', () => {
         });
         parser.decodeReply(buffer);
         const result = (await p) as RedisError;
-        strictEqual(result.message, 'this is the error description');
+        strictEqual(result.message, 'ERR this is the error description');
     });
 });
 

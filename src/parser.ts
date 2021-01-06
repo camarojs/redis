@@ -214,8 +214,6 @@ class Parser extends EventEmitter {
     private async parseSimpleError() {
         let msg = '';
         let char: string;
-        // skip 'ERR '
-        this.offset += 4;
         if (this.inBounds) {
             char = this.nextChar();
         } else {

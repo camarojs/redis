@@ -3,7 +3,6 @@ import { describe, it } from 'mocha';
 import { RedisError, VerbatimString } from '../src/types';
 import parser from '../src/parser';
 
-
 describe('Parser.encodeCommand', () => {
     it('should be strict equal', () => {
         strictEqual(
@@ -65,6 +64,7 @@ describe('Parser.parseSimpleError', () => {
 });
 
 describe('Parser.parseBlobString', () => {
+    // common string
     it('should be strict equal', async () => {
         const buffer = Buffer.from('$11\r\nhello world\r\n');
         const p = new Promise((resolve) => {
@@ -76,6 +76,7 @@ describe('Parser.parseBlobString', () => {
         const result = await p;
         strictEqual(result, 'hello world');
     });
+    // empty string
     it('should be strict equal', async () => {
         const buffer = Buffer.from('$0\r\n\r\n');
         const p = new Promise((resolve) => {
@@ -86,6 +87,18 @@ describe('Parser.parseBlobString', () => {
         parser.decodeReply(buffer);
         const result = await p;
         strictEqual(result, '');
+    });
+    // streamed string
+    it('should be strict equal', async () => {
+        const buffer = Buffer.from('$?\r\n;4\r\nHell\r\n;5\r\no wor\r\n;2\r\nld\r\n;0\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as string;
+        strictEqual(result, 'Hello world');
     });
 });
 

@@ -113,16 +113,14 @@ class Parser extends EventEmitter {
     }
 
     /**
-     * Get the next character synchronously,
-     * should judge whether the offset is less than the length of the buffer.
+     * Get the next character synchronously and move offset.
      */
     private nextChar(): string {
         return this.buffer[this.offset++] as string;
     }
 
     /**
-     * Get the next character asynchronously,
-     * should judge whether the offset is large equal than the length of the buffer.
+     * Get the next character asynchronously and move offset.
      */
     private nextCharAsync(): Promise<string> {
         this.buffer = '';
@@ -130,6 +128,26 @@ class Parser extends EventEmitter {
         return new Promise((resolve) => {
             this.once('newData', () => {
                 resolve(this.buffer[this.offset++] as string);
+            });
+        });
+    }
+
+    /**
+     * Get the next character synchronously.
+     */
+    private peekChar(): string {
+        return this.buffer[this.offset] as string;
+    }
+
+    /**
+     * Get the next character asynchronously.
+     */
+    private peekCharAsync(): Promise<string> {
+        this.buffer = '';
+        this.offset = 0;
+        return new Promise((resolve) => {
+            this.once('newData', () => {
+                resolve(this.buffer[this.offset] as string);
             });
         });
     }
@@ -146,18 +164,42 @@ class Parser extends EventEmitter {
     }
 
     private async parseBlobString() {
-        const length = await this.parseNumber();
         let result = '';
-        for (let i = 0; i < length; i++) {
-            let char: string;
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
-            result += char;
+        let char: string;
+        if (this.inBounds) {
+            char = this.peekChar();
+        } else {
+            char = await this.peekCharAsync();
         }
-        // skip '\r\n'
+
+        let length: number;
+        if (char === '?') { // stream string
+            this.offset += 4; // skip '?\r\n;'
+            length = await this.parseNumber();
+            while (length !== 0) {
+                for (let i = 0; i < length; i++) {
+                    if (this.inBounds) {
+                        char = this.nextChar();
+                    } else {
+                        char = await this.nextCharAsync();
+                    }
+                    result += char;
+                }
+                this.offset += 3;
+                length = await this.parseNumber();
+            }
+        } else { // common string
+            length = await this.parseNumber();
+            for (let i = 0; i < length; i++) {
+                if (this.inBounds) {
+                    char = this.nextChar();
+                } else {
+                    char = await this.nextCharAsync();
+                }
+                result += char;
+            }
+        }
+        // skip the ending '\r\n'
         this.offset += 2;
         return result;
     }

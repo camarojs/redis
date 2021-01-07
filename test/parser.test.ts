@@ -4,7 +4,7 @@ import { RedisError, VerbatimString } from '../src/types';
 import parser from '../src/parser';
 
 describe('Parser.encodeCommand', () => {
-    it('should be strict equal', () => {
+    it('should be encoded correctly.', () => {
         strictEqual(
             parser.encodeCommand('SET', ['mykey', 'myvalue']),
             '*3\r\n$3\r\nSET\r\n$5\r\nmykey\r\n$7\r\nmyvalue\r\n'
@@ -14,7 +14,7 @@ describe('Parser.encodeCommand', () => {
 
 // sticky packet
 describe('Parser.decodeReply', () => {
-    it('should be strict equal', async () => {
+    it('should be able to handle sticky packets correctly.', async () => {
         const p1 = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
                 resolve(reply);
@@ -50,7 +50,7 @@ describe('Parser.decodeReply', () => {
 });
 
 describe('Parser.parseSimpleError', () => {
-    it('should be strict equal', async () => {
+    it('should return an RedisError without code.', async () => {
         const buffer = Buffer.from('-ERR this is the error description\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err) => {
@@ -60,12 +60,13 @@ describe('Parser.parseSimpleError', () => {
         parser.decodeReply(buffer);
         const result = (await p) as RedisError;
         strictEqual(result.message, 'ERR this is the error description');
+        strictEqual(result.code, undefined);
     });
 });
 
 describe('Parser.parseBlobString', () => {
     // common string
-    it('should be strict equal', async () => {
+    it('should return a string.', async () => {
         const buffer = Buffer.from('$11\r\nhello world\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -77,7 +78,7 @@ describe('Parser.parseBlobString', () => {
         strictEqual(result, 'hello world');
     });
     // empty string
-    it('should be strict equal', async () => {
+    it('should return an empty string.', async () => {
         const buffer = Buffer.from('$0\r\n\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -89,7 +90,7 @@ describe('Parser.parseBlobString', () => {
         strictEqual(result, '');
     });
     // streamed string
-    it('should be strict equal', async () => {
+    it('should decode streamed string correctly.', async () => {
         const buffer = Buffer.from('$?\r\n;4\r\nHell\r\n;5\r\no wor\r\n;2\r\nld\r\n;0\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -103,7 +104,7 @@ describe('Parser.parseBlobString', () => {
 });
 
 describe('Parser.parseMap', () => {
-    it('should be strict equal', async () => {
+    it('should return a map', async () => {
         const buffer = Buffer.from('%2\r\n+first\r\n:1\r\n+second\r\n:2\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -118,7 +119,7 @@ describe('Parser.parseMap', () => {
 });
 
 describe('Parser.parseArray', () => {
-    it('should be strict equal', async () => {
+    it('should return an array', async () => {
         const buffer = Buffer.from('*3\r\n:1\r\n:2\r\n:3\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -134,7 +135,7 @@ describe('Parser.parseArray', () => {
 });
 
 describe('Parser.parseDouble', () => {
-    it('should be strict equal', async () => {
+    it('should return a floating point number.', async () => {
         const buffer = Buffer.from(',1.23\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -148,7 +149,7 @@ describe('Parser.parseDouble', () => {
 });
 
 describe('Parser.parseBoolean', () => {
-    it('should be strict equal', async () => {
+    it('should return a boolean.', async () => {
         const buffer = Buffer.from('#t\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -162,7 +163,7 @@ describe('Parser.parseBoolean', () => {
 });
 
 describe('Parser.parseBlobError', () => {
-    it('should be strict equal', async () => {
+    it('should return a RedisError with code', async () => {
         const buffer = Buffer.from('!21\r\nSYNTAX invalid syntax\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err) => {
@@ -177,7 +178,7 @@ describe('Parser.parseBlobError', () => {
 });
 
 describe('Parser.parseVerbatimString', () => {
-    it('should be strict equal', async () => {
+    it('should return a VerbatimString', async () => {
         const buffer = Buffer.from('=15\r\ntxt:Some string\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -192,7 +193,7 @@ describe('Parser.parseVerbatimString', () => {
 });
 
 describe('Parser.parseBigNumber', () => {
-    it('should be strict equal', async () => {
+    it('should return a BigInt.', async () => {
         const buffer = Buffer.from('(3492890328409238509324850943850943825024385\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -206,7 +207,7 @@ describe('Parser.parseBigNumber', () => {
 });
 
 describe('Parser.parseSet', () => {
-    it('should be strict equal', async () => {
+    it('should return a set.', async () => {
         const buffer = Buffer.from('~5\r\n=+orange\r\n+apple\r\n#t\r\n:100\r\n:999\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -221,7 +222,7 @@ describe('Parser.parseSet', () => {
 });
 
 describe('Parser.parseAttribute', () => {
-    it('should be strict equal', async () => {
+    it('should discard attribute type.', async () => {
         const buffer = Buffer.from('|1\r\n+key-popularity\r\n%2\r\n$1\r\na\r\n,0.1923\r\n$1\r\nb\r\n,0.0012\r\n*2\r\n:2039123\r\n:9543892\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
@@ -236,7 +237,7 @@ describe('Parser.parseAttribute', () => {
 });
 
 describe('Parser.parsePubSub', () => {
-    it('should be strict equal', async () => {
+    it('should receive pubsub message.', async () => {
         const buffer = Buffer.from('$9\r\nGet-Reply\r\n>4\r\n+pubsub\r\n+message\r\n+somechannel\r\n+this is the message\r\n');
         const p = new Promise((resolve) => {
             parser.on('message', (data) => {

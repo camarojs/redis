@@ -202,6 +202,11 @@ class Parser extends EventEmitter {
     private async parseNumber() {
         let result = 0;
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
+        let sign = false;
+        if (char === '-') {
+            sign = true;
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
+        }
 
         while (char !== '\r') {
             result = result * 10 + ((char as unknown as number) - ('0' as unknown as number));
@@ -209,7 +214,7 @@ class Parser extends EventEmitter {
         }
         // skip '\r\n'
         this.offset++;
-        return result;
+        return sign ? -result : result;
     }
 
     private async parseArray() {
@@ -259,6 +264,11 @@ class Parser extends EventEmitter {
     private async parseDouble() {
         let result = '';
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
+        let sign = false;
+        if (char === '-') {
+            sign = true;
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
+        }
 
         while (char !== '\r') {
             result += char;
@@ -266,7 +276,7 @@ class Parser extends EventEmitter {
         }
 
         this.offset++;
-        return parseFloat(result);
+        return sign ? -result : +result;
     }
 
     private async parseBoolean() {
@@ -306,12 +316,17 @@ class Parser extends EventEmitter {
     private async parseBigNumber() {
         let result = '';
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
+        let sign = false;
+        if (char === '-') {
+            sign = true;
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
+        }
         while (char !== '\r') {
             result += char;
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         this.offset++;
-        return BigInt(result);
+        return BigInt(sign ? -result : result);
     }
 
     private async parseSet() {

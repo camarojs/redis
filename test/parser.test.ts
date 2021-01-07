@@ -133,7 +133,7 @@ describe('Parser.parseMap', () => {
 
 describe('Parser.parseArray', () => {
     it('should return an array', async () => {
-        const buffer = Buffer.from('*3\r\n:1\r\n:2\r\n:3\r\n');
+        const buffer = Buffer.from('*3\r\n:1\r\n:2\r\n:-3\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
                 resolve(reply);
@@ -142,7 +142,7 @@ describe('Parser.parseArray', () => {
         parser.decodeReply(buffer);
         const result = (await p) as Array<number>;
         strictEqual(result[0], 1);
-        strictEqual(result[2], 3);
+        strictEqual(result[2], -3);
     });
 
     it('should decode streamed array correctly.', async () => {

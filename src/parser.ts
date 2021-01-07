@@ -147,12 +147,26 @@ class Parser extends EventEmitter {
     }
 
     private async parseMap() {
-        const length = await this.parseNumber();
+        let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
         const map = new Map();
-        for (let i = 0; i < length; i++) {
-            const key = await this.parseReply();
-            const value = await this.parseReply();
-            map.set(key, value);
+        if (char === '?') {
+            this.offset += 3; // skip '?\r\n'
+            char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
+            while (char !== '.') {
+                const key = await this.parseReply();
+                const value = await this.parseReply();
+                map.set(key, value);
+                char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
+            }
+            // skip the ending '.\r\n'
+            this.offset += 3;
+        } else {
+            const length = await this.parseNumber();
+            for (let i = 0; i < length; i++) {
+                const key = await this.parseReply();
+                const value = await this.parseReply();
+                map.set(key, value);
+            }
         }
         return map;
     }
@@ -199,11 +213,21 @@ class Parser extends EventEmitter {
     }
 
     private async parseArray() {
-        const length = await this.parseNumber();
+        let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
         const array = [];
-        for (let i = 0; i < length; i++) {
-            const elem = (await this.parseReply()) as unknown;
-            array.push(elem);
+        if (char === '?') {
+            this.offset += 3; // skip '?\r\n'
+            char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
+            while (char !== '.') {
+                array.push(await this.parseReply());
+                char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
+            }
+            this.offset += 3; // skip '.\r\n'
+        } else {
+            const length = await this.parseNumber();
+            for (let i = 0; i < length; i++) {
+                array.push(await this.parseReply());
+            }
         }
         return array;
     }
@@ -291,13 +315,23 @@ class Parser extends EventEmitter {
     }
 
     private async parseSet() {
-        const length = await this.parseNumber();
-        const result = new Set();
-        for (let i = 0; i < length; i++) {
-            const elem = await this.parseReply();
-            result.add(elem);
+        let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
+        const set = new Set();
+        if (char === '?') {
+            this.offset += 3; // skip '?\r\n'
+            char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
+            while (char !== '.') {
+                set.add(await this.parseReply());
+                char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
+            }
+            this.offset += 3; // skip '.\r\n'
+        } else {
+            const length = await this.parseNumber();
+            for (let i = 0; i < length; i++) {
+                set.add(await this.parseReply());
+            }
         }
-        return result;
+        return set;
     }
 
     private async parseAttribute() {

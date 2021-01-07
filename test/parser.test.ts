@@ -116,6 +116,19 @@ describe('Parser.parseMap', () => {
         strictEqual(result.get('first'), 1);
         strictEqual(result.get('second'), 2);
     });
+
+    it('should decode streamed map correctly.', async () => {
+        const buffer = Buffer.from('%?\r\n+a\r\n:1\r\n+b\r\n:2\r\n.\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as Map<string, number>;
+        strictEqual(result.get('a'), 1);
+        strictEqual(result.get('b'), 2);
+    });
 });
 
 describe('Parser.parseArray', () => {
@@ -129,7 +142,19 @@ describe('Parser.parseArray', () => {
         parser.decodeReply(buffer);
         const result = (await p) as Array<number>;
         strictEqual(result[0], 1);
-        strictEqual(result[1], 2);
+        strictEqual(result[2], 3);
+    });
+
+    it('should decode streamed array correctly.', async () => {
+        const buffer = Buffer.from('*?\r\n:1\r\n:2\r\n:3\r\n.\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as Array<number>;
+        strictEqual(result[0], 1);
         strictEqual(result[2], 3);
     });
 });
@@ -218,6 +243,18 @@ describe('Parser.parseSet', () => {
         const result = (await p) as Set<unknown>;
         strictEqual(result.has('apple'), true);
         strictEqual(result.has(100), true);
+    });
+    it('should decode streamed set correctly.', async () => {
+        const buffer = Buffer.from('~?\r\n:1\r\n:2\r\n:3\r\n.\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = (await p) as Set<unknown>;
+        strictEqual(result.has(1), true);
+        strictEqual(result.has(3), true);
     });
 });
 

@@ -249,3 +249,17 @@ describe('Parser.parsePubSub', () => {
         strictEqual(result[0], 'pubsub');
     });
 });
+
+describe('Parser.parseNull', () => {
+    it('should return null.', async () => {
+        const buffer = Buffer.from('_\r\n');
+        const p = new Promise((resolve) => {
+            parser.callbacks.push((_err, reply) => {
+                resolve(reply);
+            });
+        });
+        parser.decodeReply(buffer);
+        const result = await p;
+        strictEqual(result, null);
+    });
+});

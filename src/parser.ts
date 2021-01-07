@@ -100,8 +100,7 @@ class Parser extends EventEmitter {
             case '>':
                 return this.parsePubSub();
             case '_':
-                this.offset += 2;
-                return null;
+                return this.parseNull();
             default:
                 return undefined;
         }
@@ -320,6 +319,11 @@ class Parser extends EventEmitter {
             message.push(tmp);
         }
         this.emit('message', message);
+    }
+
+    private parseNull() {
+        this.offset += 2;
+        return null;
     }
 }
 

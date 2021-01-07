@@ -68,13 +68,8 @@ class Parser extends EventEmitter {
 
     private async parseReply(): Promise<unknown> {
         this.parsing = true;
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
 
+        const char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         switch (char) {
             case '$':
                 return this.parseBlobString();
@@ -165,12 +160,7 @@ class Parser extends EventEmitter {
 
     private async parseBlobString() {
         let result = '';
-        let char: string;
-        if (this.inBounds) {
-            char = this.peekChar();
-        } else {
-            char = await this.peekCharAsync();
-        }
+        let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
 
         let length: number;
         if (char === '?') { // stream string
@@ -178,11 +168,7 @@ class Parser extends EventEmitter {
             length = await this.parseNumber();
             while (length !== 0) {
                 for (let i = 0; i < length; i++) {
-                    if (this.inBounds) {
-                        char = this.nextChar();
-                    } else {
-                        char = await this.nextCharAsync();
-                    }
+                    char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
                     result += char;
                 }
                 this.offset += 3;
@@ -191,11 +177,7 @@ class Parser extends EventEmitter {
         } else { // common string
             length = await this.parseNumber();
             for (let i = 0; i < length; i++) {
-                if (this.inBounds) {
-                    char = this.nextChar();
-                } else {
-                    char = await this.nextCharAsync();
-                }
+                char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
                 result += char;
             }
         }
@@ -206,20 +188,11 @@ class Parser extends EventEmitter {
 
     private async parseNumber() {
         let result = 0;
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
+        let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
 
         while (char !== '\r') {
             result = result * 10 + ((char as unknown as number) - ('0' as unknown as number));
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         // skip '\r\n'
         this.offset++;
@@ -238,20 +211,11 @@ class Parser extends EventEmitter {
 
     private async parseSimpleString() {
         let result = '';
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
+        let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
 
         while (char !== '\r') {
             result += char;
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         // skip '\r\n'
         this.offset++;
@@ -260,40 +224,22 @@ class Parser extends EventEmitter {
 
     private async parseSimpleError() {
         let msg = '';
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
+        let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
 
         while (char !== '\r') {
             msg += char;
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         return new RedisError(msg);
     }
 
     private async parseDouble() {
         let result = '';
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
+        let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
 
         while (char !== '\r') {
             result += char;
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
 
         this.offset++;
@@ -301,13 +247,7 @@ class Parser extends EventEmitter {
     }
 
     private async parseBoolean() {
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
-
+        const char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         this.offset += 2;
         return char === 't';
     }
@@ -315,19 +255,10 @@ class Parser extends EventEmitter {
     private async parseBlobError() {
         const code = await this.parseNumber();
         let msg = '';
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
+        let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         while (char !== '\r') {
             msg += char;
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
 
         return new RedisError(msg, code);
@@ -337,14 +268,8 @@ class Parser extends EventEmitter {
         const length = await this.parseNumber();
         let result = '';
         let format = '';
-        let char: string;
         for (let i = 0; i < length; i++) {
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
-
+            const char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
             // the fourth byte is always ':'
             if (i < 3) {
                 format += char;
@@ -357,19 +282,10 @@ class Parser extends EventEmitter {
 
     private async parseBigNumber() {
         let result = '';
-        let char: string;
-        if (this.inBounds) {
-            char = this.nextChar();
-        } else {
-            char = await this.nextCharAsync();
-        }
+        let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         while (char !== '\r') {
             result += char;
-            if (this.inBounds) {
-                char = this.nextChar();
-            } else {
-                char = await this.nextCharAsync();
-            }
+            char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         this.offset++;
         return BigInt(result);

@@ -1,6 +1,6 @@
 {
     "name": "@camaro/redis",
-    "version": "0.0.7",
+    "version": "1.0.0",
     "main": "lib/index.js",
     "repository": {
         "type": "git",

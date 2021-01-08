@@ -19,7 +19,7 @@
     "keywords": [],
     "husky": {
         "hooks": {
-            "pre-commit": "npm run format"
+            "pre-commit": "npm run format && npm run coverage"
         }
     },
     "types": "./types/index.d.ts",

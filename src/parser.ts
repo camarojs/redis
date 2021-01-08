@@ -264,9 +264,8 @@ class Parser extends EventEmitter {
     private async parseDouble() {
         let result = '';
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-        let sign = false;
         if (char === '-') {
-            sign = true;
+            result = '-' + result;
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
 
@@ -276,7 +275,7 @@ class Parser extends EventEmitter {
         }
 
         this.offset++;
-        return sign ? -result : +result;
+        return parseFloat(result);
     }
 
     private async parseBoolean() {
@@ -316,9 +315,8 @@ class Parser extends EventEmitter {
     private async parseBigNumber() {
         let result = '';
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-        let sign = false;
         if (char === '-') {
-            sign = true;
+            result = '-' + result;
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         while (char !== '\r') {
@@ -326,7 +324,7 @@ class Parser extends EventEmitter {
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         this.offset++;
-        return BigInt(sign ? -result : result);
+        return BigInt(result);
     }
 
     private async parseSet() {

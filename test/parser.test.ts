@@ -161,7 +161,7 @@ describe('Parser.parseArray', () => {
 
 describe('Parser.parseDouble', () => {
     it('should return a floating point number.', async () => {
-        const buffer = Buffer.from(',1.23\r\n');
+        const buffer = Buffer.from(',-1.23\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
                 resolve(reply);
@@ -169,7 +169,7 @@ describe('Parser.parseDouble', () => {
         });
         parser.decodeReply(buffer);
         const result = await p;
-        strictEqual(result, 1.23);
+        strictEqual(result, -1.23);
     });
 });
 
@@ -219,7 +219,7 @@ describe('Parser.parseVerbatimString', () => {
 
 describe('Parser.parseBigNumber', () => {
     it('should return a BigInt.', async () => {
-        const buffer = Buffer.from('(3492890328409238509324850943850943825024385\r\n');
+        const buffer = Buffer.from('(-3492890328409238509324850943850943825024385\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
                 resolve(reply);
@@ -227,7 +227,7 @@ describe('Parser.parseBigNumber', () => {
         });
         parser.decodeReply(buffer);
         const result = (await p) as BigInt;
-        strictEqual(result, BigInt('3492890328409238509324850943850943825024385'));
+        strictEqual(result, BigInt('-3492890328409238509324850943850943825024385'));
     });
 });
 

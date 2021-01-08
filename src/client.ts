@@ -75,11 +75,7 @@ export class Client implements Client {
     }
 
     private runCommand(command: string, args?: string[]) {
-        args?.forEach(arg => {
-            if (typeof arg !== 'string') {
-                throw Error('Arguments must be string.');
-            }
-        });
+        args = args?.map(arg => '' + arg);
 
         // TODO: MONITOR commands
         return new Promise((resolve, reject) => {

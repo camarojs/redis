@@ -51,8 +51,6 @@ function appendHeader() {
     result.push(`\u0020*\u0020Automatically generated on ${new Date()}\n`);
     result.push('\u0020*/\n');
     result.push('\n');
-
-    result.push('/* eslint-disable @typescript-eslint/no-explicit-any */\n');
 }
 
 function appendComment(attr: JsonCommand[keyof JsonCommand]) {
@@ -65,12 +63,12 @@ function appendComment(attr: JsonCommand[keyof JsonCommand]) {
 }
 
 function appendMethod(command: string, attr: JsonCommand[keyof JsonCommand]) {
-    result.push(`${tab}${command.replace(/( |-)/g, '')}(`);
-    if (attr.args) {
-        result.push('...args: string[]');
-    }
     const type = attr.returnType ?? 'void';
-    result.push(`)${type === 'T' ? '<T>' : ''}: Promise<${type}>;\n`);
+    result.push(`${tab}${command.replace(/( |-)/g, '')}${type.startsWith('T') ? '<T>' : ''}(`);
+    if (attr.args) {
+        result.push('...args: unknown[]');
+    }
+    result.push(`): Promise<${type}>;\n`);
 }
 
 dodo();

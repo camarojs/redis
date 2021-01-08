@@ -6,14 +6,17 @@
         "summary": "Save the current ACL rules in the configured ACL file"
     },
     "ACL LIST": {
-        "summary": "List the current ACL rules in ACL config file format"
+        "summary": "List the current ACL rules in ACL config file format",
+        "returnType": "string[]"
     },
     "ACL USERS": {
-        "summary": "List the username of all the configured ACL rules"
+        "summary": "List the username of all the configured ACL rules",
+        "returnType": "string[]"
     },
     "ACL GETUSER": {
         "args": "username",
-        "summary": "Get the rules for a specific ACL user"
+        "summary": "Get the rules for a specific ACL user",
+        "returnType": "T[]"
     },
     "ACL SETUSER": {
         "args": "username [rule [rule ...]]",
@@ -21,33 +24,41 @@
     },
     "ACL DELUSER": {
         "args": "username [username ...]",
-        "summary": "Remove the specified ACL users and the associated rules"
+        "summary": "Remove the specified ACL users and the associated rules",
+        "returnType": "number"
     },
     "ACL CAT": {
         "args": "[categoryname]",
-        "summary": "List the ACL categories or the commands inside a category"
+        "summary": "List the ACL categories or the commands inside a category",
+        "returnType": "string[]"
     },
     "ACL GENPASS": {
         "args": "[bits]",
-        "summary": "Generate a pseudorandom secure password to use for ACL users"
+        "summary": "Generate a pseudorandom secure password to use for ACL users",
+        "returnType": "string"
     },
     "ACL WHOAMI": {
-        "summary": "Return the name of the user associated to the current connection"
+        "summary": "Return the name of the user associated to the current connection",
+        "returnType": "string"
     },
     "ACL LOG": {
         "args": "[count or RESET]",
-        "summary": "List latest events denied because of ACLs in place"
+        "summary": "List latest events denied because of ACLs in place",
+        "returnType": "T"
     },
     "ACL HELP": {
-        "summary": "Show helpful text about the different subcommands"
+        "summary": "Show helpful text about the different subcommands",
+        "returnType": "string[]"
     },
     "APPEND": {
         "args": "key value",
-        "summary": "Append a value to a key"
+        "summary": "Append a value to a key",
+        "returnType": "number"
     },
     "AUTH": {
         "args": "[username] password",
-        "summary": "Authenticate to the server"
+        "summary": "Authenticate to the server",
+        "returnType": "string"
     },
     "BGREWRITEAOF": {
         "summary": "Asynchronously rewrite the append-only file"
@@ -317,7 +328,7 @@
         "summary": "Remove all keys from the current database"
     },
     "GEOADD": {
-        "args": "key longitude latitude member [longitude latitude member ...]",
+        "args": "key [NX|XX] [CH] longitude latitude member [longitude latitude member ...]",
         "summary": "Add one or more geospatial items in the geospatial index represented using a sorted set"
     },
     "GEOHASH": {
@@ -362,8 +373,8 @@
         "summary": "Delete one or more hash fields"
     },
     "HELLO": {
-        "args": "protover [AUTH username password] [SETNAME clientname]",
-        "summary": "switch Redis protocol"
+        "args": "[protover [AUTH username password] [SETNAME clientname]]",
+        "summary": "Handshake with Redis"
     },
     "HEXISTS": {
         "args": "key field",
@@ -457,8 +468,8 @@
         "summary": "Get the length of a list"
     },
     "LPOP": {
-        "args": "key",
-        "summary": "Remove and get the first element in a list"
+        "args": "key [count]",
+        "summary": "Remove and get the first elements in a list"
     },
     "LPOS": {
         "args": "key element [RANK rank] [COUNT num-matches] [MAXLEN len]",
@@ -631,8 +642,8 @@
         "summary": "Return the role of the instance in the context of replication"
     },
     "RPOP": {
-        "args": "key",
-        "summary": "Remove and get the last element in a list"
+        "args": "key [count]",
+        "summary": "Remove and get the last elements in a list"
     },
     "RPOPLPUSH": {
         "args": "source destination",
@@ -877,8 +888,8 @@
         "summary": "Remove and return members with the lowest scores in a sorted set"
     },
     "ZRANGE": {
-        "args": "key start stop [WITHSCORES]",
-        "summary": "Return a range of members in a sorted set, by index"
+        "args": "key min max [BYSCORE|BYLEX] [REV] [LIMIT offset count] [WITHSCORES]",
+        "summary": "Return a range of members in a sorted set"
     },
     "ZRANGEBYLEX": {
         "args": "key min max [LIMIT offset count]",
@@ -1036,5 +1047,16 @@
     "GEOSEARCHSTORE": {
         "args": "destination source [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH] [STOREDIST]",
         "summary": "Query a sorted set representing a geospatial index to fetch members inside an area of a box or a circle, and store the result in another key."
+    },
+    "CLIENT TRACKINGINFO": {
+        "summary": "Return information about server assisted client side caching for the current connection"
+    },
+    "ZRANGESTORE": {
+        "args": "dst src min max [BYSCORE|BYLEX] [REV] [LIMIT offset count]",
+        "summary": "Store a range of members from sorted set into another key"
+    },
+    "XAUTOCLAIM": {
+        "args": "key group consumer min-idle-time start [COUNT count] [JUSTID]",
+        "summary": "Changes (or acquires) ownership of messages in a consumer group, as if the messages were delivered to the specified consumer."
     }
 }

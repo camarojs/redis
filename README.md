@@ -5,10 +5,7 @@
 [![npm](https://img.shields.io/npm/dm/@camaro/redis)](https://www.npmjs.com/package/@camaro/redis)
 [![GitHub stars](https://img.shields.io/github/stars/camarojs/redis)](https://github.com/camarojs/redis/stargazers)
 
-Redis client for node, support resp3 and all commands of redis.
-
-**NOTE**:
-> Camaro Redis only support redis 6.0 or later, and protocol version 3.
+Redis client for node, support resp2/3 and all commands of redis.
 
 ## Features
 
@@ -52,6 +49,7 @@ console.log(reply) // 'bar'
 | port | 6379 | Port of the redis server. |
 | username | default | Username of redis client. |
 | password | null | Password of redis client. |
+| protover | 3 | Protocol version, set 2 for redis version less than 6.0 |
 
 ## API Reference
 

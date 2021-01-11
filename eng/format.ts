@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 import { execSync } from 'child_process';
 
 // 获取全部暂存区的文件，并对暂存区文件进行lint验证

@@ -35,6 +35,7 @@ class Parser extends BaseParser {
             result += char;
         }
 
+        this.offset += 2;
         return result;
     }
 

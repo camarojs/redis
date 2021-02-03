@@ -5,7 +5,7 @@
 [![npm](https://img.shields.io/npm/dm/@camaro/redis)](https://www.npmjs.com/package/@camaro/redis)
 [![GitHub stars](https://img.shields.io/github/stars/camarojs/redis)](https://github.com/camarojs/redis/stargazers)
 
-Redis client for node, support resp2/3 and all commands of redis.
+Redis client for node, support resp2/3, redis6, and all commands of redis.
 
 ## Features
 

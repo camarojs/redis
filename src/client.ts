@@ -18,22 +18,12 @@ export interface Client extends IClientCommand {
     options: IClientOptions
 }
 
-export interface JsonCommand {
-    [x: string]: {
-        args?: string;
-        summary: string;
-        returnType?: string;
-    }
-}
-
 export class Client implements Client {
     private socket = new Socket();
     constructor(
         public options: IClientOptions = {}
     ) {
-        Object.entries(commands as JsonCommand).forEach(([command]) => {
-            this.addCommand(command);
-        });
+        commands.forEach(command => { this.addCommand(command); });
         this.initOptions(options);
         this.connect();
     }
@@ -48,7 +38,7 @@ export class Client implements Client {
         if (this.options.protover === 3) {
             parser = parserv3;
             if (this.options.password) {
-                this.HELLO(3, 'AUTH', this.options.username, this.options.password);
+                this.HELLO(3, 'auth', this.options.username as string, this.options.password);
             } else {
                 this.HELLO(3);
             }
@@ -74,12 +64,11 @@ export class Client implements Client {
     }
 
     private addCommand(command: string): void {
-        const name = command.replace(/( |-)/g, '');
         const fn = async (...args: string[]) => {
             return this.runCommand(command, args);
         };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (Client as any).prototype[name] = (Client as any).prototype[name.toLowerCase()] = fn;
+        (Client as any).prototype[command] = (Client as any).prototype[command.toUpperCase()] = fn;
     }
 
     private runCommand(command: string, args?: string[]) {

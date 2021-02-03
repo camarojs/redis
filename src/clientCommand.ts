@@ -1,1329 +1,553 @@
-/**
- * Automatically generated on Fri Jan 08 2021 14:25:48 GMT+0800 (China Standard Time)
- */
-
 export interface IClientCommand {
-    /**
-     * Reload the ACLs from the configured ACL file
-     */
-    ACLLOAD(): Promise<void>;
-    /**
-     * Save the current ACL rules in the configured ACL file
-     */
-    ACLSAVE(): Promise<void>;
-    /**
-     * List the current ACL rules in ACL config file format
-     */
-    ACLLIST(): Promise<string[]>;
-    /**
-     * List the username of all the configured ACL rules
-     */
-    ACLUSERS(): Promise<string[]>;
-    /**
-     * Get the rules for a specific ACL user
-     * @param args username
-     */
-    ACLGETUSER<T>(...args: unknown[]): Promise<T[]>;
-    /**
-     * Modify or create the rules for a specific ACL user
-     * @param args username [rule [rule ...]]
-     */
-    ACLSETUSER(...args: unknown[]): Promise<void>;
-    /**
-     * Remove the specified ACL users and the associated rules
-     * @param args username [username ...]
-     */
-    ACLDELUSER(...args: unknown[]): Promise<void>;
-    /**
-     * List the ACL categories or the commands inside a category
-     * @param args [categoryname]
-     */
-    ACLCAT(...args: unknown[]): Promise<void>;
-    /**
-     * Generate a pseudorandom secure password to use for ACL users
-     * @param args [bits]
-     */
-    ACLGENPASS(...args: unknown[]): Promise<void>;
-    /**
-     * Return the name of the user associated to the current connection
-     */
-    ACLWHOAMI(): Promise<void>;
-    /**
-     * List latest events denied because of ACLs in place
-     * @param args [count or RESET]
-     */
-    ACLLOG(...args: unknown[]): Promise<void>;
-    /**
-     * Show helpful text about the different subcommands
-     */
-    ACLHELP(): Promise<void>;
-    /**
-     * Append a value to a key
-     * @param args key value
-     */
-    APPEND(...args: unknown[]): Promise<void>;
-    /**
-     * Authenticate to the server
-     * @param args [username] password
-     */
-    AUTH(...args: unknown[]): Promise<void>;
-    /**
-     * Asynchronously rewrite the append-only file
-     */
+    ACL(subcommand: 'load'): Promise<void>;
+    ACL(subcommand: 'save'): Promise<void>;
+    ACL(subcommand: 'list'): Promise<string[]>;
+    ACL(subcommand: 'users'): Promise<string[]>;
+    ACL<T>(subcommand: 'getuser', username: string): Promise<T[]>;
+    ACL(subcommand: 'setuser', username: string, ...rule: string[]): Promise<void>;
+    ACL(subcommand: 'deluser', ...username: string[]): Promise<number>;
+    ACL(subcommand: 'cat', categoryname?: string): Promise<string[]>;
+    ACL(subcommand: 'genpass', bits?: number): Promise<string>;
+    ACL(subcommand: 'whoami'): Promise<string>;
+    ACL(subcommand: 'log', count: number): Promise<string[]>;
+    ACL(subcommand: 'log', reset: 'reset'): Promise<void>;
+    ACL(subcommand: 'help'): Promise<string[]>;
+
+    APPEND(key: string, value: string): Promise<number>;
+
+    AUTH(password: string): Promise<void>;
+    AUTH(username: string, password: string): Promise<void>;
+
     BGREWRITEAOF(): Promise<void>;
-    /**
-     * Asynchronously save the dataset to disk
-     * @param args [SCHEDULE]
-     */
-    BGSAVE(...args: unknown[]): Promise<void>;
-    /**
-     * Count set bits in a string
-     * @param args key [start end]
-     */
-    BITCOUNT(...args: unknown[]): Promise<void>;
-    /**
-     * Perform arbitrary bitfield integer operations on strings
-     * @param args key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
-     */
-    BITFIELD(...args: unknown[]): Promise<void>;
-    /**
-     * Perform bitwise operations between strings
-     * @param args operation destkey key [key ...]
-     */
-    BITOP(...args: unknown[]): Promise<void>;
-    /**
-     * Find first bit set or clear in a string
-     * @param args key bit [start] [end]
-     */
-    BITPOS(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and get the first element in a list, or block until one is available
-     * @param args key [key ...] timeout
-     */
-    BLPOP(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and get the last element in a list, or block until one is available
-     * @param args key [key ...] timeout
-     */
-    BRPOP(...args: unknown[]): Promise<void>;
-    /**
-     * Pop an element from a list, push it to another list and return it; or block until one is available
-     * @param args source destination timeout
-     */
-    BRPOPLPUSH(...args: unknown[]): Promise<void>;
-    /**
-     * Pop an element from a list, push it to another list and return it; or block until one is available
-     * @param args source destination LEFT|RIGHT LEFT|RIGHT timeout
-     */
-    BLMOVE(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and return the member with the lowest score from one or more sorted sets, or block until one is available
-     * @param args key [key ...] timeout
-     */
-    BZPOPMIN(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and return the member with the highest score from one or more sorted sets, or block until one is available
-     * @param args key [key ...] timeout
-     */
-    BZPOPMAX(...args: unknown[]): Promise<void>;
-    /**
-     * Instruct the server about tracking or not keys in the next request
-     * @param args YES|NO
-     */
-    CLIENTCACHING(...args: unknown[]): Promise<void>;
-    /**
-     * Returns the client ID for the current connection
-     */
-    CLIENTID(): Promise<void>;
-    /**
-     * Returns information about the current client connection.
-     */
-    CLIENTINFO(): Promise<void>;
-    /**
-     * Kill the connection of a client
-     * @param args [ip:port] [ID client-id] [TYPE normal|master|slave|pubsub] [USER username] [ADDR ip:port] [SKIPME yes/no]
-     */
-    CLIENTKILL(...args: unknown[]): Promise<void>;
-    /**
-     * Get the list of client connections
-     * @param args [TYPE normal|master|replica|pubsub] [ID client-id [client-id ...]]
-     */
-    CLIENTLIST(...args: unknown[]): Promise<void>;
-    /**
-     * Get the current connection name
-     */
-    CLIENTGETNAME(): Promise<void>;
-    /**
-     * Get tracking notifications redirection client ID if any
-     */
-    CLIENTGETREDIR(): Promise<void>;
-    /**
-     * Stop processing commands from clients for some time
-     * @param args timeout
-     */
-    CLIENTPAUSE(...args: unknown[]): Promise<void>;
-    /**
-     * Instruct the server whether to reply to commands
-     * @param args ON|OFF|SKIP
-     */
-    CLIENTREPLY(...args: unknown[]): Promise<void>;
-    /**
-     * Set the current connection name
-     * @param args connection-name
-     */
-    CLIENTSETNAME(...args: unknown[]): Promise<void>;
-    /**
-     * Enable or disable server assisted client side caching support
-     * @param args ON|OFF [REDIRECT client-id] [PREFIX prefix [PREFIX prefix ...]] [BCAST] [OPTIN] [OPTOUT] [NOLOOP]
-     */
-    CLIENTTRACKING(...args: unknown[]): Promise<void>;
-    /**
-     * Unblock a client blocked in a blocking command from a different connection
-     * @param args client-id [TIMEOUT|ERROR]
-     */
-    CLIENTUNBLOCK(...args: unknown[]): Promise<void>;
-    /**
-     * Assign new hash slots to receiving node
-     * @param args slot [slot ...]
-     */
-    CLUSTERADDSLOTS(...args: unknown[]): Promise<void>;
-    /**
-     * Advance the cluster config epoch
-     */
-    CLUSTERBUMPEPOCH(): Promise<void>;
-    /**
-     * Return the number of failure reports active for a given node
-     * @param args node-id
-     */
-    CLUSTERCOUNTFAILUREREPORTS(...args: unknown[]): Promise<void>;
-    /**
-     * Return the number of local keys in the specified hash slot
-     * @param args slot
-     */
-    CLUSTERCOUNTKEYSINSLOT(...args: unknown[]): Promise<void>;
-    /**
-     * Set hash slots as unbound in receiving node
-     * @param args slot [slot ...]
-     */
-    CLUSTERDELSLOTS(...args: unknown[]): Promise<void>;
-    /**
-     * Forces a replica to perform a manual failover of its master.
-     * @param args [FORCE|TAKEOVER]
-     */
-    CLUSTERFAILOVER(...args: unknown[]): Promise<void>;
-    /**
-     * Delete a node's own slots information
-     */
-    CLUSTERFLUSHSLOTS(): Promise<void>;
-    /**
-     * Remove a node from the nodes table
-     * @param args node-id
-     */
-    CLUSTERFORGET(...args: unknown[]): Promise<void>;
-    /**
-     * Return local key names in the specified hash slot
-     * @param args slot count
-     */
-    CLUSTERGETKEYSINSLOT(...args: unknown[]): Promise<void>;
-    /**
-     * Provides info about Redis Cluster node state
-     */
-    CLUSTERINFO(): Promise<void>;
-    /**
-     * Returns the hash slot of the specified key
-     * @param args key
-     */
-    CLUSTERKEYSLOT(...args: unknown[]): Promise<void>;
-    /**
-     * Force a node cluster to handshake with another node
-     * @param args ip port
-     */
-    CLUSTERMEET(...args: unknown[]): Promise<void>;
-    /**
-     * Return the node id
-     */
-    CLUSTERMYID(): Promise<void>;
-    /**
-     * Get Cluster config for the node
-     */
-    CLUSTERNODES(): Promise<void>;
-    /**
-     * Reconfigure a node as a replica of the specified master node
-     * @param args node-id
-     */
-    CLUSTERREPLICATE(...args: unknown[]): Promise<void>;
-    /**
-     * Reset a Redis Cluster node
-     * @param args [HARD|SOFT]
-     */
-    CLUSTERRESET(...args: unknown[]): Promise<void>;
-    /**
-     * Forces the node to save cluster state on disk
-     */
-    CLUSTERSAVECONFIG(): Promise<void>;
-    /**
-     * Set the configuration epoch in a new node
-     * @param args config-epoch
-     */
-    CLUSTERSETCONFIGEPOCH(...args: unknown[]): Promise<void>;
-    /**
-     * Bind a hash slot to a specific node
-     * @param args slot IMPORTING|MIGRATING|STABLE|NODE [node-id]
-     */
-    CLUSTERSETSLOT(...args: unknown[]): Promise<void>;
-    /**
-     * List replica nodes of the specified master node
-     * @param args node-id
-     */
-    CLUSTERSLAVES(...args: unknown[]): Promise<void>;
-    /**
-     * List replica nodes of the specified master node
-     * @param args node-id
-     */
-    CLUSTERREPLICAS(...args: unknown[]): Promise<void>;
-    /**
-     * Get array of Cluster slot to node mappings
-     */
-    CLUSTERSLOTS(): Promise<void>;
-    /**
-     * Get array of Redis command details
-     */
-    COMMAND(): Promise<void>;
-    /**
-     * Get total number of Redis commands
-     */
-    COMMANDCOUNT(): Promise<void>;
-    /**
-     * Extract keys given a full Redis command
-     */
-    COMMANDGETKEYS(): Promise<void>;
-    /**
-     * Get array of specific Redis command details
-     * @param args command-name [command-name ...]
-     */
-    COMMANDINFO(...args: unknown[]): Promise<void>;
-    /**
-     * Get the value of a configuration parameter
-     * @param args parameter
-     */
-    CONFIGGET(...args: unknown[]): Promise<void>;
-    /**
-     * Rewrite the configuration file with the in memory configuration
-     */
-    CONFIGREWRITE(): Promise<void>;
-    /**
-     * Set a configuration parameter to the given value
-     * @param args parameter value
-     */
-    CONFIGSET(...args: unknown[]): Promise<void>;
-    /**
-     * Reset the stats returned by INFO
-     */
-    CONFIGRESETSTAT(): Promise<void>;
-    /**
-     * Copy a key
-     * @param args source destination [DB destination-db] [REPLACE]
-     */
-    COPY(...args: unknown[]): Promise<void>;
-    /**
-     * Return the number of keys in the selected database
-     */
-    DBSIZE(): Promise<void>;
-    /**
-     * Get debugging information about a key
-     * @param args key
-     */
-    DEBUGOBJECT(...args: unknown[]): Promise<void>;
-    /**
-     * Make the server crash
-     */
-    DEBUGSEGFAULT(): Promise<void>;
-    /**
-     * Decrement the integer value of a key by one
-     * @param args key
-     */
-    DECR(...args: unknown[]): Promise<void>;
-    /**
-     * Decrement the integer value of a key by the given number
-     * @param args key decrement
-     */
-    DECRBY(...args: unknown[]): Promise<void>;
-    /**
-     * Delete a key
-     * @param args key [key ...]
-     */
-    DEL(...args: unknown[]): Promise<void>;
-    /**
-     * Discard all commands issued after MULTI
-     */
+
+    BGSAVE(schedule?: unknown): Promise<void>;
+
+    BITCOUNT(key: string, start?: number, end?: number): Promise<number>;
+
+    BITFIELD(key: string, subcommand: 'get', type: string, offset: number): Promise<number[]>;
+    BITFIELD(key: string, subcommand: 'set', type: string, offset: number, value: string): Promise<number[]>;
+    BITFIELD(key: string, subcommand: 'incrby', type: string, offset: number, increment: string): Promise<number[]>;
+    BITFIELD(key: string, subcommand: 'overflow', behavior: 'wrap' | 'sat' | 'fail'): Promise<number[]>;
+    BITFIELD_RO<T>(...arg: string[]): Promise<T>;
+
+    BITOP(operation: 'and' | 'or' | 'xor' | 'not', destkey: 'destkey', ...key: string[]): Promise<number[]>;
+
+    BITPOS(key: string, bit: number, start?: number, end?: number): Promise<number>;
+
+    BLPOP<T extends string[]>(...arg: [...T, number]): Promise<string[] | number | null>;
+
+    BRPOP<T extends string[]>(...arg: [...T, number]): Promise<string[] | number | null>;
+
+    BRPOPLPUSH(source: string, destination: string, timeout: number): Promise<string | null>;
+
+    BLMOVE(source: string, destination: string, whereto: 'left' | 'right', wherefrom: 'left' | 'right', timeout: number): Promise<string | null>
+
+    BZPOPMIN<T extends string[]>(...arg: [...T, number]): Promise<string[] | null>;
+
+    BZPOPMAX<T extends string[]>(...arg: [...T, number]): Promise<string[] | null>;
+
+    CLIENT(subcommand: 'caching', mode: 'yes' | 'no'): Promise<void>;
+    CLIENT(subcommand: 'id'): Promise<number>;
+    CLIENT(subcommand: 'info'): Promise<string>;
+    CLIENT(subcommand: 'kill', ip: string, port: number): Promise<void>;
+    CLIENT(subcommand: 'kill', way: 'id', clientId: number): Promise<number>;
+    CLIENT(subcommand: 'kill', way: 'type', type: 'normal' | 'master' | 'slave' | 'pubsub'): Promise<number>;
+    CLIENT(subcommand: 'kill', way: 'user', username: string): Promise<number>;
+    CLIENT(subcommand: 'kill', way: 'addr', ipport: string): Promise<number>;
+    CLIENT(subcommand: 'kill', way: 'skipme', mode: 'yes' | 'no'): Promise<number>;
+    CLIENT(subcommand: 'list', way: 'type', type: 'normal' | 'master' | 'slave' | 'pubsub'): Promise<string>;
+    CLIENT(subcommand: 'list', way: 'id', clientId: number[]): Promise<string>;
+    CLIENT(subcommand: 'getname'): Promise<string | null>;
+    CLIENT(subcommand: 'getredir'): Promise<number>;
+    CLIENT(subcommand: 'unpause'): Promise<void>;
+    CLIENT(subcommand: 'pause', timeout: number, mode: 'write' | 'all'): Promise<void>;
+    CLIENT(subcommand: 'reply', mode: 'on' | 'off' | 'skip'): Promise<void>;
+    CLIENT(subcommand: 'setname', name: string): Promise<void>;
+    CLIENT(subcommand: 'tracking', mode: 'on' | 'off', ...arg: string[]): Promise<void>;
+    CLIENT<T>(subcommand: 'trackinginfo'): Promise<T>;
+    CLIENT(subcommand: 'unblock', clientId: number, behavior: 'timeout' | 'error'): Promise<number>;
+
+    CLUSTER(subcommand: 'addslots', ...slot: string[]): Promise<void>;
+    CLUSTER(subcommand: 'bumpepoch'): Promise<string>;
+    CLUSTER(subcommand: 'count-failure-reports', nodeId: string): Promise<number>;
+    CLUSTER(subcommand: 'countkeysinslot'): Promise<number>;
+    CLUSTER(subcommand: 'delslots', ...slot: string[]): Promise<void>;
+    CLUSTER(subcommand: 'failover', option: 'force' | 'takeover'): Promise<void>;
+    CLUSTER(subcommand: 'flushslots'): Promise<void>;
+    CLUSTER(subcommand: 'forget', nodeId: string): Promise<void>;
+    CLUSTER(subcommand: 'getkeysinslot', slot: string, count: number): Promise<string[]>;
+    CLUSTER(subcommand: 'info'): Promise<string>;
+    CLUSTER(subcommand: 'keyslot', key: string): Promise<number>;
+    CLUSTER(subcommand: 'meet', ip: string, port: number): Promise<number>;
+    CLUSTER(subcommand: 'myid'): Promise<string>;
+    CLUSTER(subcommand: 'nodes'): Promise<string>;
+    CLUSTER(subcommand: 'replicate', nodeId: string): Promise<void>;
+    CLUSTER(subcommand: 'reset', type: 'hard' | 'soft'): Promise<void>;
+    CLUSTER(subcommand: 'saveconfig'): Promise<void>;
+    CLUSTER(subcommand: 'set-config-epoch'): Promise<void>;
+    CLUSTER(subcommand1: 'setslot', slot: string, subcommand2: 'importing' | 'migrating' | 'stable' | 'node', nodeId?: string): Promise<void>;
+    CLUSTER(subcommand: 'slaves', nodeId: string): Promise<string>;
+    CLUSTER(subcommand: 'replicas', nodeId: string): Promise<string>;
+    CLUSTER<T>(subcommand: 'slots'): Promise<T>;
+
+    COMMAND<T>(): Promise<T>;
+    COMMAND(subcommand: 'count'): Promise<number>;
+    COMMAND(subcommand: 'getkeys'): Promise<string[]>;
+    COMMAND<T>(subcommand: 'info', ...name: string[]): Promise<T>;
+
+    CONFIG(subcommand: 'get', parameter: string): Promise<string[]>;
+    CONFIG(subcommand: 'rewrite'): Promise<void>;
+    CONFIG(subcommand: 'set', parameter: string, value: string): Promise<void>;
+    CONFIG(subcommand: 'resetstat'): Promise<void>;
+
+    COPY(source: string, destination: string, ...arg: string[]): Promise<number>;
+
+    DBSIZE(): Promise<number>;
+
+    DEBUG(subcommand: 'object', key: string): Promise<string>;
+    DEBUG(subcommand: 'segfault'): Promise<string>;
+
+    DECR(key: string): Promise<number>;
+
+    DECRBY(key: string, decrement: number): Promise<number>;
+
+    DEL(...key: string[]): Promise<number>;
+
     DISCARD(): Promise<void>;
-    /**
-     * Return a serialized version of the value stored at the specified key.
-     * @param args key
-     */
-    DUMP(...args: unknown[]): Promise<void>;
-    /**
-     * Echo the given string
-     * @param args message
-     */
-    ECHO(...args: unknown[]): Promise<void>;
-    /**
-     * Execute a Lua script server side
-     * @param args script numkeys key [key ...] arg [arg ...]
-     */
-    EVAL(...args: unknown[]): Promise<void>;
-    /**
-     * Execute a Lua script server side
-     * @param args sha1 numkeys key [key ...] arg [arg ...]
-     */
-    EVALSHA(...args: unknown[]): Promise<void>;
-    /**
-     * Execute all commands issued after MULTI
-     */
-    EXEC(): Promise<void>;
-    /**
-     * Determine if a key exists
-     * @param args key [key ...]
-     */
-    EXISTS(...args: unknown[]): Promise<void>;
-    /**
-     * Set a key's time to live in seconds
-     * @param args key seconds
-     */
-    EXPIRE(...args: unknown[]): Promise<void>;
-    /**
-     * Set the expiration for a key as a UNIX timestamp
-     * @param args key timestamp
-     */
-    EXPIREAT(...args: unknown[]): Promise<void>;
-    /**
-     * Remove all keys from all databases
-     * @param args [ASYNC]
-     */
-    FLUSHALL(...args: unknown[]): Promise<void>;
-    /**
-     * Remove all keys from the current database
-     * @param args [ASYNC]
-     */
-    FLUSHDB(...args: unknown[]): Promise<void>;
-    /**
-     * Add one or more geospatial items in the geospatial index represented using a sorted set
-     * @param args key [NX|XX] [CH] longitude latitude member [longitude latitude member ...]
-     */
-    GEOADD(...args: unknown[]): Promise<void>;
-    /**
-     * Returns members of a geospatial index as standard geohash strings
-     * @param args key member [member ...]
-     */
-    GEOHASH(...args: unknown[]): Promise<void>;
-    /**
-     * Returns longitude and latitude of members of a geospatial index
-     * @param args key member [member ...]
-     */
-    GEOPOS(...args: unknown[]): Promise<void>;
-    /**
-     * Returns the distance between two members of a geospatial index
-     * @param args key member1 member2 [m|km|ft|mi]
-     */
-    GEODIST(...args: unknown[]): Promise<void>;
-    /**
-     * Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point
-     * @param args key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]
-     */
-    GEORADIUS(...args: unknown[]): Promise<void>;
-    /**
-     * Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member
-     * @param args key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]
-     */
-    GEORADIUSBYMEMBER(...args: unknown[]): Promise<void>;
-    /**
-     * Get the value of a key
-     * @param args key
-     */
-    GET(...args: unknown[]): Promise<string>;
-    /**
-     * Returns the bit value at offset in the string value stored at key
-     * @param args key offset
-     */
-    GETBIT(...args: unknown[]): Promise<void>;
-    /**
-     * Get a substring of the string stored at a key
-     * @param args key start end
-     */
-    GETRANGE(...args: unknown[]): Promise<void>;
-    /**
-     * Set the string value of a key and return its old value
-     * @param args key value
-     */
-    GETSET(...args: unknown[]): Promise<void>;
-    /**
-     * Delete one or more hash fields
-     * @param args key field [field ...]
-     */
-    HDEL(...args: unknown[]): Promise<void>;
-    /**
-     * Handshake with Redis
-     * @param args [protover [AUTH username password] [SETNAME clientname]]
-     */
-    HELLO(...args: unknown[]): Promise<void>;
-    /**
-     * Determine if a hash field exists
-     * @param args key field
-     */
-    HEXISTS(...args: unknown[]): Promise<void>;
-    /**
-     * Get the value of a hash field
-     * @param args key field
-     */
-    HGET(...args: unknown[]): Promise<void>;
-    /**
-     * Get all the fields and values in a hash
-     * @param args key
-     */
-    HGETALL(...args: unknown[]): Promise<void>;
-    /**
-     * Increment the integer value of a hash field by the given number
-     * @param args key field increment
-     */
-    HINCRBY(...args: unknown[]): Promise<void>;
-    /**
-     * Increment the float value of a hash field by the given amount
-     * @param args key field increment
-     */
-    HINCRBYFLOAT(...args: unknown[]): Promise<void>;
-    /**
-     * Get all the fields in a hash
-     * @param args key
-     */
-    HKEYS(...args: unknown[]): Promise<void>;
-    /**
-     * Get the number of fields in a hash
-     * @param args key
-     */
-    HLEN(...args: unknown[]): Promise<void>;
-    /**
-     * Get the values of all the given hash fields
-     * @param args key field [field ...]
-     */
-    HMGET(...args: unknown[]): Promise<void>;
-    /**
-     * Set multiple hash fields to multiple values
-     * @param args key field value [field value ...]
-     */
-    HMSET(...args: unknown[]): Promise<void>;
-    /**
-     * Set the string value of a hash field
-     * @param args key field value [field value ...]
-     */
-    HSET(...args: unknown[]): Promise<void>;
-    /**
-     * Set the value of a hash field, only if the field does not exist
-     * @param args key field value
-     */
-    HSETNX(...args: unknown[]): Promise<void>;
-    /**
-     * Get the length of the value of a hash field
-     * @param args key field
-     */
-    HSTRLEN(...args: unknown[]): Promise<void>;
-    /**
-     * Get all the values in a hash
-     * @param args key
-     */
-    HVALS(...args: unknown[]): Promise<void>;
-    /**
-     * Increment the integer value of a key by one
-     * @param args key
-     */
-    INCR(...args: unknown[]): Promise<void>;
-    /**
-     * Increment the integer value of a key by the given amount
-     * @param args key increment
-     */
-    INCRBY(...args: unknown[]): Promise<void>;
-    /**
-     * Increment the float value of a key by the given amount
-     * @param args key increment
-     */
-    INCRBYFLOAT(...args: unknown[]): Promise<void>;
-    /**
-     * Get information and statistics about the server
-     * @param args [section]
-     */
-    INFO(...args: unknown[]): Promise<void>;
-    /**
-     * Display some computer art and the Redis version
-     * @param args [VERSION version]
-     */
-    LOLWUT(...args: unknown[]): Promise<void>;
-    /**
-     * Find all keys matching the given pattern
-     * @param args pattern
-     */
-    KEYS(...args: unknown[]): Promise<void>;
-    /**
-     * Get the UNIX time stamp of the last successful save to disk
-     */
-    LASTSAVE(): Promise<void>;
-    /**
-     * Get an element from a list by its index
-     * @param args key index
-     */
-    LINDEX(...args: unknown[]): Promise<void>;
-    /**
-     * Insert an element before or after another element in a list
-     * @param args key BEFORE|AFTER pivot element
-     */
-    LINSERT(...args: unknown[]): Promise<void>;
-    /**
-     * Get the length of a list
-     * @param args key
-     */
-    LLEN(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and get the first elements in a list
-     * @param args key [count]
-     */
-    LPOP(...args: unknown[]): Promise<void>;
-    /**
-     * Return the index of matching elements on a list
-     * @param args key element [RANK rank] [COUNT num-matches] [MAXLEN len]
-     */
-    LPOS(...args: unknown[]): Promise<void>;
-    /**
-     * Prepend one or multiple elements to a list
-     * @param args key element [element ...]
-     */
-    LPUSH(...args: unknown[]): Promise<void>;
-    /**
-     * Prepend an element to a list, only if the list exists
-     * @param args key element [element ...]
-     */
-    LPUSHX(...args: unknown[]): Promise<void>;
-    /**
-     * Get a range of elements from a list
-     * @param args key start stop
-     */
-    LRANGE(...args: unknown[]): Promise<void>;
-    /**
-     * Remove elements from a list
-     * @param args key count element
-     */
-    LREM(...args: unknown[]): Promise<void>;
-    /**
-     * Set the value of an element in a list by its index
-     * @param args key index element
-     */
-    LSET(...args: unknown[]): Promise<void>;
-    /**
-     * Trim a list to the specified range
-     * @param args key start stop
-     */
-    LTRIM(...args: unknown[]): Promise<void>;
-    /**
-     * Outputs memory problems report
-     */
-    MEMORYDOCTOR(): Promise<void>;
-    /**
-     * Show helpful text about the different subcommands
-     */
-    MEMORYHELP(): Promise<void>;
-    /**
-     * Show allocator internal stats
-     */
-    MEMORYMALLOCSTATS(): Promise<void>;
-    /**
-     * Ask the allocator to release memory
-     */
-    MEMORYPURGE(): Promise<void>;
-    /**
-     * Show memory usage details
-     */
-    MEMORYSTATS(): Promise<void>;
-    /**
-     * Estimate the memory usage of a key
-     * @param args key [SAMPLES count]
-     */
-    MEMORYUSAGE(...args: unknown[]): Promise<void>;
-    /**
-     * Get the values of all the given keys
-     * @param args key [key ...]
-     */
-    MGET(...args: unknown[]): Promise<void>;
-    /**
-     * Atomically transfer a key from a Redis instance to another one.
-     * @param args host port key|"" destination-db timeout [COPY] [REPLACE] [AUTH password] [AUTH2 username password] [KEYS key [key ...]]
-     */
-    MIGRATE(...args: unknown[]): Promise<void>;
-    /**
-     * List all modules loaded by the server
-     */
-    MODULELIST(): Promise<void>;
-    /**
-     * Load a module
-     * @param args path [ arg [arg ...]]
-     */
-    MODULELOAD(...args: unknown[]): Promise<void>;
-    /**
-     * Unload a module
-     * @param args name
-     */
-    MODULEUNLOAD(...args: unknown[]): Promise<void>;
-    /**
-     * Listen for all requests received by the server in real time
-     */
+
+    DUMP(key: string): Promise<string>;
+
+    ECHO(message: string): Promise<string>;
+
+    EVAL(script: string, numkeys: number, ...arg: string[]): Promise<string>;
+
+    EVALSHA(sha1: string, numkeys: number, ...arg: string[]): Promise<string>;
+
+    EXEC(): Promise<string[]>;
+
+    EXISTS(...key: string[]): Promise<number>;
+
+    EXPIRE(key: string, seconds: number): Promise<number>;
+
+    EXPIREAT(key: string, timestamp: number): Promise<number>;
+
+    FAILOVER(subcommand: 'to', host: string, port: number, force?: boolean): Promise<void>;
+    FAILOVER(subcommand: 'abort'): Promise<void>;
+    FAILOVER(subcommand: 'timeout', milliseconds: number): Promise<void>;
+
+    FLUSHALL(mode?: 'async' | 'sync'): Promise<void>;
+
+    FLUSHDB(mode?: 'async' | 'sync'): Promise<void>;
+
+    GEOADD(key: string, ...arg: string[]): Promise<number>;
+
+    GEOHASH(key: string, ...member: string[]): Promise<string[]>;
+
+    GEOPOS(key: string, ...member: string[]): Promise<string[]>;
+
+    GEODIST(key: string, member1: string, member2: string, unit: 'm' | 'km' | 'mi' | 'ft'): Promise<string[]>;
+
+    GEORADIUS(...arg: string[]): Promise<string[]>;
+    GEORADIUS_RO<T>(...arg: string[]): Promise<T>;
+
+    GEORADIUSBYMEMBER(...arg: string[]): Promise<string[]>;
+    GEORADIUSBYMEMBER_RO<T>(...arg: string[]): Promise<T>;
+
+    GEOSEARCH(...arg: string[]): Promise<string[]>;
+
+    GEOSEARCHSTORE(...arg: string[]): Promise<string[]>;
+
+    GET(key: string): Promise<string>;
+
+    GETBIT(key: string, offset: number): Promise<number>;
+
+    GETDEL(key: string): Promise<string | null>;
+
+    GETEX(key: string, option: 'ex', seconds: number): Promise<string | null>;
+    GETEX(key: string, option: 'px', milliseconds: number): Promise<string | null>;
+    GETEX(key: string, option: 'exat', timestamp: number): Promise<string | null>;
+    GETEX(key: string, option: 'pxat', millisecondsTimestamp: number): Promise<string | null>;
+    GETEX(key: string, option: 'persist'): Promise<string | null>;
+
+    GETRANGE(key: string, start: number, end: number): Promise<string>;
+
+    GETSET(key: string, value: string): Promise<string | null>;
+
+    HDEL(key: string, ...field: string[]): Promise<number>;
+
+    HELLO(protover: number): Promise<void>;
+    HELLO(protover: number, option: 'auth', password: string): Promise<void>;
+    HELLO(protover: number, option: 'auth', username: string, password: string): Promise<void>;
+    HELLO(protover: number, option: 'setname', clientname: string): Promise<void>;
+
+    HEXISTS(key: string, field: string): Promise<number>;
+
+    HGET(key: string, field: string): Promise<string | null>;
+
+    HGETALL(key: string): Promise<string[]>;
+
+    HINCRBY(key: string, field: string, increment: number): Promise<number>;
+
+    HINCRBYFLOAT(key: string, field: string, increment: number): Promise<string>;
+
+    HKEYS(key: string): Promise<string[]>;
+
+    HLEN(key: string): Promise<number>;
+
+    HMGET(key: string, ...field: string[]): Promise<string[]>;
+
+    HMSET(key: string, ...fieldValue: string[]): Promise<number>;
+
+    HSET(key: string, ...fieldValue: string[]): Promise<number>;
+
+    HSETNX(key: string, field: string, value: string): Promise<number>;
+
+    HRANDFIELD(key: string): Promise<string | null>;
+    HRANDFIELD(key: string, count: number, withvalues?: 'withvalues'): Promise<string[]>;
+
+    HSCAN<T>(key: string, cursor: string, ...arg: string[]): Promise<T>;
+
+    HSTRLEN(key: string, field: string): Promise<number>;
+
+    HVALS(key: string, field: string): Promise<string[]>;
+
+    INCR(key: string, field: string): Promise<string[]>;
+
+    INCRBY(key: string, field: string, increment: string): Promise<number>;
+
+    INCRBYFLOAT(key: string, field: string, increment: string): Promise<number>;
+
+    INFO(
+        section: 'all' | 'default' | 'everything' | 'server' | 'clients' | 'memory'
+        | 'persistence' | 'stats' | 'replication' | 'cpu' | 'commandstats' | 'cluster'
+        | 'modules' | 'keyspace' | 'errorstats'
+    ): Promise<string>;
+
+    KEYS(pattern: string): Promise<string[]>;
+
+    LATENCY(subcommand: 'doctor'): Promise<string>;
+    LATENCY(subcommand: 'graph', event: string): Promise<string>;
+    LATENCY(subcommand: 'history', event: string): Promise<[number, number][]>;
+    LATENCY<T>(subcommand: 'latest', event: string): Promise<T[]>;
+    LATENCY(subcommand: 'reset', ...event: string[]): Promise<number>;
+    LATENCY(subcommand: 'help'): Promise<string[]>;
+
+    LOLWUT(): Promise<string>;
+    LOLWUT(subcommand: 'version', version: number): Promise<string>;
+
+    LASTSAVE(): Promise<number>;
+
+    LINDEX(key: string, index: number): Promise<string | null>;
+
+    LINSERT(key: string, pos: 'before' | 'after', pivot: string, element: string): Promise<number>;
+
+    LLEN(key: string): Promise<number>;
+
+    LMOVE(source: string, destination: string, whereto: 'left' | 'right', wherefrom: 'left' | 'right'): Promise<string | null>
+
+    LPOP(key: string): Promise<string | null>;
+
+    LPOS(key: string, element: string, ...arg: string[]): Promise<string[] | number | null>;
+
+    LPUSH(key: string, ...element: string[]): Promise<number>;
+
+    LPUSHX(key: string, ...element: string[]): Promise<number>;
+
+    LRANGE(key: string, start: number, end: number): Promise<string[]>;
+
+    LREM(key: string, count: number, element: string): Promise<number>;
+
+    LSET(key: string, index: number, element: string): Promise<string>;
+
+    LTRIM(key: string, start: number, stop: number): Promise<string>;
+
+    MEMORY(subcommand: 'doctor'): Promise<string>;
+    MEMORY(subcommand: 'help'): Promise<string[]>;
+    MEMORY(subcommand: 'malloc-stats'): Promise<string>;
+    MEMORY(subcommand: 'purge'): Promise<string>;
+    MEMORY(subcommand: 'stats'): Promise<string>;
+    MEMORY(subcommand: 'usage', key: string): Promise<number>;
+    MEMORY(subcommand: 'usage', key: string, option: 'samples', count: number): Promise<number>;
+
+    MGET(...key: string[]): Promise<string[]>;
+
+    MIGRATE(...arg: string[]): Promise<string>;
+
+    MODULE(subcommand: 'list'): Promise<{ name: string, ver: string }[]>;
+    MODULE(subcommand: 'load', path: string, ...arg: string[]): Promise<void>;
+    MODULE(subcommand: 'unload', name: string): Promise<void>;
+
     MONITOR(): Promise<void>;
-    /**
-     * Move a key to another database
-     * @param args key db
-     */
-    MOVE(...args: unknown[]): Promise<void>;
-    /**
-     * Set multiple keys to multiple values
-     * @param args key value [key value ...]
-     */
-    MSET(...args: unknown[]): Promise<void>;
-    /**
-     * Set multiple keys to multiple values, only if none of the keys exist
-     * @param args key value [key value ...]
-     */
-    MSETNX(...args: unknown[]): Promise<void>;
-    /**
-     * Mark the start of a transaction block
-     */
+
+    MOVE(key: string, db: number): Promise<void>;
+
+    MSET(key: string, value: string, ...arg: string[]): Promise<void>;
+
+    MSETNX(key: string, value: string, ...arg: string[]): Promise<number>;
+
     MULTI(): Promise<void>;
-    /**
-     * Inspect the internals of Redis objects
-     * @param args subcommand [arguments [arguments ...]]
-     */
-    OBJECT(...args: unknown[]): Promise<void>;
-    /**
-     * Remove the expiration from a key
-     * @param args key
-     */
-    PERSIST(...args: unknown[]): Promise<void>;
-    /**
-     * Set a key's time to live in milliseconds
-     * @param args key milliseconds
-     */
-    PEXPIRE(...args: unknown[]): Promise<void>;
-    /**
-     * Set the expiration for a key as a UNIX timestamp specified in milliseconds
-     * @param args key milliseconds-timestamp
-     */
-    PEXPIREAT(...args: unknown[]): Promise<void>;
-    /**
-     * Adds the specified elements to the specified HyperLogLog.
-     * @param args key element [element ...]
-     */
-    PFADD(...args: unknown[]): Promise<void>;
-    /**
-     * Return the approximated cardinality of the set(s) observed by the HyperLogLog at key(s).
-     * @param args key [key ...]
-     */
-    PFCOUNT(...args: unknown[]): Promise<void>;
-    /**
-     * Merge N different HyperLogLogs into a single one.
-     * @param args destkey sourcekey [sourcekey ...]
-     */
-    PFMERGE(...args: unknown[]): Promise<void>;
-    /**
-     * Ping the server
-     * @param args [message]
-     */
-    PING(...args: unknown[]): Promise<void>;
-    /**
-     * Set the value and expiration in milliseconds of a key
-     * @param args key milliseconds value
-     */
-    PSETEX(...args: unknown[]): Promise<void>;
-    /**
-     * Listen for messages published to channels matching the given patterns
-     * @param args pattern [pattern ...]
-     */
-    PSUBSCRIBE(...args: unknown[]): Promise<void>;
-    /**
-     * Inspect the state of the Pub/Sub subsystem
-     * @param args subcommand [argument [argument ...]]
-     */
-    PUBSUB(...args: unknown[]): Promise<void>;
-    /**
-     * Get the time to live for a key in milliseconds
-     * @param args key
-     */
-    PTTL(...args: unknown[]): Promise<void>;
-    /**
-     * Post a message to a channel
-     * @param args channel message
-     */
-    PUBLISH(...args: unknown[]): Promise<void>;
-    /**
-     * Stop listening for messages posted to channels matching the given patterns
-     * @param args [pattern [pattern ...]]
-     */
-    PUNSUBSCRIBE(...args: unknown[]): Promise<void>;
-    /**
-     * Close the connection
-     */
+
+    OBJECT(subcommand: 'refcount', key: string): Promise<number>;
+    OBJECT(subcommand: 'encoding', key: string): Promise<string>;
+    OBJECT(subcommand: 'idletime', key: string): Promise<number>;
+    OBJECT(subcommand: 'freq', key: string): Promise<string>;
+    OBJECT(subcommand: 'help'): Promise<string>;
+
+    PERSIST(key: string): Promise<number>;
+
+    PEXPIRE(key: string, milliseconds: number): Promise<number>;
+
+    PEXPIREAT(key: string, millisecondsTimestamp: number): Promise<number>;
+
+    PFADD(key: string, ...element: string[]): Promise<number>;
+
+    PFCOUNT(...key: string[]): Promise<number>;
+
+    PFMERGE(destkey: string, ...sourcekey: string[]): Promise<void>;
+
+    PING(message?: string): Promise<string>;
+
+    PSETEX(key: string, milliseconds: number, value: string): Promise<void>;
+
+    PSUBSCRIBE(...pattern: string[]): Promise<void>;
+
+    PUBSUB(subcommand: 'channels', pattern?: string): Promise<string[]>;
+    PUBSUB(subcommand: 'numsub', ...channel: string[]): Promise<string[]>;
+    PUBSUB(subcommand: 'numpat'): Promise<number>;
+
+    PTTL(key: string): Promise<number>;
+
+    PUBLISH(channel: string, message: string): Promise<number>;
+
+    PUNSUBSCRIBE(...pattern: string[]): Promise<number>;
+
     QUIT(): Promise<void>;
-    /**
-     * Return a random key from the keyspace
-     */
-    RANDOMKEY(): Promise<void>;
-    /**
-     * Enables read queries for a connection to a cluster replica node
-     */
+
+    RANDOMKEY(): Promise<string | null>;
+
     READONLY(): Promise<void>;
-    /**
-     * Disables read queries for a connection to a cluster replica node
-     */
+
     READWRITE(): Promise<void>;
-    /**
-     * Rename a key
-     * @param args key newkey
-     */
-    RENAME(...args: unknown[]): Promise<void>;
-    /**
-     * Rename a key, only if the new key does not exist
-     * @param args key newkey
-     */
-    RENAMENX(...args: unknown[]): Promise<void>;
-    /**
-     * Reset the connection
-     */
+
+    RENAME(key: string, newkey: string): Promise<void>;
+
+    RENAMENX(key: string, newkey: string): Promise<number>;
+
+    REPLICAOF(host: string, port: number): Promise<void>;
+
     RESET(): Promise<void>;
-    /**
-     * Create a key using the provided serialized value, previously obtained using DUMP.
-     * @param args key ttl serialized-value [REPLACE] [ABSTTL] [IDLETIME seconds] [FREQ frequency]
-     */
-    RESTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Return the role of the instance in the context of replication
-     */
-    ROLE(): Promise<void>;
-    /**
-     * Remove and get the last elements in a list
-     * @param args key [count]
-     */
-    RPOP(...args: unknown[]): Promise<void>;
-    /**
-     * Remove the last element in a list, prepend it to another list and return it
-     * @param args source destination
-     */
-    RPOPLPUSH(...args: unknown[]): Promise<void>;
-    /**
-     * Pop an element from a list, push it to another list and return it
-     * @param args source destination LEFT|RIGHT LEFT|RIGHT
-     */
-    LMOVE(...args: unknown[]): Promise<void>;
-    /**
-     * Append one or multiple elements to a list
-     * @param args key element [element ...]
-     */
-    RPUSH(...args: unknown[]): Promise<void>;
-    /**
-     * Append an element to a list, only if the list exists
-     * @param args key element [element ...]
-     */
-    RPUSHX(...args: unknown[]): Promise<void>;
-    /**
-     * Add one or more members to a set
-     * @param args key member [member ...]
-     */
-    SADD(...args: unknown[]): Promise<void>;
-    /**
-     * Synchronously save the dataset to disk
-     */
+
+    RESTORE(key: string, ttl: number, serializedValue: string, ...arg: string[]): Promise<void>;
+
+    ROLE<T>(): Promise<T[]>;
+
+    RPOP(key: string): Promise<string | null>;
+    RPOP(key: string, count: number): Promise<string[] | null>;
+
+    RPOPLPUSH(source: string, destination: string): Promise<string>;
+
+    RPUSH(key: string, ...element: string[]): Promise<number>;
+
+    RPUSHX(key: string, ...element: string[]): Promise<number>;
+
+    SADD(key: string, ...member: string[]): Promise<number>;
+
     SAVE(): Promise<void>;
-    /**
-     * Get the number of members in a set
-     * @param args key
-     */
-    SCARD(...args: unknown[]): Promise<void>;
-    /**
-     * Set the debug mode for executed scripts.
-     * @param args YES|SYNC|NO
-     */
-    SCRIPTDEBUG(...args: unknown[]): Promise<void>;
-    /**
-     * Check existence of scripts in the script cache.
-     * @param args sha1 [sha1 ...]
-     */
-    SCRIPTEXISTS(...args: unknown[]): Promise<void>;
-    /**
-     * Remove all the scripts from the script cache.
-     */
-    SCRIPTFLUSH(): Promise<void>;
-    /**
-     * Kill the script currently in execution.
-     */
-    SCRIPTKILL(): Promise<void>;
-    /**
-     * Load the specified Lua script into the script cache.
-     * @param args script
-     */
-    SCRIPTLOAD(...args: unknown[]): Promise<void>;
-    /**
-     * Subtract multiple sets
-     * @param args key [key ...]
-     */
-    SDIFF(...args: unknown[]): Promise<void>;
-    /**
-     * Subtract multiple sets and store the resulting set in a key
-     * @param args destination key [key ...]
-     */
-    SDIFFSTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Change the selected database for the current connection
-     * @param args index
-     */
-    SELECT(...args: unknown[]): Promise<void>;
-    /**
-     * Set the string value of a key
-     * @param args key value [EX seconds|PX milliseconds|KEEPTTL] [NX|XX] [GET]
-     */
-    SET(...args: unknown[]): Promise<void>;
-    /**
-     * Sets or clears the bit at offset in the string value stored at key
-     * @param args key offset value
-     */
-    SETBIT(...args: unknown[]): Promise<void>;
-    /**
-     * Set the value and expiration of a key
-     * @param args key seconds value
-     */
-    SETEX(...args: unknown[]): Promise<void>;
-    /**
-     * Set the value of a key, only if the key does not exist
-     * @param args key value
-     */
-    SETNX(...args: unknown[]): Promise<void>;
-    /**
-     * Overwrite part of a string at key starting at the specified offset
-     * @param args key offset value
-     */
-    SETRANGE(...args: unknown[]): Promise<void>;
-    /**
-     * Synchronously save the dataset to disk and then shut down the server
-     * @param args [NOSAVE|SAVE]
-     */
-    SHUTDOWN(...args: unknown[]): Promise<void>;
-    /**
-     * Intersect multiple sets
-     * @param args key [key ...]
-     */
-    SINTER(...args: unknown[]): Promise<void>;
-    /**
-     * Intersect multiple sets and store the resulting set in a key
-     * @param args destination key [key ...]
-     */
-    SINTERSTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Determine if a given value is a member of a set
-     * @param args key member
-     */
-    SISMEMBER(...args: unknown[]): Promise<void>;
-    /**
-     * Returns the membership associated with the given elements for a set
-     * @param args key member [member ...]
-     */
-    SMISMEMBER(...args: unknown[]): Promise<void>;
-    /**
-     * Make the server a replica of another instance, or promote it as master. Deprecated starting with Redis 5. Use REPLICAOF instead.
-     * @param args host port
-     */
-    SLAVEOF(...args: unknown[]): Promise<void>;
-    /**
-     * Make the server a replica of another instance, or promote it as master.
-     * @param args host port
-     */
-    REPLICAOF(...args: unknown[]): Promise<void>;
-    /**
-     * Manages the Redis slow queries log
-     * @param args subcommand [argument]
-     */
-    SLOWLOG(...args: unknown[]): Promise<void>;
-    /**
-     * Get all the members in a set
-     * @param args key
-     */
-    SMEMBERS(...args: unknown[]): Promise<void>;
-    /**
-     * Move a member from one set to another
-     * @param args source destination member
-     */
-    SMOVE(...args: unknown[]): Promise<void>;
-    /**
-     * Sort the elements in a list, set or sorted set
-     * @param args key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA] [STORE destination]
-     */
-    SORT(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and return one or multiple random members from a set
-     * @param args key [count]
-     */
-    SPOP(...args: unknown[]): Promise<void>;
-    /**
-     * Get one or multiple random members from a set
-     * @param args key [count]
-     */
-    SRANDMEMBER(...args: unknown[]): Promise<void>;
-    /**
-     * Remove one or more members from a set
-     * @param args key member [member ...]
-     */
-    SREM(...args: unknown[]): Promise<void>;
-    /**
-     * Run algorithms (currently LCS) against strings
-     * @param args LCS algo-specific-argument [algo-specific-argument ...]
-     */
-    STRALGO(...args: unknown[]): Promise<void>;
-    /**
-     * Get the length of the value stored in a key
-     * @param args key
-     */
-    STRLEN(...args: unknown[]): Promise<void>;
-    /**
-     * Listen for messages published to the given channels
-     * @param args channel [channel ...]
-     */
-    SUBSCRIBE(...args: unknown[]): Promise<void>;
-    /**
-     * Add multiple sets
-     * @param args key [key ...]
-     */
-    SUNION(...args: unknown[]): Promise<void>;
-    /**
-     * Add multiple sets and store the resulting set in a key
-     * @param args destination key [key ...]
-     */
-    SUNIONSTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Swaps two Redis databases
-     * @param args index1 index2
-     */
-    SWAPDB(...args: unknown[]): Promise<void>;
-    /**
-     * Internal command used for replication
-     */
+
+    SCAN<T>(cursor: string, ...arg: string[]): Promise<T>;
+
+    SCARD(key: string): Promise<number>;
+
+    SCRIPT(subcommand: 'debug', mode: 'yes' | 'sync' | 'no'): Promise<void>;
+    SCRIPT(subcommand: 'exists', ...sha1: string[]): Promise<number[]>;
+    SCRIPT(subcommand: 'flush', modifier?: 'async' | 'sync'): Promise<void>;
+    SCRIPT(subcommand: 'kill'): Promise<void>;
+    SCRIPT(subcommand: 'load', script: string): Promise<string>;
+
+    SDIFF(...key: string[]): Promise<string[]>;
+
+    SDIFFSTORE(destination: string, ...key: string[]): Promise<number>;
+
+    SELECT(index: number): Promise<void>;
+
+    SET(key: string, value: string, ...arg: string[]): Promise<string>;
+
+    SETBIT(key: string, offset: number, value: string): Promise<number>;
+
+    SETEX(key: string, seconds: number, value: string): Promise<void>;
+
+    SETRANGE(key: string, offset: number, value: string): Promise<number>;
+
+    SHUTDOWN(modifier?: 'save' | 'nosave'): Promise<number>;
+
+    SINTER(...key: string[]): Promise<string>;
+
+    SINTERSTORE(destination: string, ...key: string[]): Promise<number>;
+
+    SISMEMBER(key: string, member: string): Promise<number>;
+
+    SMISMEMBER(key: string, ...member: string[]): Promise<number[]>;
+
+    SLAVEOF(host: string, port: number): Promise<void>;
+
+    SLOWLOG<T>(...arg: string[]): Promise<T>;
+
+    SMEMBERS(key: string): Promise<string[]>;
+
+    SMOVE(key: string, source: string, destination: string, member: string): Promise<number>;
+
+    SORT(key: string, ...arg: string[]): Promise<string[] | number>;
+
+    SPOP(key: string): Promise<string | null>;
+    SPOP(key: string, count: number): Promise<string[] | null>;
+
+    SRANDMEMBER(key: string): Promise<string | null>;
+    SRANDMEMBER(key: string, count: number): Promise<string[] | null>;
+
+    SREM(key: string, ...member: string[]): Promise<number>;
+
+    SSCAN<T>(key: string, cursor: string, ...arg: string[]): Promise<T>;
+
+    STRALGO<T>(subcommand: 'lcs', ...arg: string[]): Promise<T>;
+
+    STRLEN(key: string): Promise<number>;
+
+    SUBSCRIBE(...channel: string[]): Promise<void>;
+
+    SUNION(...key: string[]): Promise<string[]>;
+
+    SUNIONSTORE(destination: string, ...key: string[]): Promise<number>;
+
+    SWAPDB(index1: number, index2: number,): Promise<void>;
+
     SYNC(): Promise<void>;
-    /**
-     * Internal command used for replication
-     * @param args replicationid offset
-     */
-    PSYNC(...args: unknown[]): Promise<void>;
-    /**
-     * Return the current server time
-     */
-    TIME(): Promise<void>;
-    /**
-     * Alters the last access time of a key(s). Returns the number of existing keys specified.
-     * @param args key [key ...]
-     */
-    TOUCH(...args: unknown[]): Promise<void>;
-    /**
-     * Get the time to live for a key
-     * @param args key
-     */
-    TTL(...args: unknown[]): Promise<void>;
-    /**
-     * Determine the type stored at key
-     * @param args key
-     */
-    TYPE(...args: unknown[]): Promise<void>;
-    /**
-     * Stop listening for messages posted to the given channels
-     * @param args [channel [channel ...]]
-     */
-    UNSUBSCRIBE(...args: unknown[]): Promise<void>;
-    /**
-     * Delete a key asynchronously in another thread. Otherwise it is just as DEL, but non blocking.
-     * @param args key [key ...]
-     */
-    UNLINK(...args: unknown[]): Promise<void>;
-    /**
-     * Forget about all watched keys
-     */
+
+    PSYNC(replicationid: string, offset: string): Promise<void>;
+
+    TIME(): Promise<string[]>;
+
+    TOUCH(...key: string[]): Promise<number>;
+
+    TTL(key: string): Promise<number>;
+
+    TYPE(key: string): Promise<string | null>;
+
+    UNSUBSCRIBE(...channel: string[]): Promise<void>;
+
+    UNLINK(...key: string[]): Promise<number>;
+
     UNWATCH(): Promise<void>;
-    /**
-     * Wait for the synchronous replication of all the write commands sent in the context of the current connection
-     * @param args numreplicas timeout
-     */
-    WAIT(...args: unknown[]): Promise<void>;
-    /**
-     * Watch the given keys to determine execution of the MULTI/EXEC block
-     * @param args key [key ...]
-     */
-    WATCH(...args: unknown[]): Promise<void>;
-    /**
-     * Add one or more members to a sorted set, or update its score if it already exists
-     * @param args key [NX|XX] [GT|LT] [CH] [INCR] score member [score member ...]
-     */
-    ZADD(...args: unknown[]): Promise<void>;
-    /**
-     * Get the number of members in a sorted set
-     * @param args key
-     */
-    ZCARD(...args: unknown[]): Promise<void>;
-    /**
-     * Count the members in a sorted set with scores within the given values
-     * @param args key min max
-     */
-    ZCOUNT(...args: unknown[]): Promise<void>;
-    /**
-     * Subtract multiple sorted sets
-     * @param args numkeys key [key ...] [WITHSCORES]
-     */
-    ZDIFF(...args: unknown[]): Promise<void>;
-    /**
-     * Subtract multiple sorted sets and store the resulting sorted set in a new key
-     * @param args destination numkeys key [key ...]
-     */
-    ZDIFFSTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Increment the score of a member in a sorted set
-     * @param args key increment member
-     */
-    ZINCRBY(...args: unknown[]): Promise<void>;
-    /**
-     * Intersect multiple sorted sets
-     * @param args numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] [WITHSCORES]
-     */
-    ZINTER(...args: unknown[]): Promise<void>;
-    /**
-     * Intersect multiple sorted sets and store the resulting sorted set in a new key
-     * @param args destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
-     */
-    ZINTERSTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Count the number of members in a sorted set between a given lexicographical range
-     * @param args key min max
-     */
-    ZLEXCOUNT(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and return members with the highest scores in a sorted set
-     * @param args key [count]
-     */
-    ZPOPMAX(...args: unknown[]): Promise<void>;
-    /**
-     * Remove and return members with the lowest scores in a sorted set
-     * @param args key [count]
-     */
-    ZPOPMIN(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of members in a sorted set
-     * @param args key min max [BYSCORE|BYLEX] [REV] [LIMIT offset count] [WITHSCORES]
-     */
-    ZRANGE(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of members in a sorted set, by lexicographical range
-     * @param args key min max [LIMIT offset count]
-     */
-    ZRANGEBYLEX(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of members in a sorted set, by lexicographical range, ordered from higher to lower strings.
-     * @param args key max min [LIMIT offset count]
-     */
-    ZREVRANGEBYLEX(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of members in a sorted set, by score
-     * @param args key min max [WITHSCORES] [LIMIT offset count]
-     */
-    ZRANGEBYSCORE(...args: unknown[]): Promise<void>;
-    /**
-     * Determine the index of a member in a sorted set
-     * @param args key member
-     */
-    ZRANK(...args: unknown[]): Promise<void>;
-    /**
-     * Remove one or more members from a sorted set
-     * @param args key member [member ...]
-     */
-    ZREM(...args: unknown[]): Promise<void>;
-    /**
-     * Remove all members in a sorted set between the given lexicographical range
-     * @param args key min max
-     */
-    ZREMRANGEBYLEX(...args: unknown[]): Promise<void>;
-    /**
-     * Remove all members in a sorted set within the given indexes
-     * @param args key start stop
-     */
-    ZREMRANGEBYRANK(...args: unknown[]): Promise<void>;
-    /**
-     * Remove all members in a sorted set within the given scores
-     * @param args key min max
-     */
-    ZREMRANGEBYSCORE(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of members in a sorted set, by index, with scores ordered from high to low
-     * @param args key start stop [WITHSCORES]
-     */
-    ZREVRANGE(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of members in a sorted set, by score, with scores ordered from high to low
-     * @param args key max min [WITHSCORES] [LIMIT offset count]
-     */
-    ZREVRANGEBYSCORE(...args: unknown[]): Promise<void>;
-    /**
-     * Determine the index of a member in a sorted set, with scores ordered from high to low
-     * @param args key member
-     */
-    ZREVRANK(...args: unknown[]): Promise<void>;
-    /**
-     * Get the score associated with the given member in a sorted set
-     * @param args key member
-     */
-    ZSCORE(...args: unknown[]): Promise<void>;
-    /**
-     * Add multiple sorted sets
-     * @param args numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] [WITHSCORES]
-     */
-    ZUNION(...args: unknown[]): Promise<void>;
-    /**
-     * Get the score associated with the given members in a sorted set
-     * @param args key member [member ...]
-     */
-    ZMSCORE(...args: unknown[]): Promise<void>;
-    /**
-     * Add multiple sorted sets and store the resulting sorted set in a new key
-     * @param args destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
-     */
-    ZUNIONSTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Incrementally iterate the keys space
-     * @param args cursor [MATCH pattern] [COUNT count] [TYPE type]
-     */
-    SCAN(...args: unknown[]): Promise<void>;
-    /**
-     * Incrementally iterate Set elements
-     * @param args key cursor [MATCH pattern] [COUNT count]
-     */
-    SSCAN(...args: unknown[]): Promise<void>;
-    /**
-     * Incrementally iterate hash fields and associated values
-     * @param args key cursor [MATCH pattern] [COUNT count]
-     */
-    HSCAN(...args: unknown[]): Promise<void>;
-    /**
-     * Incrementally iterate sorted sets elements and associated scores
-     * @param args key cursor [MATCH pattern] [COUNT count]
-     */
-    ZSCAN(...args: unknown[]): Promise<void>;
-    /**
-     * Get information on streams and consumer groups
-     * @param args [CONSUMERS key groupname] [GROUPS key] [STREAM key] [HELP]
-     */
-    XINFO(...args: unknown[]): Promise<void>;
-    /**
-     * Appends a new entry to a stream
-     * @param args key [MAXLEN [=|~] length] [NOMKSTREAM] *|ID field value [field value ...]
-     */
-    XADD(...args: unknown[]): Promise<void>;
-    /**
-     * Trims the stream to (approximately if '~' is passed) a certain size
-     * @param args key MAXLEN [=|~] length
-     */
-    XTRIM(...args: unknown[]): Promise<void>;
-    /**
-     * Removes the specified entries from the stream. Returns the number of items actually deleted, that may be different from the number of IDs passed in case certain IDs do not exist.
-     * @param args key ID [ID ...]
-     */
-    XDEL(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of elements in a stream, with IDs matching the specified IDs interval
-     * @param args key start end [COUNT count]
-     */
-    XRANGE(...args: unknown[]): Promise<void>;
-    /**
-     * Return a range of elements in a stream, with IDs matching the specified IDs interval, in reverse order (from greater to smaller IDs) compared to XRANGE
-     * @param args key end start [COUNT count]
-     */
-    XREVRANGE(...args: unknown[]): Promise<void>;
-    /**
-     * Return the number of entries in a stream
-     * @param args key
-     */
-    XLEN(...args: unknown[]): Promise<void>;
-    /**
-     * Return never seen elements in multiple streams, with IDs greater than the ones reported by the caller for each stream. Can block.
-     * @param args [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] ID [ID ...]
-     */
-    XREAD(...args: unknown[]): Promise<void>;
-    /**
-     * Create, destroy, and manage consumer groups.
-     * @param args [CREATE key groupname ID|$ [MKSTREAM]] [SETID key groupname ID|$] [DESTROY key groupname] [CREATECONSUMER key groupname consumername] [DELCONSUMER key groupname consumername]
-     */
-    XGROUP(...args: unknown[]): Promise<void>;
-    /**
-     * Return new entries from a stream using a consumer group, or access the history of the pending entries for a given consumer. Can block.
-     * @param args GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]
-     */
-    XREADGROUP(...args: unknown[]): Promise<void>;
-    /**
-     * Marks a pending message as correctly processed, effectively removing it from the pending entries list of the consumer group. Return value of the command is the number of messages successfully acknowledged, that is, the IDs we were actually able to resolve in the PEL.
-     * @param args key group ID [ID ...]
-     */
-    XACK(...args: unknown[]): Promise<void>;
-    /**
-     * Changes (or acquires) ownership of a message in a consumer group, as if the message was delivered to the specified consumer.
-     * @param args key group consumer min-idle-time ID [ID ...] [IDLE ms] [TIME ms-unix-time] [RETRYCOUNT count] [FORCE] [JUSTID]
-     */
-    XCLAIM(...args: unknown[]): Promise<void>;
-    /**
-     * Return information and entries from a stream consumer group pending entries list, that are messages fetched but never acknowledged.
-     * @param args key group [[IDLE min-idle-time] start end count [consumer]]
-     */
-    XPENDING(...args: unknown[]): Promise<void>;
-    /**
-     * Return a human readable latency analysis report.
-     */
-    LATENCYDOCTOR(): Promise<void>;
-    /**
-     * Return a latency graph for the event.
-     * @param args event
-     */
-    LATENCYGRAPH(...args: unknown[]): Promise<void>;
-    /**
-     * Return timestamp-latency samples for the event.
-     * @param args event
-     */
-    LATENCYHISTORY(...args: unknown[]): Promise<void>;
-    /**
-     * Return the latest latency samples for all events.
-     */
-    LATENCYLATEST(): Promise<void>;
-    /**
-     * Reset latency data for one or more events.
-     * @param args [event [event ...]]
-     */
-    LATENCYRESET(...args: unknown[]): Promise<void>;
-    /**
-     * Show helpful text about the different subcommands.
-     */
-    LATENCYHELP(): Promise<void>;
-    /**
-     * Query a sorted set representing a geospatial index to fetch members inside an area of a box or a circle.
-     * @param args key [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH]
-     */
-    GEOSEARCH(...args: unknown[]): Promise<void>;
-    /**
-     * Query a sorted set representing a geospatial index to fetch members inside an area of a box or a circle, and store the result in another key.
-     * @param args destination source [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH] [STOREDIST]
-     */
-    GEOSEARCHSTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Return information about server assisted client side caching for the current connection
-     */
-    CLIENTTRACKINGINFO(): Promise<void>;
-    /**
-     * Store a range of members from sorted set into another key
-     * @param args dst src min max [BYSCORE|BYLEX] [REV] [LIMIT offset count]
-     */
-    ZRANGESTORE(...args: unknown[]): Promise<void>;
-    /**
-     * Changes (or acquires) ownership of messages in a consumer group, as if the messages were delivered to the specified consumer.
-     * @param args key group consumer min-idle-time start [COUNT count] [JUSTID]
-     */
-    XAUTOCLAIM(...args: unknown[]): Promise<void>;
+
+    WAIT(numreplicas: string, timeout: number): Promise<void>;
+
+    WATCH(...key: string[]): Promise<void>;
+
+    XADD(key: string, ...arg: string[]): Promise<string>;
+
+    XACK(key: string, group: string, ...id: string[]): Promise<number>;
+
+    XCLAIM<T>(key: string, group: string, consumer: string, ...arg: string[]): Promise<T>;
+
+    XDEL(key: string, ...id: string[]): Promise<number>;
+
+    XGROUP<T>(...arg: string[]): Promise<T>;
+
+    XINFO<T>(...arg: string[]): Promise<T>;
+
+    XLEN(key: string): Promise<number>;
+
+    XPENDING<T>(key: string, group: string): Promise<T>;
+
+    XRANGE<T>(key: string, start: number, end: number): Promise<T[]>;
+    XRANGE<T>(key: string, start: number, end: number, option: 'count', count: number): Promise<T[]>;
+
+    XREVRANGE(key: string, end: number, start: number): Promise<string[]>;
+    XREVRANGE(key: string, end: number, start: number, option: 'count', count: number): Promise<string[]>;
+
+    XREAD<T>(...arg: string[]): Promise<T[]>;
+
+    XREADGROUP<T>(...arg: string[]): Promise<T[]>;
+
+    XTRIM(key: string, subcommand: 'maxlen' | 'minid', ...arg: string[]): Promise<number>;
+
+    ZADD(key: string, ...arg: string[]): Promise<number | string>;
+
+    ZCARD(key: string): Promise<number>;
+
+    ZCOUNT(key: string, min: number, max: number): Promise<number>;
+
+    ZDIFF(numkeys: number, ...arg: string[]): Promise<string[]>;
+
+    ZDIFFSTORE(destination: string, numkeys: number, ...key: string[]): Promise<number>;
+
+    ZINCRBY(key: string, increment: number, member: string): Promise<string>;
+
+    ZINTER(numkeys: number, ...arg: string[]): Promise<string[]>;
+
+    ZINTERSTORE(destination: string, numkeys: number, ...key: string[]): Promise<number>;
+
+    ZLEXCOUNT(key: string, min: number, max: number): Promise<number>;
+
+    ZMSCORE(key: string, member: string): Promise<string>;
+
+    ZPOPMAX(key: string, count?: number): Promise<number[]>;
+
+    ZPOPMIN(key: string, count?: number): Promise<number[]>;
+
+    ZRANDMEMBER(key: string): Promise<string | null>;
+    ZRANDMEMBER(key: string, count: number, option?: 'withscores'): Promise<string[]>;
+
+    ZRANGESTORE(dst: string, src: string, min: number, max: number, ...arg: string[]): Promise<number>;
+
+    ZRANGE(key: string, min: number, max: number, ...arg: string[]): Promise<string[]>;
+
+    ZRANGEBYLEX(key: string, min: number, max: number): Promise<string[]>;
+    ZRANGEBYLEX(key: string, min: number, max: number, option: 'limit', offset: number, count: number): Promise<string[]>;
+
+    ZREVRANGEBYLEX(key: string, min: number, max: number): Promise<string[]>;
+    ZREVRANGEBYLEX(key: string, min: number, max: number, option: 'limit', offset: number, count: number): Promise<string[]>;
+
+    ZRANGEBYSCORE(key: string, min: number, max: number): Promise<string[]>;
+    ZRANGEBYSCORE(key: string, min: number, max: number, option: 'limit', offset: number, count: number): Promise<string[]>;
+    ZRANGEBYSCORE(key: string, min: number, max: number, option: 'withscores'): Promise<string[]>;
+    ZRANGEBYSCORE(key: string, min: number, max: number, option1: 'withscores', option2: 'limit', offset: number, count: number): Promise<string[]>;
+
+    ZRANK(key: string, member: string): Promise<number | null>;
+
+    ZREM(key: string, ...member: string[]): Promise<number>;
+
+    ZREMRANGEBYLEX(key: string, min: number, max: number): Promise<number>;
+
+    ZREMRANGEBYRANK(key: string, start: number, stop: number): Promise<number>;
+
+    ZREMRANGEBYSCORE(key: string, min: number, max: number): Promise<number>;
+
+    ZREVRANGE(key: string, start: number, stop: number, option: 'withscores'): Promise<string[]>;
+
+    ZREVRANGEBYSCORE(key: string, min: number, max: number): Promise<string[]>;
+    ZREVRANGEBYSCORE(key: string, min: number, max: number, option: 'limit', offset: number, count: number): Promise<string[]>;
+    ZREVRANGEBYSCORE(key: string, min: number, max: number, option: 'withscores'): Promise<string[]>;
+    ZREVRANGEBYSCORE(key: string, min: number, max: number, option1: 'withscores', option2: 'limit', offset: number, count: number): Promise<string[]>;
+
+    ZREVRANK(key: string, member: string): Promise<number | null>;
+
+    ZSCAN<T>(key: string, cursor: string, ...arg: string[]): Promise<T>;
+
+    ZSCORE(key: string, member: string): Promise<string>;
+
+    ZUNION<T>(numkeys: number, ...args: string[]): Promise<T>;
+
+    ZUNIONSTORE(destination: string, numkeys: number, ...arg: string[]): Promise<number>;
+
+    //#region No documentation 
+    ASKING<T>(...arg: string[]): Promise<T>;
+    'HOST:'<T>(...arg: string[]): Promise<T>;
+    PFDEBUG<T>(...arg: string[]): Promise<T>;
+    PFSELFTEST<T>(...arg: string[]): Promise<T>;
+    POST<T>(...arg: string[]): Promise<T>;
+    'RESTORE-ASKING'<T>(...arg: string[]): Promise<T>;
+    REPLCONF<T>(...arg: string[]): Promise<T>;
+    SUBSTR<T>(...arg: string[]): Promise<T>;
+    XSETID<T>(...arg: string[]): Promise<T>;
+    //#endregion
 }

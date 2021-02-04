@@ -74,10 +74,13 @@ See the complete command list: [https://redis.io/commands](https://redis.io/comm
 
 You can receive `pub/sub` message by `message` event and handle it in the callback function.
 
+If you are using the resp2, you need to create a new client to receive messages.
+
 ```js
 const client = new Client();
+client.SUBSCRIBE('test');
 client.on('message', (data)=>{
-    // data: ['pubsub','message','somechannel','this is the message']
+    // data: ['message','somechannel','this is the message']
     console.log(data);    
 })
 ```

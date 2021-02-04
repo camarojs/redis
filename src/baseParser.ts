@@ -2,6 +2,12 @@ import { EventEmitter } from 'events';
 import { RedisError } from './types';
 
 export default abstract class BaseParser extends EventEmitter {
+    constructor(
+        private readonly protover: 2 | 3
+    ) {
+        super();
+    }
+
     callbacks = new Array<(error: RedisError | undefined, reply: unknown | undefined) => void>();
     buffer = '';
     offset = 0;
@@ -43,10 +49,16 @@ export default abstract class BaseParser extends EventEmitter {
                     cb(undefined, reply);
                 }
             }
+
             /**
              * When the array is emptied but there is unprocessed data in the buffer,
              * there may be pubsub data.
+             * And if the protover is 2, we should return pubsub data.
              */
+            if (this.callbacks.length === 0 && this.protover === 2) {
+                this.emit('message', reply);
+            }
+
             if (this.callbacks.length === 0 && (!this.inBounds)) {
                 break;
             }

@@ -55,4 +55,4 @@ class Parser extends BaseParser {
     }
 }
 
-export default new Parser();
+export default new Parser(2);

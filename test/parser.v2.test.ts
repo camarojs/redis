@@ -1,6 +1,8 @@
 import { strictEqual } from 'assert';
 import { describe, it } from 'mocha';
-import parser from '../src/parser.v2';
+import Parser from '../src/parser.v2';
+
+const parser = new Parser();
 
 describe('Parser.parseBulkString', () => {
     it('should return a string.', async () => {

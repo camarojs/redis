@@ -1,10 +1,8 @@
 import { Socket } from 'net';
 import { IClientCommand } from './clientCommand';
 import commands from './commands.json';
-import parserv2 from './parser.v2';
-import parserv3 from './parser.v3';
-
-let parser: typeof parserv2 | typeof parserv3 = parserv3;
+import ParserV2 from './parser.v2';
+import ParserV3 from './parser.v3';
 
 export interface IClientOptions {
     host?: string;
@@ -20,6 +18,7 @@ export interface Client extends IClientCommand {
 
 export class Client implements Client {
     private socket = new Socket();
+    private parser!: ParserV2 | ParserV3;
     constructor(
         public options: IClientOptions = {}
     ) {
@@ -36,7 +35,7 @@ export class Client implements Client {
         this.socket.setKeepAlive(true);
 
         if (this.options.protover === 3) {
-            parser = parserv3;
+            this.parser = new ParserV3();
             if (this.options.password) {
                 this.HELLO(3, 'auth', this.options.username as string, this.options.password);
             } else {
@@ -45,14 +44,14 @@ export class Client implements Client {
         }
 
         if (this.options.protover === 2) {
-            parser = parserv2;
+            this.parser = new ParserV2();
             if (this.options.password) {
                 this.AUTH(this.options.password);
             }
         }
 
         this.socket.on('data', (data) => {
-            parser.decodeReply(data);
+            this.parser.decodeReply(data);
         });
     }
 
@@ -76,10 +75,10 @@ export class Client implements Client {
 
         // TODO: MONITOR commands
         return new Promise((resolve, reject) => {
-            parser.callbacks.push((err, reply) => {
+            this.parser.callbacks.push((err, reply) => {
                 err ? reject(err) : resolve(reply);
             });
-            const buffer = parser.encodeCommand(command, args);
+            const buffer = this.parser.encodeCommand(command, args);
             this.socket.write(buffer);
         });
     }
@@ -87,7 +86,7 @@ export class Client implements Client {
     public on(event: string, listener: (data: unknown) => void): void {
         switch (event) {
             case 'message':
-                parser.on(event, listener);
+                this.parser.on(event, listener);
                 break;
         }
     }

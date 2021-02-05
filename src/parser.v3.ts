@@ -2,6 +2,10 @@ import BaseParser from './baseParser';
 import { RedisError, VerbatimString } from './types';
 
 class Parser extends BaseParser {
+    constructor() {
+        super(3);
+    }
+    
     async parseReply(): Promise<unknown> {
         this.parsing = true;
 
@@ -228,4 +232,4 @@ class Parser extends BaseParser {
     }
 }
 
-export default new Parser(3);
+export default Parser;

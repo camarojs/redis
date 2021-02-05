@@ -1,6 +1,10 @@
 import BaseParser from './baseParser';
 
 class Parser extends BaseParser {
+    constructor() {
+        super(2);
+    }
+    
     async parseReply(): Promise<unknown> {
         this.parsing = true;
 
@@ -55,4 +59,4 @@ class Parser extends BaseParser {
     }
 }
 
-export default new Parser(2);
+export default Parser;

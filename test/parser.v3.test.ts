@@ -1,7 +1,9 @@
 import { strictEqual } from 'assert';
 import { describe, it } from 'mocha';
 import { RedisError, VerbatimString } from '../src/types';
-import parser from '../src/parser.v3';
+import Parser from '../src/parser.v3';
+
+const parser = new Parser();
 
 describe('Parser.encodeCommand', () => {
     it('should be encoded correctly.', () => {

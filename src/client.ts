@@ -68,7 +68,7 @@ export class Client implements Client {
             return this.runCommand(command, args);
         };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (Client as any).prototype[command] = (Client as any).prototype[command.toUpperCase()] = fn;
+        (this as any)[command] = (this as any)[command.toUpperCase()] = fn;
     }
 
     private runCommand(command: string, args?: string[]) {

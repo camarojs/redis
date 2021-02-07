@@ -33,7 +33,7 @@
         "@typescript-eslint/parser": "^4.11.1",
         "axios": "^0.21.1",
         "eslint": "^7.16.0",
-        "husky": "^4.3.6",
+        "husky": "^4.3.8",
         "mocha": "^8.2.1",
         "node-html-parser": "^2.0.1",
         "nyc": "^15.1.0",

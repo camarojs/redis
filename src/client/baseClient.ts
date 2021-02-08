@@ -14,7 +14,7 @@ export interface IClientOptions {
 export abstract class BaseClient {
     private socket = new Socket();
     private parser: ParserV2 | ParserV3;
-    constructor(public options: IClientOptions = {}, protover: ProtoVer) {
+    constructor(public options: IClientOptions, protover: ProtoVer) {
         this.parser = protover === 3 ? new ParserV3() : new ParserV2();
         commands.forEach(command => { this.addCommand(command); });
         this.initOptions(options);
@@ -31,21 +31,6 @@ export abstract class BaseClient {
         this.socket.setKeepAlive(true);
 
         this.authenticate();
-
-        // if (this.protover === 3) {
-        //     if (this.options.password) {
-        //         this.HELLO(3, 'auth', this.options.username as string, this.options.password);
-        //     } else {
-        //         this.HELLO(3);
-        //     }
-        // }
-
-        // if (this.protover === 2) {
-        //     this.parser = new ParserV2();
-        //     if (this.options.password) {
-        //         this.AUTH(this.options.password);
-        //     }
-        // }
 
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);

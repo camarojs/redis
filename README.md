@@ -26,7 +26,8 @@ npm install @camaro/redis
 ### Usage
 
 ```js
-const { Client } = require('redis')
+// If you want to use resp2 ,change `ClientV3` to `ClientV2`.
+const { ClientV3: Client } = require('@camaro/redis')
 const client = new Client();
 
 client.SET('foo', 'foo').then(() => {
@@ -49,7 +50,6 @@ console.log(reply) // 'bar'
 | port | 6379 | Port of the redis server. |
 | username | default | Username of redis client. |
 | password | null | Password of redis client. |
-| protover | 3 | Protocol version, set 2 for redis version less than 6.0 |
 
 ## API Reference
 

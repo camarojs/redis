@@ -16,3 +16,5 @@ export class VerbatimString extends String {
         super(value);
     }
 }
+
+export type ProtoVer = 2 | 3;

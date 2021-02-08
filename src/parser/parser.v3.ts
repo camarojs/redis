@@ -1,5 +1,5 @@
 import BaseParser from './baseParser';
-import { RedisError, VerbatimString } from './types';
+import { RedisError, VerbatimString } from '../types';
 
 class Parser extends BaseParser {
     constructor() {

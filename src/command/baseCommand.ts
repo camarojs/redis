@@ -1,4 +1,4 @@
-export interface IClientCommand {
+export interface IBaseCommand {
     ACL(subcommand: 'load'): Promise<void>;
     ACL(subcommand: 'save'): Promise<void>;
     ACL(subcommand: 'list'): Promise<string[]>;
@@ -183,8 +183,6 @@ export interface IClientCommand {
     HEXISTS(key: string, field: string): Promise<number>;
 
     HGET(key: string, field: string): Promise<string | null>;
-
-    HGETALL(key: string): Promise<string[]>;
 
     HINCRBY(key: string, field: string, increment: number): Promise<number>;
 

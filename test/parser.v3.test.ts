@@ -1,7 +1,7 @@
 import { strictEqual } from 'assert';
 import { describe, it } from 'mocha';
 import { RedisError, VerbatimString } from '../src/types';
-import Parser from '../src/parser.v3';
+import Parser from '../src/parser/parser.v3';
 
 const parser = new Parser();
 

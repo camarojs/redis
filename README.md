@@ -26,7 +26,8 @@ npm install @camaro/redis
 ### Usage
 
 ```js
-const { Client } = require('redis')
+// If you want to use resp2 ,change `ClientV3` to `ClientV2`.
+const { ClientV3: Client } = require('@camaro/redis')
 const client = new Client();
 
 client.SET('foo', 'foo').then(() => {

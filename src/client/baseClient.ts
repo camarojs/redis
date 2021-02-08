@@ -1,31 +1,27 @@
 import { Socket } from 'net';
-import { IClientCommand } from './clientCommand';
-import commands from './commands.json';
-import ParserV2 from './parser.v2';
-import ParserV3 from './parser.v3';
+import { ProtoVer } from '../types';
+import commands from '../command/commands.json';
+import ParserV2 from '../parser/parser.v2';
+import ParserV3 from '../parser/parser.v3';
 
 export interface IClientOptions {
     host?: string;
     port?: number;
     username?: string;
     password?: string;
-    protover?: 2 | 3;
 }
 
-export interface Client extends IClientCommand {
-    options: IClientOptions
-}
-
-export class Client implements Client {
+export abstract class BaseClient {
     private socket = new Socket();
-    private parser!: ParserV2 | ParserV3;
-    constructor(
-        public options: IClientOptions = {}
-    ) {
+    private parser: ParserV2 | ParserV3;
+    constructor(public options: IClientOptions = {}, protover: ProtoVer) {
+        this.parser = protover === 3 ? new ParserV3() : new ParserV2();
         commands.forEach(command => { this.addCommand(command); });
         this.initOptions(options);
         this.connect();
     }
+
+    abstract authenticate(): void;
 
     private connect(): void {
         this.socket.connect(
@@ -34,21 +30,22 @@ export class Client implements Client {
         );
         this.socket.setKeepAlive(true);
 
-        if (this.options.protover === 3) {
-            this.parser = new ParserV3();
-            if (this.options.password) {
-                this.HELLO(3, 'auth', this.options.username as string, this.options.password);
-            } else {
-                this.HELLO(3);
-            }
-        }
+        this.authenticate();
 
-        if (this.options.protover === 2) {
-            this.parser = new ParserV2();
-            if (this.options.password) {
-                this.AUTH(this.options.password);
-            }
-        }
+        // if (this.protover === 3) {
+        //     if (this.options.password) {
+        //         this.HELLO(3, 'auth', this.options.username as string, this.options.password);
+        //     } else {
+        //         this.HELLO(3);
+        //     }
+        // }
+
+        // if (this.protover === 2) {
+        //     this.parser = new ParserV2();
+        //     if (this.options.password) {
+        //         this.AUTH(this.options.password);
+        //     }
+        // }
 
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
@@ -59,7 +56,6 @@ export class Client implements Client {
         options.host = options.host || '127.0.0.1';
         options.port = options.port || 6379;
         options.username = options.username || 'default';
-        options.protover = options.protover || 3;
     }
 
     private addCommand(command: string): void {

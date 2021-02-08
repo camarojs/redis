@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { Client } from '../';
+import { ClientV3 as Client } from '../';
 
 const redis = new Client();
 const jsonPath = resolve(__dirname, '..', 'src', 'commands.json');

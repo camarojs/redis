@@ -50,7 +50,6 @@ console.log(reply) // 'bar'
 | port | 6379 | Port of the redis server. |
 | username | default | Username of redis client. |
 | password | null | Password of redis client. |
-| protover | 3 | Protocol version, set 2 for redis version less than 6.0 |
 
 ## API Reference
 

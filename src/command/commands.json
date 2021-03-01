@@ -203,5 +203,6 @@
     "zrevrank",
     "zscan",
     "zscore",
-    "zunionstore"
+    "zunionstore",
+    "quit"
 ]

@@ -1,24 +1,31 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { ClientV3 as Client } from '../';
 
-const redis = new Client();
-const jsonPath = resolve(__dirname, '..', 'src', 'commands.json');
-const dtsPath = resolve(__dirname, '..', 'src', 'clientCommand.ts');
+const jsonPath = resolve(__dirname, '..', 'src', 'command', 'commands.json');
+const dtsPath = resolve(__dirname, '..', 'src', 'command', 'baseCommand.ts');
+const dtsPathV2 = resolve(__dirname, '..', 'src', 'command', 'command.v2.ts');
+const dtsPathV3 = resolve(__dirname, '..', 'src', 'command', 'command.v3.ts');
+
+const dtsBase = readFileSync(dtsPath).toString();
+const dtsV2 = readFileSync(dtsPathV2).toString();
+const dtsV3 = readFileSync(dtsPathV3).toString();
 
 async function dodo() {
-    const redisCommands = await redis.COMMAND<[string][]>();
-    const dts = readFileSync(dtsPath).toString();
-    const commands = redisCommands.map(c => {
-        const cmdText = c[0];
-        const reg = new RegExp(`${cmdText.toUpperCase()}(<T>)?(.*)`);
-        if (!reg.test(dts)) {
+    const redisCommands: string[] = JSON.parse(readFileSync(jsonPath).toString());
+    redisCommands.forEach(cmdText => {
+        checkDTS(cmdText);
+
+    });
+    process.exit(0);
+}
+
+function checkDTS(cmdText: string) {
+    const reg = new RegExp(`${cmdText.toUpperCase()}(<T>)?(.*)`);
+    if (!reg.test(dtsBase)) {
+        if (!reg.test(dtsV2) || !reg.test(dtsV3)) {
             console.log(`Command '${cmdText}' is not defined in dts.`);
         }
-        return c[0];
-    }).sort();
-    writeFileSync(jsonPath, JSON.stringify(commands, undefined, '\u0020\u0020\u0020\u0020'));
-    process.exit(0);
+    }
 }
 
 dodo();

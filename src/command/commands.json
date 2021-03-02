@@ -110,6 +110,7 @@
     "publish",
     "pubsub",
     "punsubscribe",
+    "quit",
     "randomkey",
     "readonly",
     "readwrite",
@@ -203,6 +204,5 @@
     "zrevrank",
     "zscan",
     "zscore",
-    "zunionstore",
-    "quit"
+    "zunionstore"
 ]

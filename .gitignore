@@ -8,3 +8,6 @@ node_modules/
 # Compile output
 lib/
 types/
+
+# husky folder
+.husky/_

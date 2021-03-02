@@ -2,6 +2,7 @@
     "name": "@camaro/redis",
     "version": "2.0.0",
     "main": "lib/index.js",
+    "description": "Redis client for node, support resp3 and redis6.",
     "repository": {
         "type": "git",
         "url": "https://github.com/pikadun/redis"

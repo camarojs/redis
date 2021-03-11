@@ -10,11 +10,13 @@ export class Client extends BaseClient {
         super(options, 3);
     }
 
-    authenticate(): void {
+    init(): void {
         if (this.options.password) {
             this.HELLO(3, 'auth', this.options.username as string, this.options.password);
         } else {
             this.HELLO(3);
         }
+
+        this.SELECT(this.options.db as number);
     }
 }

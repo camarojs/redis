@@ -7,6 +7,7 @@ import ParserV3 from '../parser/parser.v3';
 export interface IClientOptions {
     host?: string;
     port?: number;
+    db?: number;
     username?: string;
     password?: string;
 }
@@ -21,7 +22,7 @@ export abstract class BaseClient {
         this.connect();
     }
 
-    abstract authenticate(): void;
+    abstract init(): void;
 
     private connect(): void {
         this.socket.connect(
@@ -30,7 +31,7 @@ export abstract class BaseClient {
         );
         this.socket.setKeepAlive(true);
 
-        this.authenticate();
+        this.init();
 
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
@@ -40,6 +41,7 @@ export abstract class BaseClient {
     private initOptions(options: IClientOptions): void {
         options.host = options.host || '127.0.0.1';
         options.port = options.port || 6379;
+        options.db = options.db || 0;
         options.username = options.username || 'default';
     }
 

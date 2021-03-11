@@ -50,6 +50,7 @@ console.log(reply) // 'bar'
 | port | 6379 | Port of the redis server. |
 | username | default | Username of redis client. |
 | password | null | Password of redis client. |
+| db | 0 | If set, client will run `SELECT` command on connect. |
 
 ## API Reference
 

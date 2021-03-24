@@ -5,6 +5,8 @@
 [![npm](https://img.shields.io/npm/dm/@camaro/redis)](https://www.npmjs.com/package/@camaro/redis)
 [![GitHub stars](https://img.shields.io/github/stars/camarojs/redis)](https://github.com/camarojs/redis/stargazers)
 
+[中文文档说明](./doc/zh-CN.md)
+
 Redis client for node, support resp2/3, redis6, and all commands of redis.
 
 ## Features
@@ -36,7 +38,7 @@ client.SET('foo', 'foo').then(() => {
     console.log(reply) // 'foo'
 })
 
-// if you want to use async/await
+// Or if you want to use async/await.
 await client.SET('bar', 'bar')
 const reply = await client.GET('bar')
 console.log(reply) // 'bar'

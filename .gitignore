@@ -11,3 +11,4 @@ types/
 
 # husky folder
 .husky/_
+.husky/.gitignore

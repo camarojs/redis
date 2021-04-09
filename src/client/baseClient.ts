@@ -15,6 +15,7 @@ export interface IClientOptions {
 export abstract class BaseClient {
     private socket = new Socket();
     private parser: ParserV2 | ParserV3;
+    private reconnectIntervalHandle: number | null = null;
     constructor(public options: IClientOptions, protover: ProtoVer) {
         this.parser = protover === 3 ? new ParserV3() : new ParserV2();
         commands.forEach(command => { this.addCommand(command); });
@@ -31,11 +32,34 @@ export abstract class BaseClient {
         );
         this.socket.setKeepAlive(true);
 
-        this.init();
-
+        this.socket.on('connect', () => {
+            if (this.reconnectIntervalHandle !== null) {
+                clearInterval(this.reconnectIntervalHandle);
+                this.reconnectIntervalHandle = null;
+            }
+            this.init();
+        });
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
+
+        this.socket.on('error', (err) => {
+            console.error('Redis socket error', err);
+            this.reconnect();
+        });
+        this.socket.on('close', () => this.reconnect());
+        this.socket.on('end', () => this.reconnect());
+    }
+
+    private reconnect(): void {
+        if(this.reconnectIntervalHandle !== null)
+            return;
+        this.reconnectIntervalHandle = setInterval(() => {
+            this.socket.connect(
+                this.options.port as number,
+                this.options.host as string
+            );
+        }, 10000) as unknown as number;
     }
 
     private initOptions(options: IClientOptions): void {

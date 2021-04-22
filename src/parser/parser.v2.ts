@@ -4,21 +4,21 @@ class Parser extends BaseParser {
     constructor() {
         super(2);
     }
-    
+
     async parseReply(): Promise<unknown> {
         this.parsing = true;
 
         const char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         switch (char) {
-            case '+':
+            case 43: // '+'
                 return this.parseSimpleString();
-            case '-':
+            case 45: // '-'
                 return this.parseSimpleError();
-            case ':':
+            case 58: // ':'
                 return this.parseNumber();
-            case '$':
+            case 36: // '$'
                 return this.parseBulkString();
-            case '*':
+            case 42: // '*'
                 return this.parseArray();
             default:
                 return undefined;
@@ -26,7 +26,7 @@ class Parser extends BaseParser {
     }
 
     private async parseBulkString() {
-        let result = '';
+        const result: number[] = [];
         let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
         const length = await this.parseNumber();
 
@@ -36,11 +36,11 @@ class Parser extends BaseParser {
 
         for (let i = 0; i < length; i++) {
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-            result += char;
+            result.push(char);
         }
 
         this.offset += 2;
-        return result;
+        return Buffer.from(result).toString();
     }
 
     private async parseArray() {

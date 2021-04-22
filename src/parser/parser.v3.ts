@@ -5,41 +5,41 @@ class Parser extends BaseParser {
     constructor() {
         super(3);
     }
-    
+
     async parseReply(): Promise<unknown> {
         this.parsing = true;
 
         const char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         switch (char) {
-            case '$':
+            case 36: // '$'
                 return this.parseBlobString();
-            case '%':
+            case 37: // '%'
                 return this.parseMap();
-            case ':':
+            case 58: // ':'
                 return this.parseNumber();
-            case '*':
+            case 42: // '*'
                 return this.parseArray();
-            case '+':
+            case 43: // '+'
                 return this.parseSimpleString();
-            case '-':
+            case 45: // '-'
                 return this.parseSimpleError();
-            case ',':
+            case 44: // ','
                 return this.parseDouble();
-            case '#':
+            case 35: // '#'
                 return this.parseBoolean();
-            case '!':
+            case 33: // '!'
                 return this.parseBlobError();
-            case '=':
+            case 61: // '='
                 return this.parseVerbatimString();
-            case '(':
+            case 40: // '('
                 return this.parseBigNumber();
-            case '~':
+            case 126: // '~'
                 return this.parseSet();
-            case '|':
+            case 124: // '|'
                 return this.parseAttribute();
-            case '>':
+            case 62: // '>'
                 return this.parsePubSub();
-            case '_':
+            case 95: // '_'
                 return this.parseNull();
             default:
                 return undefined;
@@ -49,10 +49,10 @@ class Parser extends BaseParser {
     private async parseMap() {
         let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
         const map = new Map();
-        if (char === '?') {
+        if (char === 63) { // '?'
             this.offset += 3; // skip '?\r\n'
             char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
-            while (char !== '.') {
+            while (char !== 46) { // '.'
                 const key = await this.parseReply();
                 const value = await this.parseReply();
                 map.set(key, value);
@@ -72,17 +72,17 @@ class Parser extends BaseParser {
     }
 
     private async parseBlobString() {
-        let result = '';
+        const result: number[] = [];
         let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
 
         let length: number;
-        if (char === '?') { // stream string
+        if (char === 63) { // '?' stream string
             this.offset += 4; // skip '?\r\n;'
             length = await this.parseNumber();
             while (length !== 0) {
                 for (let i = 0; i < length; i++) {
                     char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-                    result += char;
+                    result.push(char);
                 }
                 this.offset += 3;
                 length = await this.parseNumber();
@@ -91,21 +91,21 @@ class Parser extends BaseParser {
             length = await this.parseNumber();
             for (let i = 0; i < length; i++) {
                 char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-                result += char;
+                result.push(char);
             }
         }
         // skip the ending '\r\n'
         this.offset += 2;
-        return result;
+        return Buffer.from(result).toString();
     }
 
     private async parseArray() {
         let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
         const array = [];
-        if (char === '?') {
+        if (char === 63) { // '?'
             this.offset += 3; // skip '?\r\n'
             char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
-            while (char !== '.') {
+            while (char !== 46) { // '.'
                 array.push(await this.parseReply());
                 char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
             }
@@ -120,78 +120,78 @@ class Parser extends BaseParser {
     }
 
     private async parseDouble() {
-        let result = '';
+        const result: number[] = [];
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-        if (char === '-') {
-            result = '-' + result;
+        if (char === 45) { // '-'
+            result.unshift(45);
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
 
-        while (char !== '\r') {
-            result += char;
+        while (char !== 13) { // '\r'
+            result.push(char);
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
 
         this.offset++;
-        return parseFloat(result);
+        return parseFloat(Buffer.from(result).toString());
     }
 
     private async parseBoolean() {
         const char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         this.offset += 2;
-        return char === 't';
+        return char === 116; // 't'
     }
 
     private async parseBlobError() {
         const code = await this.parseNumber();
-        let msg = '';
+        const msg: number[] = [];
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-        while (char !== '\r') {
-            msg += char;
+        while (char !== 13) { // '\r'
+            msg.push(char);
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
 
-        return new RedisError(msg, code);
+        return new RedisError(Buffer.from(msg).toString(), code);
     }
 
     private async parseVerbatimString() {
         const length = await this.parseNumber();
-        let result = '';
-        let format = '';
+        const result: number[] = [];
+        const format: number[] = [];
         for (let i = 0; i < length; i++) {
             const char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
             // the fourth byte is always ':'
             if (i < 3) {
-                format += char;
+                format.push(char);
             } else if (i > 3) {
-                result += char;
+                result.push(char);
             }
         }
-        return new VerbatimString(format, result);
+        return new VerbatimString(Buffer.from(format).toString(), Buffer.from(result).toString());
     }
 
     private async parseBigNumber() {
-        let result = '';
+        const result: number[] = [];
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
-        if (char === '-') {
-            result = '-' + result;
+        if (char === 45) { // '-'
+            result.unshift(45);
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
-        while (char !== '\r') {
-            result += char;
+        while (char !== 13) { // '\r'
+            result.push(char);
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         this.offset++;
-        return BigInt(result);
+        return BigInt(Buffer.from(result).toString());
     }
 
     private async parseSet() {
         let char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
         const set = new Set();
-        if (char === '?') {
+        if (char === 63) { // '?'
             this.offset += 3; // skip '?\r\n'
             char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
-            while (char !== '.') {
+            while (char !== 46) { // '.'
                 set.add(await this.parseReply());
                 char = this.inBounds ? this.peekChar() : await this.peekCharAsync();
             }

@@ -235,7 +235,7 @@ describe('Parser.parseBigNumber', () => {
 
 describe('Parser.parseSet', () => {
     it('should return a set.', async () => {
-        const buffer = Buffer.from('~5\r\n=+orange\r\n+apple\r\n#t\r\n:100\r\n:999\r\n');
+        const buffer = Buffer.from('~5\r\n+orange\r\n+apple\r\n#t\r\n:100\r\n:999\r\n');
         const p = new Promise((resolve) => {
             parser.callbacks.push((_err, reply) => {
                 resolve(reply);

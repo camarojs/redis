@@ -9,7 +9,7 @@ export default abstract class BaseParser extends EventEmitter {
     }
 
     callbacks = new Array<(error: RedisError | undefined, reply: unknown | undefined) => void>();
-    buffer = '';
+    buffer: number[] = [];
     offset = 0;
     parsing = false;
 
@@ -17,14 +17,22 @@ export default abstract class BaseParser extends EventEmitter {
         return this.offset < this.buffer.length;
     }
 
+    /**
+     * Convert command to resp string.
+     * @param command Redis command.
+     * @param args Redis command args.
+     */
     encodeCommand(command: string, args?: string[]): string {
         const result = [];
         result.push('*', args ? args.length + 1 : 1, '\r\n');
+        // If the command contains only letters,
+        // the length of the command string is the same as the length of the Buffer 
         result.push('$', command.length, '\r\n');
         result.push(command, '\r\n');
 
         args?.forEach(arg => {
-            result.push('$', arg.length, '\r\n');
+            // The length of the buffer 
+            result.push('$', Buffer.from(arg).length, '\r\n');
             result.push(arg, '\r\n');
         });
 
@@ -32,7 +40,7 @@ export default abstract class BaseParser extends EventEmitter {
     }
 
     async decodeReply(data: Buffer): Promise<void> {
-        this.buffer += data.toString();
+        this.buffer.push(...data);
         this.emit('newData');
         if (this.parsing) {
             return;
@@ -73,7 +81,7 @@ export default abstract class BaseParser extends EventEmitter {
      * Reset parser status.
      */
     private reset() {
-        this.buffer = '';
+        this.buffer = [];
         this.offset = 0;
         this.parsing = false;
     }
@@ -81,19 +89,19 @@ export default abstract class BaseParser extends EventEmitter {
     /**
      * Get the next character synchronously and move offset.
      */
-    nextChar(): string {
-        return this.buffer[this.offset++] as string;
+    nextChar(): number {
+        return this.buffer[this.offset++] as number;
     }
 
     /**
      * Get the next character asynchronously and move offset.
      */
-    nextCharAsync(): Promise<string> {
-        this.buffer = '';
+    nextCharAsync(): Promise<number> {
+        this.buffer = [];
         this.offset = 0;
         return new Promise((resolve) => {
             this.once('newData', () => {
-                resolve(this.buffer[this.offset++] as string);
+                resolve(this.buffer[this.offset++] as number);
             });
         });
     }
@@ -101,19 +109,19 @@ export default abstract class BaseParser extends EventEmitter {
     /**
      * Get the next character synchronously.
      */
-    peekChar(): string {
-        return this.buffer[this.offset] as string;
+    peekChar(): number {
+        return this.buffer[this.offset] as number;
     }
 
     /**
      * Get the next character asynchronously.
      */
-    peekCharAsync(): Promise<string> {
-        this.buffer = '';
+    peekCharAsync(): Promise<number> {
+        this.buffer = [];
         this.offset = 0;
         return new Promise((resolve) => {
             this.once('newData', () => {
-                resolve(this.buffer[this.offset] as string);
+                resolve(this.buffer[this.offset] as number);
             });
         });
     }
@@ -121,16 +129,16 @@ export default abstract class BaseParser extends EventEmitter {
     abstract parseReply(): Promise<unknown>;
 
     async parseSimpleString(): Promise<string> {
-        let result = '';
+        const result: number[] = [];
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
 
-        while (char !== '\r') {
-            result += char;
+        while (char !== 13) { // '\r'
+            result.push(char);
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         // skip '\r\n'
         this.offset++;
-        return result;
+        return Buffer.from(result).toString();
     }
 
     async parseSimpleError(): Promise<RedisError> {
@@ -142,13 +150,13 @@ export default abstract class BaseParser extends EventEmitter {
         let result = 0;
         let char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         let sign = false;
-        if (char === '-') {
+        if (char === 45) { // '-'
             sign = true;
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
 
-        while (char !== '\r') {
-            result = result * 10 + ((char as unknown as number) - ('0' as unknown as number));
+        while (char !== 13) { // '\r'
+            result = result * 10 + (char - 48); // '0'
             char = this.inBounds ? this.nextChar() : await this.nextCharAsync();
         }
         // skip '\r\n'

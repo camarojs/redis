@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
-import { ProtoVer, RedisError } from '../types';
+import { ProtoVer } from '../client/baseClient';
+import { RedisError } from '../library/redisError';
 
 export default abstract class BaseParser extends EventEmitter {
     constructor(

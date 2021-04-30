@@ -7,14 +7,3 @@ export class RedisError extends Error {
         this.name = 'Redis Reply Error';
     }
 }
-
-export class VerbatimString extends String {
-    constructor(
-        public format: string,
-        value: string
-    ) {
-        super(value);
-    }
-}
-
-export type ProtoVer = 2 | 3;

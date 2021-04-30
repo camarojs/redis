@@ -5,7 +5,7 @@
     "description": "Redis client for node, support resp3 and redis6.",
     "repository": {
         "type": "git",
-        "url": "https://github.com/pikadun/redis"
+        "url": "https://github.com/camarojs/redis"
     },
     "license": "MIT",
     "scripts": {

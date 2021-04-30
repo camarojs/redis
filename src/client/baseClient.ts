@@ -1,5 +1,4 @@
 import { Socket } from 'net';
-import { ProtoVer } from '../types';
 import commands from '../command/commands.json';
 import ParserV2 from '../parser/parser.v2';
 import ParserV3 from '../parser/parser.v3';
@@ -11,6 +10,8 @@ export interface IClientOptions {
     username?: string;
     password?: string;
 }
+
+export type ProtoVer = 2 | 3;
 
 export abstract class BaseClient {
     private socket = new Socket();

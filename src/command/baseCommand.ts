@@ -444,6 +444,9 @@ export interface IBaseCommand {
 
     XACK(key: string, group: string, ...id: string[]): Promise<number>;
 
+    XAUTOCLAIM<T>(key: string, group: string, consumer: string, minIdleIime: number, start: string, subcommand2?: 'JUSTID'): Promise<T>;
+    XAUTOCLAIM<T>(key: string, group: string, consumer: string, minIdleIime: number, start: string, subcommand1: 'count', count: number, subcommand2?: 'JUSTID'): Promise<T>;
+
     XCLAIM<T>(key: string, group: string, consumer: string, ...arg: string[]): Promise<T>;
 
     XDEL(key: string, ...id: string[]): Promise<number>;

@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { resolve } from 'path';
+import { ClientV3 } from '../';
 
 const jsonPath = resolve(__dirname, '..', 'src', 'command', 'commands.json');
 const dtsPath = resolve(__dirname, '..', 'src', 'command', 'baseCommand.ts');
@@ -10,11 +12,19 @@ const dtsBase = readFileSync(dtsPath).toString();
 const dtsV2 = readFileSync(dtsPathV2).toString();
 const dtsV3 = readFileSync(dtsPathV3).toString();
 
-async function dodo() {
-    const redisCommands: string[] = JSON.parse(readFileSync(jsonPath).toString());
-    redisCommands.forEach(cmdText => {
-        checkDTS(cmdText);
+const redis = new ClientV3();
 
+const notInCommands = ['zscan', 'quit'];
+
+async function dodo() {
+    const redisCommands = await redis.COMMAND<[string][]>();
+    const commands = redisCommands.filter(rc => rc instanceof Array).map(rc => rc[0]);
+    commands.push(...notInCommands);
+    commands.sort();
+    writeFileSync(jsonPath, JSON.stringify(commands, undefined, '\u0020\u0020\u0020\u0020'));
+
+    commands.forEach(cmdText => {
+        checkDTS(cmdText);
     });
     process.exit(0);
 }

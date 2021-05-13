@@ -17,6 +17,8 @@ export abstract class BaseClient {
     private socket = new Socket();
     private parser: ParserV2 | ParserV3;
     private reconnectIntervalHandle: number | null = null;
+    /** Store the command that executed before connect */
+    private queue: string[] = [];
     constructor(public options: IClientOptions, protover: ProtoVer) {
         this.parser = protover === 3 ? new ParserV3() : new ParserV2();
         commands.forEach(command => { this.addCommand(command); });
@@ -38,22 +40,27 @@ export abstract class BaseClient {
                 clearInterval(this.reconnectIntervalHandle);
                 this.reconnectIntervalHandle = null;
             }
-            this.init();
+
+            this.queue.forEach(elem => {
+                this.socket.write(elem);
+            });
         });
+
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
-
         this.socket.on('error', (err) => {
             console.error('Redis socket error', err);
             this.reconnect();
         });
         this.socket.on('close', () => this.reconnect());
         this.socket.on('end', () => this.reconnect());
+
+        this.init();
     }
 
     private reconnect(): void {
-        if(this.reconnectIntervalHandle !== null)
+        if (this.reconnectIntervalHandle !== null)
             return;
         this.reconnectIntervalHandle = setInterval(() => {
             this.socket.connect(
@@ -87,7 +94,11 @@ export abstract class BaseClient {
                 err ? reject(err) : resolve(reply);
             });
             const buffer = this.parser.encodeCommand(command, args);
-            this.socket.write(buffer);
+            if (this.socket.connecting) {
+                this.queue.push(buffer);
+            } else {
+                this.socket.write(buffer);
+            }
         });
     }
 

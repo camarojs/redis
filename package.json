@@ -1,6 +1,6 @@
 {
     "name": "@camaro/redis",
-    "version": "2.2.2",
+    "version": "2.2.3",
     "main": "lib/index.js",
     "description": "Redis client for node, support resp3 and redis6.",
     "repository": {

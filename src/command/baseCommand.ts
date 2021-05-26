@@ -216,7 +216,7 @@ export interface IBaseCommand {
     INCRBYFLOAT(key: string, field: string, increment: string): Promise<number>;
 
     INFO(
-        section: 'all' | 'default' | 'everything' | 'server' | 'clients' | 'memory'
+        section?: 'all' | 'default' | 'everything' | 'server' | 'clients' | 'memory'
         | 'persistence' | 'stats' | 'replication' | 'cpu' | 'commandstats' | 'cluster'
         | 'modules' | 'keyspace' | 'errorstats'
     ): Promise<string>;

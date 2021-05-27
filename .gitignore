@@ -10,5 +10,5 @@ lib/
 types/
 
 # husky folder
-.husky/_
-.husky/.gitignore
+eng/_
+eng/husky/.gitignore

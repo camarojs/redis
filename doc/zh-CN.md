@@ -36,6 +36,7 @@ console.log(reply) // 'bar'
 | username | default | 连接服务器使用的用户名。 |
 | password | null | 连接服务器使用的密码。 |
 | db | 0 | 如果设置了，会执行 `SELECT` 命令切换到对应的数据库。 |
+| reconnection | true | 发生错误时是否重新连接。 |
 
 ## API 说明
 

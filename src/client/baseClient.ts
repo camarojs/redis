@@ -9,6 +9,7 @@ export interface IClientOptions {
     db?: number;
     username?: string;
     password?: string;
+    reconnection?: boolean;
 }
 
 export type ProtoVer = 2 | 3;
@@ -50,7 +51,7 @@ export abstract class BaseClient {
              * In addition to actively disconnecting the client or server, 
              * it will automatically reconnect 
              */
-            if (hadError) {
+            if (hadError && this.options.reconnection) {
                 this.reconnect();
             }
         });
@@ -73,6 +74,7 @@ export abstract class BaseClient {
         options.port = options.port || 6379;
         options.db = options.db || 0;
         options.username = options.username || 'default';
+        options.reconnection = options.reconnection !== false;
     }
 
     private addCommand(command: string): void {

@@ -53,6 +53,7 @@ console.log(reply) // 'bar'
 | username | default | Username of redis client. |
 | password | null | Password of redis client. |
 | db | 0 | If set, client will run `SELECT` command on connect. |
+| reconnection | true | Whether to reconnect when an error occurs. |
 
 ## API Reference
 

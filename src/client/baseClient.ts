@@ -13,10 +13,15 @@ export interface IClientOptions {
 
 export type ProtoVer = 2 | 3;
 
+declare module 'net' {
+    interface Socket {
+        pending: boolean
+    }
+}
+
 export abstract class BaseClient {
     private socket = new Socket();
     private parser: ParserV2 | ParserV3;
-    private reconnectIntervalHandle: number | null = null;
     /** Store the command that executed before connect */
     private queue: string[] = [];
     constructor(public options: IClientOptions, protover: ProtoVer) {
@@ -28,46 +33,37 @@ export abstract class BaseClient {
 
     abstract init(): void;
 
-    private connect(): void {
-        this.socket.connect(
-            this.options.port as number,
-            this.options.host as string
-        );
+    async connect(): Promise<void> {
+        this.socket.connect(this.options.port as number, this.options.host as string);
         this.socket.setKeepAlive(true);
-
         this.socket.on('connect', () => {
-            if (this.reconnectIntervalHandle !== null) {
-                clearInterval(this.reconnectIntervalHandle);
-                this.reconnectIntervalHandle = null;
-            }
-
             this.queue.forEach(elem => {
                 this.socket.write(elem);
             });
         });
-
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
         this.socket.on('error', (err) => {
-            console.error('Redis socket error', err);
-            this.reconnect();
+            console.error(err + '');
         });
-        this.socket.on('close', () => this.reconnect());
-        this.socket.on('end', () => this.reconnect());
+        this.socket.on('close', (err) => {
+            /**
+             * In addition to actively disconnecting the client or server, 
+             * it will automatically reconnect 
+             */
+            if (err) {
+                this.reconnect();
+            }
+        });
 
         this.init();
     }
 
     private reconnect(): void {
-        if (this.reconnectIntervalHandle !== null)
-            return;
-        this.reconnectIntervalHandle = setInterval(() => {
-            this.socket.connect(
-                this.options.port as number,
-                this.options.host as string
-            );
-        }, 10000) as unknown as number;
+        setTimeout(() => {
+            this.socket.connect(this.options.port as number, this.options.host as string);
+        }, 100);
     }
 
     private initOptions(options: IClientOptions): void {
@@ -94,7 +90,7 @@ export abstract class BaseClient {
                 err ? reject(err) : resolve(reply);
             });
             const buffer = this.parser.encodeCommand(command, args);
-            if (this.socket.connecting) {
+            if (this.socket.pending) {
                 this.queue.push(buffer);
             } else {
                 this.socket.write(buffer);

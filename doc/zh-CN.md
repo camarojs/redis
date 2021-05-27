@@ -54,7 +54,12 @@ client.GET(...args);
 // ... other commands
 ```
 
-查看完整 redis 命令列表: [https://redis.io/commands](https://redis.io/commands) .
+查看完整 redis 命令列表: [https://redis.io/commands](https://redis.io/commands)。
+
+### Events
+
++ `message`: 查看 [Pub/Sub](#Pub/Sub)。
++ `error`: 发生连接错误时触发。
 
 ### Pub/Sub
 

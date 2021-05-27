@@ -73,6 +73,11 @@ client.GET(...args);
 
 See the complete command list: [https://redis.io/commands](https://redis.io/commands) .
 
+### Events
+
++ `message`: See [Pub/Sub](#Pub/Sub)
++ `error`: Emitted when a connection error occurs.
+
 ### Pub/Sub
 
 You can receive `pub/sub` message by `message` event and handle it in the callback function.

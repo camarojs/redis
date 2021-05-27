@@ -44,15 +44,13 @@ export abstract class BaseClient {
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
-        this.socket.on('error', (err) => {
-            console.error(err + '');
-        });
-        this.socket.on('close', (err) => {
+        this.socket.on('error', (err) => { this.handleError(err); });
+        this.socket.on('close', (hadError) => {
             /**
              * In addition to actively disconnecting the client or server, 
              * it will automatically reconnect 
              */
-            if (err) {
+            if (hadError) {
                 this.reconnect();
             }
         });
@@ -64,6 +62,10 @@ export abstract class BaseClient {
         setTimeout(() => {
             this.socket.connect(this.options.port as number, this.options.host as string);
         }, 100);
+    }
+
+    private handleError(err: Error): void {
+        console.error(err + '');
     }
 
     private initOptions(options: IClientOptions): void {
@@ -98,10 +100,13 @@ export abstract class BaseClient {
         });
     }
 
-    public on(event: string, listener: (data: unknown) => void): void {
+    public on(event: 'message' | 'error', listener: (data: unknown) => void): void {
         switch (event) {
             case 'message':
                 this.parser.on(event, listener);
+                break;
+            case 'error':
+                this.handleError = listener;
                 break;
         }
     }

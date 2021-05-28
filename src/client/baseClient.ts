@@ -41,11 +41,12 @@ export abstract class BaseClient {
             this.queue.forEach(elem => {
                 this.socket.write(elem);
             });
+            this.handleConnect?.();
         });
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
-        this.socket.on('error', (err) => { this.handleError(err); });
+        this.socket.on('error', err => { this.handleError(err); });
         this.socket.on('close', (hadError) => {
             /**
              * In addition to actively disconnecting the client or server, 
@@ -65,6 +66,7 @@ export abstract class BaseClient {
         }, 100);
     }
 
+    private handleConnect?: () => void;
     private handleError(err: Error): void {
         console.error(err + '');
     }
@@ -102,7 +104,7 @@ export abstract class BaseClient {
         });
     }
 
-    public on(event: 'message' | 'error', listener: (data: unknown) => void): void {
+    public on(event: 'message' | 'error' | 'connect', listener: (data?: unknown) => void): void {
         switch (event) {
             case 'message':
                 this.parser.on(event, listener);
@@ -110,6 +112,8 @@ export abstract class BaseClient {
             case 'error':
                 this.handleError = listener;
                 break;
+            case 'connect':
+                this.handleConnect = listener;
         }
     }
 }

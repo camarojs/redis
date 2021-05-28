@@ -78,6 +78,7 @@ See the complete command list: [https://redis.io/commands](https://redis.io/comm
 
 + `message`: See [Pub/Sub](#Pub/Sub)
 + `error`: Emitted when a connection error occurs.
++ `connect`: Emitted when a socket connection is successfully established.
 
 ### Pub/Sub
 

@@ -61,6 +61,7 @@ client.GET(...args);
 
 + `message`: 查看 [Pub/Sub](#Pub/Sub)。
 + `error`: 发生连接错误时触发。
++ `connect`: 成功建立socket连接时触发。
 
 ### Pub/Sub
 

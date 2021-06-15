@@ -25,10 +25,11 @@ export abstract class BaseClient {
     private parser: ParserV2 | ParserV3;
     /** Store the command that executed before connect */
     private queue: string[] = [];
-    constructor(public options: IClientOptions, protover: ProtoVer) {
+    options: IClientOptions;
+    constructor(options: IClientOptions, protover: ProtoVer) {
         this.parser = protover === 3 ? new ParserV3() : new ParserV2();
         commands.forEach(command => { this.addCommand(command); });
-        this.initOptions(options);
+        this.options = this.initOptions(options);
         this.connect();
     }
 
@@ -71,12 +72,14 @@ export abstract class BaseClient {
         console.error(err + '');
     }
 
-    private initOptions(options: IClientOptions): void {
-        options.host = options.host || '127.0.0.1';
-        options.port = options.port || 6379;
-        options.db = options.db || 0;
-        options.username = options.username || 'default';
-        options.reconnection = options.reconnection !== false;
+    private initOptions(options: IClientOptions): IClientOptions {
+        const cloneOptions: IClientOptions = {};
+        cloneOptions.host = options.host || '127.0.0.1';
+        cloneOptions.port = options.port || 6379;
+        cloneOptions.db = options.db || 0;
+        cloneOptions.username = options.username || 'default';
+        cloneOptions.reconnection = options.reconnection !== false;
+        return cloneOptions;
     }
 
     private addCommand(command: string): void {

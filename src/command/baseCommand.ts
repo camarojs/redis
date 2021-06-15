@@ -203,7 +203,10 @@ export interface IBaseCommand {
     HRANDFIELD(key: string): Promise<string | null>;
     HRANDFIELD(key: string, count: number, withvalues?: 'withvalues'): Promise<string[]>;
 
-    HSCAN<T>(key: string, cursor: string, ...arg: string[]): Promise<T>;
+    HSCAN(key: string, cursor: number): Promise<[string, string[]]>;
+    HSCAN(key: string, cursor: number, option1: 'match', pattern: string): Promise<[string, string[]]>;
+    HSCAN(key: string, cursor: number, option1: 'count', count: number): Promise<[string, string[]]>;
+    HSCAN(key: string, cursor: number, option1: 'match', pattern: string, option2: 'count', count: number): Promise<[string, string[]]>;
 
     HSTRLEN(key: string, field: string): Promise<number>;
 
@@ -352,7 +355,14 @@ export interface IBaseCommand {
 
     SAVE(): Promise<void>;
 
-    SCAN<T>(cursor: string, ...arg: string[]): Promise<T>;
+    SCAN(cursor: number): Promise<[string, string[]]>;
+    SCAN(cursor: number, option1: 'match', pattern: string): Promise<[string, string[]]>;
+    SCAN(cursor: number, option1: 'count', count: number): Promise<[string, string[]]>;
+    SCAN(cursor: number, option1: 'type', type: string): Promise<[string, string[]]>;
+    SCAN(cursor: number, option1: 'match', pattern: string, option2: 'count', count: number): Promise<[string, string[]]>;
+    SCAN(cursor: number, option1: 'match', pattern: string, option2: 'type', type: string): Promise<[string, string[]]>;
+    SCAN(cursor: number, option1: 'count', count: number, option2: 'type', type: string): Promise<[string, string[]]>;
+    SCAN(cursor: number, option1: 'match', pattern: string, option2: 'count', count: number, option3: 'type', type: string): Promise<[string, string[]]>;
 
     SCARD(key: string): Promise<number>;
 
@@ -404,7 +414,10 @@ export interface IBaseCommand {
 
     SREM(key: string, ...member: string[]): Promise<number>;
 
-    SSCAN<T>(key: string, cursor: string, ...arg: string[]): Promise<T>;
+    SSCAN(key: string, cursor: number): Promise<[string, string[]]>;
+    SSCAN(key: string, cursor: number, option1: 'match', pattern: string): Promise<[string, string[]]>;
+    SSCAN(key: string, cursor: number, option1: 'count', count: number): Promise<[string, string[]]>;
+    SSCAN(key: string, cursor: number, option1: 'match', pattern: string, option2: 'count', count: number): Promise<[string, string[]]>;
 
     STRALGO<T>(subcommand: 'lcs', ...arg: string[]): Promise<T>;
 
@@ -532,7 +545,10 @@ export interface IBaseCommand {
 
     ZREVRANK(key: string, member: string): Promise<number | null>;
 
-    ZSCAN<T>(key: string, cursor: string, ...arg: string[]): Promise<T>;
+    ZSCAN(key: string, cursor: number): Promise<[string, string[]]>;
+    ZSCAN(key: string, cursor: number, option1: 'match', pattern: string): Promise<[string, string[]]>;
+    ZSCAN(key: string, cursor: number, option1: 'count', count: number): Promise<[string, string[]]>;
+    ZSCAN(key: string, cursor: number, option1: 'match', pattern: string, option2: 'count', count: number): Promise<[string, string[]]>;
 
     ZSCORE(key: string, member: string): Promise<string>;
 

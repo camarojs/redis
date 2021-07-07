@@ -79,6 +79,7 @@ export abstract class BaseClient {
         cloneOptions.db = options.db || 0;
         cloneOptions.username = options.username || 'default';
         cloneOptions.reconnection = options.reconnection !== false;
+        cloneOptions.password = options.password;
         return cloneOptions;
     }
 

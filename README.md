@@ -54,6 +54,7 @@ console.log(reply) // 'bar'
 | password | null | Password of redis client. |
 | db | 0 | If set, client will run `SELECT` command on connect. |
 | reconnection | true | Whether to reconnect when an error occurs. |
+| logger | null | Provide a callback function to process commands log. |
 
 ## API Reference
 

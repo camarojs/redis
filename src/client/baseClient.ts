@@ -10,6 +10,7 @@ export interface IClientOptions {
     username?: string;
     password?: string;
     reconnection?: boolean;
+    logger?: (err: Error, reply: unknown, command: string, args?: string[]) => void
 }
 
 export type ProtoVer = 2 | 3;
@@ -86,6 +87,7 @@ export abstract class BaseClient {
         cloneOptions.username = options.username || 'default';
         cloneOptions.reconnection = options.reconnection !== false;
         cloneOptions.password = options.password;
+        cloneOptions.logger = options.logger;
         return cloneOptions;
     }
 
@@ -103,6 +105,7 @@ export abstract class BaseClient {
         // TODO: MONITOR commands
         return new Promise((resolve, reject) => {
             this.parser.callbacks.push((err, reply) => {
+                this.options.logger?.(err as Error, reply, command, args);
                 err ? reject(err) : resolve(reply);
             });
             const buffer = this.parser.encodeCommand(command, args);

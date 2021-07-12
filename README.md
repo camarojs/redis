@@ -77,8 +77,8 @@ See the complete command list: [https://redis.io/commands](https://redis.io/comm
 ### Events
 
 + `message`: See [Pub/Sub](#Pub/Sub)
-+ `error`: Emitted when a connection error occurs.
-+ `connect`: Emitted when a socket connection is successfully established.
++ `error`: Emitted when a error occurs.
++ `connect`: Emitted when the client is established. Commands issued before the `connect` event are queued, then replayed just before this event is emitted.
 
 ### Pub/Sub
 

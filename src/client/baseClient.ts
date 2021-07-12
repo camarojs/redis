@@ -33,21 +33,20 @@ export abstract class BaseClient {
         this.connect();
     }
 
-    abstract init(): void;
+    abstract init(): Promise<void>;
 
     async connect(): Promise<void> {
         this.socket.connect(this.options.port as number, this.options.host as string);
         this.socket.setKeepAlive(true);
-        this.socket.on('connect', () => {
+        this.socket.on('connect', async () => {
             this.queue.forEach(elem => {
                 this.socket.write(elem);
             });
-            this.handleConnect?.();
         });
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
-        this.socket.on('error', err => { this.handleError(err); });
+        this.socket.on('error', err => { this.handleError?.(err); });
         this.socket.on('close', (hadError) => {
             /**
              * In addition to actively disconnecting the client or server, 
@@ -58,7 +57,16 @@ export abstract class BaseClient {
             }
         });
 
-        this.init();
+        try {
+            await this.init();
+            this.handleConnect?.();
+        } catch (error) {
+            if (this.handleError) {
+                this.handleError(error);
+            } else {
+                throw error;
+            }
+        }
     }
 
     private reconnect(): void {
@@ -68,9 +76,7 @@ export abstract class BaseClient {
     }
 
     private handleConnect?: () => void;
-    private handleError(err: Error): void {
-        console.error(err + '');
-    }
+    private handleError?: (err: Error) => void;
 
     private initOptions(options: IClientOptions): IClientOptions {
         const cloneOptions: IClientOptions = {};

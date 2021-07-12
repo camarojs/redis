@@ -10,13 +10,12 @@ export class Client extends BaseClient {
         super(options, 3);
     }
 
-    init(): void {
+    async init(): Promise<void> {
         if (this.options.password) {
-            this.HELLO(3, 'auth', this.options.username as string, this.options.password);
+            await this.HELLO(3, 'auth', this.options.username as string, this.options.password);
         } else {
-            this.HELLO(3);
+            await this.HELLO(3);
         }
-
-        this.SELECT(this.options.db as number);
+        await this.SELECT(this.options.db as number);
     }
 }

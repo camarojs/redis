@@ -47,7 +47,13 @@ export abstract class BaseClient {
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
-        this.socket.on('error', err => { this.handleError?.(err); });
+        this.socket.on('error', err => {
+            if (this.handleError) {
+                this.handleError(err);
+            } else {
+                console.error(err);
+            }
+        });
         this.socket.on('close', (hadError) => {
             /**
              * In addition to actively disconnecting the client or server, 

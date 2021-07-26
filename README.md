@@ -16,6 +16,7 @@ The first redis client to support [resp3](https://github.com/antirez/RESP3/blob/
 + All commands of redis support.
 + All command results return promise.
 + Support for ES6 types, such as Map and Set.
++ Support for TLS.
 
 ## Quick Start
 
@@ -51,10 +52,11 @@ console.log(reply) // 'bar'
 | host | 127.0.0.1 | IP address of the redis server. |
 | port | 6379 | Port of the redis server. |
 | username | default | Username of redis client. |
-| password | null | Password of redis client. |
+| password | undefined | Password of redis client. |
 | db | 0 | If set, client will run `SELECT` command on connect. |
 | reconnection | true | Whether to reconnect when an error occurs. |
-| logger | null | Provide a callback function to process commands log. |
+| logger | undefined | Provide a callback function to process commands log. |
+| tls | undefined | Object passed as options to [tls.connect()](https://nodejs.org/api/tls.html#tls_tls_connect_options_callback). |
 
 ## API Reference
 

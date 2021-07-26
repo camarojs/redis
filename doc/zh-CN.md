@@ -37,6 +37,8 @@ console.log(reply) // 'bar'
 | password | null | 连接服务器使用的密码。 |
 | db | 0 | 如果设置了，会执行 `SELECT` 命令切换到对应的数据库。 |
 | reconnection | true | 发生错误时是否重新连接。 |
+| logger | undefined | 用来记录命令执行日志的函数。 |
+| tls | undefined | 传递给 [tls.connect()](https://nodejs.org/api/tls.html#tls_tls_connect_options_callback) 作为 `options` 的对象。 |
 
 ## API 说明
 

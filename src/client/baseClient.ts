@@ -1,4 +1,5 @@
-import { Socket } from 'net';
+import net, { Socket } from 'net';
+import tls, { SecureContextOptions, TLSSocket } from 'tls';
 import commands from '../command/commands.json';
 import ParserV2 from '../parser/parser.v2';
 import ParserV3 from '../parser/parser.v3';
@@ -10,6 +11,7 @@ export interface IClientOptions {
     username?: string;
     password?: string;
     reconnection?: boolean;
+    tls?: SecureContextOptions;
     logger?: (err: Error, reply: unknown, command: string, args?: string[]) => void
 }
 
@@ -22,7 +24,7 @@ declare module 'net' {
 }
 
 export abstract class BaseClient {
-    private socket = new Socket();
+    private socket: Socket | TLSSocket;
     private parser: ParserV2 | ParserV3;
     /** Store the command that executed before connect */
     private queue: string[] = [];
@@ -31,22 +33,34 @@ export abstract class BaseClient {
         this.parser = protover === 3 ? new ParserV3() : new ParserV2();
         commands.forEach(command => { this.addCommand(command); });
         this.options = this.initOptions(options);
-        this.connect();
-    }
 
-    abstract init(): Promise<void>;
+        const connectionOpts = {
+            port: this.options.port as number,
+            host: this.options.host
+        };
+        Object.assign(connectionOpts, this.options.tls);
 
-    async connect(): Promise<void> {
-        this.socket.connect(this.options.port as number, this.options.host as string);
+        // Ignore HostName Mismatch
+        if (this.options.host === '127.0.0.1') {
+            Object.assign(connectionOpts, { rejectUnauthorized: false });
+        }
+
+        this.socket = this.options.tls
+            ? tls.connect(connectionOpts)
+            : net.createConnection(connectionOpts);
         this.socket.setKeepAlive(true);
-        this.socket.on('connect', async () => {
+
+        const connectEventName = this.options.tls ? 'secureConnect' : 'connect';
+        this.socket.on(connectEventName, async () => {
             this.queue.forEach(elem => {
                 this.socket.write(elem);
             });
         });
+
         this.socket.on('data', (data) => {
             this.parser.decodeReply(data);
         });
+
         this.socket.on('error', err => {
             if (this.handleError) {
                 this.handleError(err);
@@ -54,6 +68,7 @@ export abstract class BaseClient {
                 console.error(err);
             }
         });
+
         this.socket.on('close', (hadError) => {
             /**
              * In addition to actively disconnecting the client or server, 
@@ -64,17 +79,18 @@ export abstract class BaseClient {
             }
         });
 
-        try {
-            await this.init();
+        this.init().then(() => {
             this.handleConnect?.();
-        } catch (error) {
+        }).catch(error => {
             if (this.handleError) {
                 this.handleError(error);
             } else {
                 throw error;
             }
-        }
+        });
     }
+
+    abstract init(): Promise<void>;
 
     private reconnect(): void {
         setTimeout(() => {
@@ -94,6 +110,10 @@ export abstract class BaseClient {
         cloneOptions.reconnection = options.reconnection !== false;
         cloneOptions.password = options.password;
         cloneOptions.logger = options.logger;
+        if (options.tls) {
+            cloneOptions.tls = {};
+            Object.assign(cloneOptions.tls, options.tls);
+        }
         return cloneOptions;
     }
 

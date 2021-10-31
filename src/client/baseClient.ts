@@ -1,4 +1,4 @@
-import net, { Socket } from 'net';
+import net, { NetConnectOpts, Socket } from 'net';
 import tls, { SecureContextOptions, TLSSocket } from 'tls';
 import commands from '../command/commands.json';
 import ParserV2 from '../parser/parser.v2';
@@ -24,34 +24,40 @@ declare module 'net' {
 }
 
 export abstract class BaseClient {
-    private socket: Socket | TLSSocket;
+    private socket!: Socket | TLSSocket;
     private parser: ParserV2 | ParserV3;
     /** Store the command that executed before connect */
     private queue: string[] = [];
     options: IClientOptions;
+    private connectionOpts: NetConnectOpts;
+    private attempts = 0;
     constructor(options: IClientOptions, protover: ProtoVer) {
         this.parser = protover === 3 ? new ParserV3() : new ParserV2();
         commands.forEach(command => { this.addCommand(command); });
         this.options = this.initOptions(options);
-
-        const connectionOpts = {
+        this.connectionOpts = {
             port: this.options.port as number,
             host: this.options.host
         };
-        Object.assign(connectionOpts, this.options.tls);
+        Object.assign(this.connectionOpts, this.options.tls);
 
         // Ignore HostName Mismatch
         if (this.options.host === '127.0.0.1') {
-            Object.assign(connectionOpts, { rejectUnauthorized: false });
+            Object.assign(this.connectionOpts, { rejectUnauthorized: false });
         }
 
+        this.connect();
+    }
+
+    private connect() {
         this.socket = this.options.tls
-            ? tls.connect(connectionOpts)
-            : net.createConnection(connectionOpts);
+            ? tls.connect(this.connectionOpts)
+            : net.createConnection(this.connectionOpts);
         this.socket.setKeepAlive(true);
 
         const connectEventName = this.options.tls ? 'secureConnect' : 'connect';
         this.socket.on(connectEventName, async () => {
+            this.attempts = 0;
             this.queue.forEach(elem => {
                 this.socket.write(elem);
             });
@@ -93,9 +99,12 @@ export abstract class BaseClient {
     abstract init(): Promise<void>;
 
     private reconnect(): void {
+        this.attempts++;
         setTimeout(() => {
-            this.socket.connect(this.options.port as number, this.options.host as string);
-        }, 100);
+            this.socket.destroy();
+            this.socket.unref();
+            this.connect();
+        }, Math.min(this.attempts * this.attempts * 100, 15000));
     }
 
     private handleConnect?: () => void;
